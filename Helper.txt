@@ -1,0 +1,8 @@
+Creating the simplest web project in IntelliJ Idea Enterprise:
+https://codegym.cc/groups/posts/51-creating-the-simplest-web-project-in-intellij-idea-enterprise-step-by-step-with-pictures
+
+Creating a Simple Web App using Servlets and JSP (Part 1):
+https://codegym.cc/groups/posts/52-creating-a-simple-web-application-using-servlets-and-jsps-part-1
+
+
+
