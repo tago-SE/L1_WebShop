@@ -12,6 +12,15 @@
     <title>Home</title>
 </head>
 <body>
-    Welcome user!
+    <!-- Redirects the user to login if not logged in -->
+    <%
+        if (session.getAttribute("username") == null) {
+            response.sendRedirect("login.jsp");
+        }
+    %>
+    Welcome ${username}
+    <form action="Logout">
+        <input type="submit" value="logout">
+    </form>
 </body>
 </html>

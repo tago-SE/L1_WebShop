@@ -11,10 +11,11 @@
     <title>Login</title>
 </head>
 <body>
-    <form action="Dispatcher" method="post">
+    <form action="Login">
         Enter username : <input type="text" name = "username"></br>
         Enter password : <input type="password" name = "password"></br>
         <input type="submit" value="login">
     </form>
+    <a href = "register.jsp">Register</a><br>
 </body>
 </html>

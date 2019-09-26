@@ -3,17 +3,38 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
+
+    <!-- Login -->
     <servlet>
-        <servlet-name>Dispatcher</servlet-name>
-        <servlet-class>controllers.Dispatcher</servlet-class>
+        <servlet-name>Login</servlet-name>
+        <servlet-class>controllers.Login</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>Dispatcher</servlet-name>
-        <url-pattern>/Dispatcher</url-pattern>
+        <servlet-name>Login</servlet-name>
+        <url-pattern>/Login</url-pattern>
     </servlet-mapping>
+    <!-- Logout -->
+    <servlet>
+        <servlet-name>Logout</servlet-name>
+        <servlet-class>controllers.Logout</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Logout</servlet-name>
+        <url-pattern>/Logout</url-pattern>
+    </servlet-mapping>
+    <!-- Register -->
+    <servlet>
+        <servlet-name>Register</servlet-name>
+        <servlet-class>controllers.Register</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Register</servlet-name>
+        <url-pattern>/Register</url-pattern>
+    </servlet-mapping>
+
     <session-config>
         <session-timeout>
-            20
+            50
         </session-timeout>
     </session-config>
 </web-app>

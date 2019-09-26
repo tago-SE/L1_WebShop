@@ -23,6 +23,9 @@ public class ItemEntity implements Serializable {
     @Column(name = "quantity", nullable = false)
     Integer quantity;
 
+    @Column(name = "category")
+    String category;
+
     @Override
     public String toString() {
         return "ItemEntity{" +
@@ -30,6 +33,7 @@ public class ItemEntity implements Serializable {
                 ", name='" + name + '\'' +
                 ", price=" + price +
                 ", quantity=" + quantity +
+                ", category='" + category + '\'' +
                 '}';
     }
 }
