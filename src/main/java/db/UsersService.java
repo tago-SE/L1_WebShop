@@ -22,8 +22,7 @@ public class UsersService extends BaseService {
 
     public static int login(String username, String password) {
         if (username == null || password == null)
-            throw new IllegalArgumentException();
-
+            throw new IllegalArgumentException(username + " || " + password);
         EntityManagerFactory factory = getEntityManagerFactory();
         EntityManager em = factory.createEntityManager();
         try {
@@ -39,7 +38,7 @@ public class UsersService extends BaseService {
             return INVALID_CREDENTIALS;
         } catch (Exception e) {
             em.getTransaction().rollback();
-            LOGGER.log(Level.SEVERE, "" + e.getClass().getName());
+            LOGGER.log(Level.SEVERE, "" + e.getClass().getName() + ":" + e.getMessage());
             return TRANSACTION_FAILED;
         } finally {
             factory.close();
@@ -48,7 +47,7 @@ public class UsersService extends BaseService {
 
     public static int register(String username, String password) {
         if (username == null || password == null)
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(username + " || " + password);
 
         EntityManagerFactory factory = getEntityManagerFactory();
         EntityManager em = factory.createEntityManager();

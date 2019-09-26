@@ -24,7 +24,7 @@ public class Register extends HttpServlet {
         String password = request.getParameter("password");
         String password1 = request.getParameter("password1");
 
-        if (username == null) {
+        if (username == null || username.length() == 0) {
             errorMessage(request, response, "Need to specify username.");
         }
         else if (password == null || password.length() == 0 || password1 == null || password1.length() == 0) {

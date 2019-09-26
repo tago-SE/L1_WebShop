@@ -31,6 +31,16 @@
         <servlet-name>Register</servlet-name>
         <url-pattern>/Register</url-pattern>
     </servlet-mapping>
+    <!-- Users -->
+    <servlet>
+        <servlet-name>Users</servlet-name>
+        <servlet-class>controllers.Users</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Users</servlet-name>
+        <url-pattern>/Users</url-pattern>
+    </servlet-mapping>
+
 
     <session-config>
         <session-timeout>

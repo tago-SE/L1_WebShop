@@ -13,6 +13,8 @@ import java.io.IOException;
 @WebServlet(name = "/Login")
 public class Login extends HttpServlet {
 
+    // TODO: https://stackoverflow.com/tags/el/info change to handle user objects rather than what it does now
+
     protected void errorMessage(HttpServletRequest request, HttpServletResponse response, String msg) throws ServletException, IOException {
         request.setAttribute("errorMessage", msg);
         request.getRequestDispatcher("login.jsp").forward(request, response);
@@ -23,7 +25,7 @@ public class Login extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        if (username == null) {
+        if (username == null || username.length() == 0) {
             errorMessage(request, response, "Need to specify username.");
         }
         else if (password == null || password.length() == 0) {
