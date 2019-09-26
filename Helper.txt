@@ -4,5 +4,23 @@ https://codegym.cc/groups/posts/51-creating-the-simplest-web-project-in-intellij
 Creating a Simple Web App using Servlets and JSP (Part 1):
 https://codegym.cc/groups/posts/52-creating-a-simple-web-application-using-servlets-and-jsps-part-1
 
+------------------------------------------------------------------------------------------------
+-   MYSQL
+------------------------------------------------------------------------------------------------
+mysql -u root -p
+root
 
+for the mysql docker - add a MYSQL_ROOT_PASSWORD make a remote user (this is bad practice...)
 
+CREATE DATABASE lamebook;
+
+CREATE USER 'remoteuser'@'localhost' IDENTIFIED BY 'remotepassword';
+CREATE USER 'remoteuser'@'%' IDENTIFIED BY 'remotepassword';
+GRANT ALL ON *.* TO 'remoteuser'@'localhost';
+GRANT ALL ON *.* TO 'remoteuser'@'%';
+
+FLUSH PRIVILEGES; // Needed after grant tables etc have been modified
+
+Test Database Connection (perstience.xml) --> Imported Data Sources and Drivers (intelliJ)
+
+------------------------------------------------------------------------------------------------

@@ -14,6 +14,7 @@
     <form action="Login">
         Enter username : <input type="text" name = "username"></br>
         Enter password : <input type="password" name = "password"></br>
+        <div style="color: #FF0000;">${errorMessage}</div><br>
         <input type="submit" value="login">
     </form>
     <a href = "register.jsp">Register</a><br>
