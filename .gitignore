@@ -1,4 +1,6 @@
 # Custom
+*.idea
+*.iml
 .idea
 .iml
 /out/*
