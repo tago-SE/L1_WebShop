@@ -1,6 +1,6 @@
 <%--
   Created by IntelliJ IDEA.
-  model.User: tiago
+  view.viewmodels.User: tiago
   Date: 2019-09-25
   Time: 17:56
   To change this template use File | Settings | File Templates.

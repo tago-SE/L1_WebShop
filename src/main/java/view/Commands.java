@@ -25,6 +25,7 @@ public class Commands {
     public static final String CATEGORY_ID_ARG              = "cat_id";
     public static final String CATEGORY_LIST_ARG            = "categories";
     public static final String CATEGORY_NAME_ARG            = "cat_name";
+    public static final String CURR_USER_ARG                = "curr_user";
     public static final String USER_NAME_ARG                = "username";
     public static final String USER_PASS_ARG                = "password";
     public static final String USER_PASS_1_ARG              = "password1";

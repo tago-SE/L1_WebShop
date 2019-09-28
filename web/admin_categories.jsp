@@ -9,6 +9,7 @@
 <%@ page import="view.Commands" %>
 <%@ page import="view.viewmodels.Category" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="view.viewmodels.User" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
@@ -18,8 +19,17 @@
 <body>
 <!-- Redirects the user to login if not logged in -->
 <%
-    if (session.getAttribute("username") == null) {
+    User user = (User) session.getAttribute(Commands.CURR_USER_ARG);
+    if (user == null)
+    {
         response.sendRedirect("login.jsp");
+    }
+    else if (user.getRole() == null || !user.getRole().equals("Admin"))
+    {
+
+        %>
+            Only Admins have access to this page!
+        <%
     }
     else
     {
@@ -46,8 +56,10 @@
             <th>Operators</th>
             <%
                 ArrayList<Category> categories = (ArrayList<Category>) session.getAttribute(Commands.CATEGORY_LIST_ARG);
-                if (categories != null) {
-                    for(Category category : categories) {
+                if (categories != null)
+                {
+                    for(Category category : categories)
+                    {
             %>
             <tr>
                 <td> <%= category.getId() %> </td>
@@ -80,5 +92,9 @@
     <%
     }
     %>
+    <form method="post" action="Users">
+        <input type="hidden" name=<%= Commands.COMMAND%> value=<%= Commands.LOGOUT_COMMAND%>>
+        <input type="submit" value="logout">
+    </form>
 </body>
 </html>

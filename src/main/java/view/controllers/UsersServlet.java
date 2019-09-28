@@ -1,5 +1,6 @@
 package view.controllers;
 
+import view.viewmodels.User;
 import model.handlers.CategoryHandler;
 import model.handlers.UsersHandler;
 import view.Commands;
@@ -37,17 +38,20 @@ public class UsersServlet extends HttpServlet {
                                 HttpServletResponse response,
                                 String username) throws ServletException, IOException {
 
+
+        User currUser = new User(-1, username, "Admin");
+
         HttpSession session = request.getSession();
         session.setAttribute(Commands.USER_NAME_ARG, username);
+        session.setAttribute(Commands.CURR_USER_ARG, currUser);
 
         // Set Categories
         session.setAttribute(Commands.CATEGORY_LIST_ARG, CategoryHandler.getCategories());
         session.setAttribute(Commands.CATEGORY_TS_ARG, new Date());
 
-        //response.sendRedirect("home.jsp");
+        response.sendRedirect("home.jsp");
 
-        // TEMP
-        response.sendRedirect("admin_categories.jsp");
+
     }
 
     private void doLogin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -74,6 +78,7 @@ public class UsersServlet extends HttpServlet {
     private void doLogout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         session.removeAttribute(Commands.USER_NAME_ARG);
+        session.removeAttribute(Commands.CURR_USER_ARG);
         session.invalidate();
         response.sendRedirect("login.jsp");
     }

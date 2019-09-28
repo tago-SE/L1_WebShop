@@ -1,6 +1,6 @@
 <%--
   Created by IntelliJ IDEA.
-  model.User: tiago
+  view.viewmodels.User: tiago
   Date: 2019-09-25
   Time: 17:57
   To change this template use File | Settings | File Templates.
@@ -9,6 +9,7 @@
 <%@ page import="view.Commands" %>
 <%@ page import="view.viewmodels.Category" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="view.viewmodels.User" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
@@ -19,14 +20,15 @@
 <body>
     <!-- Redirects the user to login if not logged in -->
     <%
-    if (session.getAttribute("username") == null) {
+        User user = (User) session.getAttribute(Commands.CURR_USER_ARG);
+    if (user == null) {
         response.sendRedirect("login.jsp");
     }
     else
     {
     %>
 
-        Welcome ${username}
+        Welcome [<%= user.getRole() %>] <%= user.getName() %>
 
         </br>
         </br>
