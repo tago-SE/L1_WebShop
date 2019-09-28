@@ -14,9 +14,9 @@
 <body>
     <form method="post" action="Users">
         <input type="hidden" name=<%= Commands.COMMAND%> value=<%= Commands.LOGIN_COMMAND%>>
-        Enter username : <input type="text" name = "username"></br>
-        Enter password : <input type="password" name = "password"></br>
-        <div style="color: #FF0000;">${errorMessage}</div><br>
+        Enter username : <input type="text" name=<%= Commands.USER_NAME_ARG%>></br>
+        Enter password : <input type="password" name=<%= Commands.USER_PASS_ARG%>></br></br>
+        <div style="color: #FF0000;">${errorResponse}</div><br>
         <input type="submit" value="login">
     </form>
     <a href = "register.jsp">Register</a><br>

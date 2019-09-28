@@ -1,23 +1,26 @@
-package model.db.entities;
-
-import model.Item;
+package model.repository.entities;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
-@Entity
-@Table(name = "Carts")
+//@Entity
+//@Table(name = "Carts")
 public class PurchaseEntity implements EntityInt {
 
     @Id
     @GeneratedValue(generator = "incrementor")
     @Column(name = "id", unique = true)
-    public Integer id;
-
-    @OneToOne
-    public ItemEntity item;
+    public int id;
 
     @Column(name = "amount")
     public int amount;
 
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(int id) {
+        this.id = id;
+    }
 }

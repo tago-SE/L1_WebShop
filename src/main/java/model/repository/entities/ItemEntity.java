@@ -1,30 +1,37 @@
-package model.db.entities;
+package model.repository.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.io.Serializable;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "Items")
 public class ItemEntity implements EntityInt {
 
     @Id
+    @GeneratedValue(generator = "incrementor")
     @Column(name = "id", unique = true)
-    Integer id;
+    public int id;
 
     @Column(name = "name", unique = true, nullable = false)
-    String name;
+    public String name;
 
     @Column(name = "price", nullable = false)
-    Integer price;
+    public Integer price;
 
     @Column(name = "quantity", nullable = false)
-    Integer quantity;
+    public Integer quantity;
 
     @Column(name = "category")
-    String category;
+    public String category;
+
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(int id) {
+        this.id = id;
+    }
 
 
     @Override
@@ -37,4 +44,5 @@ public class ItemEntity implements EntityInt {
                 ", category='" + category + '\'' +
                 '}';
     }
+
 }

@@ -11,73 +11,96 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Date;
 
 @WebServlet(name = "Users")
 public class UsersServlet extends HttpServlet {
 
-    protected void errorMessage(HttpServletRequest request, HttpServletResponse response, String msg) throws ServletException, IOException {
-        request.setAttribute("errorMessage", msg);
-        request.getRequestDispatcher("login.jsp").forward(request, response);
+    private static final String NO_PASSWORD_MSG         = "No specified password.";
+    private static final String NO_USERNAME_MSG         = "No specified username.";
+    private static final String LOGIN_FAILURE_MSG       = "Invalid username or password";
+    private static final String LOGIN_EXCEPTION_MSG     = "Unknown exception raised.";
+    private static final String REG_PASSWORD_FAIL_MSG   = "Passwords do not match";
+    private static final String USERNAME_TAKEN_MSG      = "Username is already taken.";
+    private static final String REG_EXCEPTION_MSG       = "Unknown exception raised.";
+
+    private void errorResponse(HttpServletRequest request,
+                                 HttpServletResponse response,
+                                 String msg,
+                                 String redirect) throws ServletException, IOException {
+
+        request.setAttribute("errorResponse", msg);
+        request.getRequestDispatcher(redirect).forward(request, response);
+    }
+
+    private void onLoginSuccess(HttpServletRequest request,
+                                HttpServletResponse response,
+                                String username) throws ServletException, IOException {
+
+        HttpSession session = request.getSession();
+        session.setAttribute(Commands.USER_NAME_ARG, username);
+
+        // Set Categories
+        session.setAttribute(Commands.CATEGORY_LIST_ARG, CategoryHandler.getCategories());
+        session.setAttribute(Commands.CATEGORY_TS_ARG, new Date());
+
+        //response.sendRedirect("home.jsp");
+
+        // TEMP
+        response.sendRedirect("admin_categories.jsp");
     }
 
     private void doLogin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-
+        String username = request.getParameter(Commands.USER_NAME_ARG);
+        String password = request.getParameter(Commands.USER_PASS_ARG);
         switch (UsersHandler.login(username, password)) {
             case UsersHandler.NO_PASSWORD:
-                errorMessage(request, response, "No specified password.");
+                errorResponse(request, response, NO_PASSWORD_MSG, "login.jsp");
                 break;
             case UsersHandler.NO_USERNAME:
-                errorMessage(request, response, "No specified username.");
+                errorResponse(request, response, NO_USERNAME_MSG, "login.jsp");
                 break;
             case UsersHandler.LOGIN_SUCCESS:
-                HttpSession session = request.getSession();
-                session.setAttribute("username", username);
-                // Set Categories
-                session.setAttribute("categories", CategoryHandler.getCategories());
-                response.sendRedirect("home.jsp");
+                onLoginSuccess(request, response, username);
                 break;
             case UsersHandler.LOGIN_FAILURE:
-                errorMessage(request, response, "Invalid username or password");
+                errorResponse(request, response, LOGIN_FAILURE_MSG, "login.jsp");
                 break;
             default:
-                errorMessage(request, response, "Unknown exception raised.");
+                errorResponse(request, response, LOGIN_EXCEPTION_MSG, "login.jsp");
         }
     }
 
     private void doLogout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        session.removeAttribute("username");
+        session.removeAttribute(Commands.USER_NAME_ARG);
         session.invalidate();
         response.sendRedirect("login.jsp");
     }
 
     private void doRegister(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String password1 = request.getParameter("password1");
+        String username = request.getParameter(Commands.USER_NAME_ARG);
+        String password = request.getParameter(Commands.USER_PASS_ARG);
+        String password1 = request.getParameter(Commands.USER_PASS_1_ARG);
 
-        switch (UsersHandler.register(request.getParameter("username"), password, password1)) {
+        switch (UsersHandler.register(username, password, password1)) {
             case UsersHandler.NO_USERNAME:
-                errorMessage(request, response, "Need to specify username.");
+                errorResponse(request, response, NO_USERNAME_MSG, "register.jsp");
                 break;
             case UsersHandler.NO_PASSWORD:
-                errorMessage(request, response, "Need to specify both passwords.");
+                errorResponse(request, response, NO_PASSWORD_MSG, "register.jsp");
                 break;
             case UsersHandler.NO_PASSWORD_MATCH:
-                errorMessage(request, response, "Passwords do not match.");
+                errorResponse(request, response, REG_PASSWORD_FAIL_MSG, "register.jsp");
                 break;
             case UsersHandler.REGISTRATION_SUCCESS:
-                HttpSession session = request.getSession();
-                session.setAttribute("username", username);
-                response.sendRedirect("home.jsp");
+                onLoginSuccess(request, response, username);
                 break;
             case UsersHandler.REGISTRATION_FAILURE:
-                errorMessage(request, response, "Username is already taken.");
+                errorResponse(request, response, USERNAME_TAKEN_MSG, "register.jsp");
                 break;
             default:
-                errorMessage(request, response, "Unknown exception raised.");
+                errorResponse(request, response, REG_EXCEPTION_MSG, "register.jsp");
         }
     }
 

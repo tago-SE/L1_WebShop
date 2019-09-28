@@ -7,7 +7,7 @@
 --%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="view.Commands" %>
-<%@ page import="model.Category" %>
+<%@ page import="view.viewmodels.Category" %>
 <%@ page import="java.util.ArrayList" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 

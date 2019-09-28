@@ -13,6 +13,15 @@
         <servlet-name>Users</servlet-name>
         <url-pattern>/Users</url-pattern>
     </servlet-mapping>
+    <!-- Items -->
+    <servlet>
+        <servlet-name>Items</servlet-name>
+        <servlet-class>view.controllers.ItemsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Items</servlet-name>
+        <url-pattern>/Items</url-pattern>
+    </servlet-mapping>
 
 
     <session-config>

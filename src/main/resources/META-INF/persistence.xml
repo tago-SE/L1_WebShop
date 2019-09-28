@@ -7,7 +7,7 @@
     <persistence-unit name="org.hibernate.lab1_web_shop.jpa"  transaction-type="RESOURCE_LOCAL">
         <properties>
             <property name="hibernate.connection.driver_class" value="com.mysql.cj.jdbc.Driver"/>
-            <property name="hibernate.connection.url" value="jdbc:mysql://192.168.99.100:32770/DB_WEB_SHOP?useSSL=false"/>
+            <property name="hibernate.connection.url" value="jdbc:mysql://192.168.99.100:32769/DB_WEB_SHOP"/>
             <property name="hibernate.connection.autocommit" value="false"/>
             <property name="hibernate.connection.username" value="remoteuser"/>
             <property name="hibernate.connection.password" value="remotepassword"/>

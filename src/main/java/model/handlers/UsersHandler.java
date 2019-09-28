@@ -1,9 +1,7 @@
 package model.handlers;
 
-import model.db.UsersDB;
-import model.db.entities.UserEntity;
-
-import javax.persistence.EntityManagerFactory;
+import model.repository.DAO.UsersDB;
+import model.repository.entities.UserEntity;
 
 public class UsersHandler {
 
@@ -30,6 +28,7 @@ public class UsersHandler {
             }
             return LOGIN_FAILURE;
         } catch (Exception e) {
+            e.printStackTrace();
             return LOGIN_EXCEPTION;
         }
     }

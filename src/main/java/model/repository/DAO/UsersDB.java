@@ -1,14 +1,14 @@
-package model.db;
+package model.repository.DAO;
 
-import model.Result;
-import model.db.entities.UserEntity;
+import model.repository.entities.EntityInt;
+import model.repository.entities.UserEntity;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class UsersDB extends BaseDB {
+public class UsersDB extends AbstractDB {
 
     private static final Logger LOGGER = Logger.getLogger(UsersDB.class.getName());
 
@@ -36,9 +36,11 @@ public class UsersDB extends BaseDB {
         }
     }
 
-    public static boolean insert(UserEntity newUser) throws Exception {
+    public static boolean insert(EntityInt entity) throws Exception {
         EntityManagerFactory factory = getEntityManagerFactory();
         EntityManager em = factory.createEntityManager();
+        UserEntity newUser = (UserEntity) entity;
+        System.out.println("INSERT USER");
         try {
             em.getTransaction().begin();
             List<UserEntity> users = (List<UserEntity>) em.createNamedQuery("User.findByName")
