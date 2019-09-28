@@ -52,7 +52,7 @@ public class UsersHandler {
     }
 
     public static void logout() {
-        // Do Nothing
-    }
+
+    } // Do Nothing
 
 }
