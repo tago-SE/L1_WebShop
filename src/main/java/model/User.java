@@ -2,7 +2,7 @@ package model;
 
 public class User {
 
-    private Integer id;
+    private int id;
     private String name;
 
     public User() {}
@@ -11,7 +11,7 @@ public class User {
         this.name = name;
     }
 
-    public User(Integer id, String name) {
+    public User(int id, String name) {
         this.id = id;
         this.name = name;
     }

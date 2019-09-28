@@ -5,13 +5,15 @@
   Time: 17:56
   To change this template use File | Settings | File Templates.
 --%>
+<%@ page import="view.Commands" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>Login</title>
 </head>
 <body>
-    <form action="Login">
+    <form method="post" action="Users">
+        <input type="hidden" name=<%= Commands.COMMAND%> value=<%= Commands.LOGIN_COMMAND%>>
         Enter username : <input type="text" name = "username"></br>
         Enter password : <input type="password" name = "password"></br>
         <div style="color: #FF0000;">${errorMessage}</div><br>

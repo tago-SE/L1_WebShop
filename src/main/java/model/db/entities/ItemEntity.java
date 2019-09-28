@@ -1,4 +1,4 @@
-package db.entities;
+package model.db.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "Items")
-public class ItemEntity implements Serializable {
+public class ItemEntity implements EntityInt {
 
     @Id
     @Column(name = "id", unique = true)
@@ -25,6 +25,7 @@ public class ItemEntity implements Serializable {
 
     @Column(name = "category")
     String category;
+
 
     @Override
     public String toString() {
