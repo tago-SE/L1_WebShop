@@ -13,6 +13,9 @@ public class ItemEntity implements EntityInt {
     @Column(name = "item_id", unique = true)
     public int id;
 
+    @Version
+    public int version;
+
     @Column(name = "name", unique = true, nullable = false)
     public String name;
 
@@ -27,7 +30,27 @@ public class ItemEntity implements EntityInt {
     public List<CategoryEntity> categories = new ArrayList<>();
 
     @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public int getVersion() {
+        return version;
+    }
+
+    @Override
+    public void transferTo(EntityInt toEntity) {
+
+    }
+
+    @Override
     public Query createVerifyIsUniqueQuery(EntityManager em) {
+        return null;
+    }
+
+    @Override
+    public Query createFindByIdQuery(EntityManager em) {
         return null;
     }
 
@@ -35,6 +58,7 @@ public class ItemEntity implements EntityInt {
     public String toString() {
         return "ItemEntity{" +
                 "id=" + id +
+                ", version=" + version +
                 ", name='" + name + '\'' +
                 ", price=" + price +
                 ", quantity=" + quantity +

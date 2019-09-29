@@ -1,10 +1,17 @@
 package view.viewmodels;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 public class User {
 
     private int id;
+    private int version;
     private String name;
-    private String role;
+    private Collection<String> accessRoles;
+
 
     public User() {}
 
@@ -17,30 +24,46 @@ public class User {
         this.name = name;
     }
 
-    public User(int id, String name, String role) {
+    public User(int id, int version, String name, List<String> accessRoles) {
         this.id = id;
+        this.version = version;
         this.name = name;
-        this.role = role;
+        this.accessRoles = new ArrayList<>(accessRoles);
     }
 
     public Integer getId() {
         return id;
     }
 
+    public int getVersion() {
+        return version;
+    }
+
     public String getName() {
         return name;
     }
 
-    public String getRole() {
-        return role;
+    public Collection<String> getAccessRoles() {
+        return accessRoles;
+    }
+
+    public boolean isAdmin() {
+        if (accessRoles != null)
+            for (String role : accessRoles) {
+                if (role.equals("Admin"))
+                    return true;
+            }
+        return false;
     }
 
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
+                ", version=" + version +
                 ", name='" + name + '\'' +
-                ", role='" + role + '\'' +
+                ", roles=" + accessRoles +
                 '}';
     }
+
 }

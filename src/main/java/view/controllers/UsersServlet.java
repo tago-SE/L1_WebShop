@@ -1,5 +1,7 @@
 package view.controllers;
 
+import model.handlers.exceptions.LoginException;
+import model.handlers.exceptions.RegisterException;
 import view.viewmodels.User;
 import model.handlers.CategoryHandler;
 import model.handlers.UsersHandler;
@@ -36,18 +38,21 @@ public class UsersServlet extends HttpServlet {
 
     private void onLoginSuccess(HttpServletRequest request,
                                 HttpServletResponse response,
-                                String username) throws ServletException, IOException {
+                                User user) throws ServletException, IOException {
 
 
-        User currUser = new User(-1, username, "Admin");
 
         HttpSession session = request.getSession();
-        session.setAttribute(Commands.USER_NAME_ARG, username);
-        session.setAttribute(Commands.CURR_USER_ARG, currUser);
+        session.setAttribute(Commands.USER_NAME_ARG, user.getName());
+        session.setAttribute(Commands.CURR_USER_ARG, user);
 
+        System.out.println("UsersServlet__onLoginSuccess: " + user.toString());
         // Set Categories
         session.setAttribute(Commands.CATEGORY_LIST_ARG, CategoryHandler.getCategories());
         session.setAttribute(Commands.CATEGORY_TS_ARG, new Date());
+
+        // TODO: Should be reserved for admins
+        // Set Users
 
         response.sendRedirect("home.jsp");
 
@@ -57,7 +62,22 @@ public class UsersServlet extends HttpServlet {
     private void doLogin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter(Commands.USER_NAME_ARG);
         String password = request.getParameter(Commands.USER_PASS_ARG);
-        switch (UsersHandler.login(username, password)) {
+        int result = -1;
+        User user = null;
+        try {
+            user = UsersHandler.login(username, password);
+            result = UsersHandler.LOGIN_SUCCESS;
+        } catch (Exception e) {
+            if (e instanceof LoginException) {
+                LoginException le = (LoginException) e;
+                result = le.code;
+            } else {
+                // Unexpected exception
+                e.printStackTrace();
+                result = UsersHandler.EXCEPTION;
+            }
+        }
+        switch (result) {
             case UsersHandler.NO_PASSWORD:
                 errorResponse(request, response, NO_PASSWORD_MSG, "login.jsp");
                 break;
@@ -65,7 +85,7 @@ public class UsersServlet extends HttpServlet {
                 errorResponse(request, response, NO_USERNAME_MSG, "login.jsp");
                 break;
             case UsersHandler.LOGIN_SUCCESS:
-                onLoginSuccess(request, response, username);
+                onLoginSuccess(request, response, user);
                 break;
             case UsersHandler.LOGIN_FAILURE:
                 errorResponse(request, response, LOGIN_FAILURE_MSG, "login.jsp");
@@ -88,7 +108,22 @@ public class UsersServlet extends HttpServlet {
         String password = request.getParameter(Commands.USER_PASS_ARG);
         String password1 = request.getParameter(Commands.USER_PASS_1_ARG);
 
-        switch (UsersHandler.register(username, password, password1)) {
+        int result = -1;
+        User user = null;
+        try {
+            user = UsersHandler.register(username, password, password1);
+            result = UsersHandler.REGISTRATION_SUCCESS;
+        } catch (Exception e) {
+            if (e instanceof RegisterException) {
+                RegisterException re = (RegisterException) e;
+                result = re.code;
+            } else {
+                // Unexpected exception
+                e.printStackTrace();
+                result = UsersHandler.EXCEPTION;
+            }
+        }
+        switch (result) {
             case UsersHandler.NO_USERNAME:
                 errorResponse(request, response, NO_USERNAME_MSG, "register.jsp");
                 break;
@@ -99,7 +134,7 @@ public class UsersServlet extends HttpServlet {
                 errorResponse(request, response, REG_PASSWORD_FAIL_MSG, "register.jsp");
                 break;
             case UsersHandler.REGISTRATION_SUCCESS:
-                onLoginSuccess(request, response, username);
+                onLoginSuccess(request, response, user);
                 break;
             case UsersHandler.REGISTRATION_FAILURE:
                 errorResponse(request, response, USERNAME_TAKEN_MSG, "register.jsp");

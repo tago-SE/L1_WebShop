@@ -32,10 +32,10 @@
             <input type="submit" value="logout">
         </form>
 
-        Welcome [<%= user.getRole() %>] <%= user.getName() %>
+        Welcome <%= user.getName() %>
 
         <%
-            if (user.getRole() != null && user.getRole().equals("Admin"))
+            if (user.isAdmin())
             {
                 %>
                 <h3>Admin Control</h3>

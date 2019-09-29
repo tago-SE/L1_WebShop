@@ -14,13 +14,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.http.HttpRequest;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @WebServlet(name = "ItemsServlet")
 public class ItemsServlet extends HttpServlet {
 
     private static final String ACCESS_DENIED_MSG = "Unauthorized access";
     private static final String INSERT_FAILURE_MSG = "Category already exists.";
+    private static final String NO_CATEGORY_NAME_MSG = "No name provided.";
     private static final String UNKNWON_EXCEPTION_MSG = "Unknown exception raised.";
 
     private void errorResponse(HttpServletRequest request,
@@ -30,6 +33,7 @@ public class ItemsServlet extends HttpServlet {
 
         request.setAttribute(Commands.ERROR_RESPONSE_COMMAND, msg);
         request.getRequestDispatcher(redirect).forward(request, response);
+        System.out.println("ItemsServlet__errorResponse: " + msg);
     }
 
     private void doReloadPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -39,11 +43,15 @@ public class ItemsServlet extends HttpServlet {
         response.sendRedirect("admin_categories.jsp");
     }
 
-    private void doInsertCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void doInsertCategory(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            HttpSession session,
+            User user,
+            String... access
+    ) throws ServletException, IOException {
+
         String paramName = request.getParameter(Commands.CATEGORY_NAME_ARG);
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute(Commands.CURR_USER_ARG);
-        String access = user.getRole();
         if (paramName != null && paramName.length() > 0) {
             switch (CategoryHandler.newCategory(paramName, access)) {
                 case CategoryHandler.INSERT_OK:
@@ -58,17 +66,23 @@ public class ItemsServlet extends HttpServlet {
                 default:
                     errorResponse(request, response, UNKNWON_EXCEPTION_MSG, "admin_categories.jsp");
             }
+        } else {
+            errorResponse(request, response, NO_CATEGORY_NAME_MSG, "admin_categories.jsp");
         }
     }
 
-    private void doDeleteCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void doDeleteCategory(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            HttpSession session,
+            User user,
+            String... access
+    ) throws ServletException, IOException {
+
         String paramId = request.getParameter(Commands.CATEGORY_ID_ARG);
         String paramName = request.getParameter(Commands.CATEGORY_NAME_ARG);
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute(Commands.CURR_USER_ARG);
-        String access = user.getRole();
         if (paramName != null && paramName.length() > 0) {
-            System.out.println("Servlet want to delete: " + paramName);
+            System.out.println("Inserting: " + paramName + " " + paramName.length());
             switch (CategoryHandler.deleteCategory(paramName, access)) {
                 case CategoryHandler.DELETE_OK:
                 case CategoryHandler.DELETE_FAILURE:
@@ -81,19 +95,20 @@ public class ItemsServlet extends HttpServlet {
         }
     }
 
-    private void doUpdateCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void doUpdateCategory(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            HttpSession session,
+            User user,
+            String... access
+    ) throws ServletException, IOException {
+
         String paramId = request.getParameter(Commands.CATEGORY_ID_ARG);
         String paramName = request.getParameter(Commands.CATEGORY_NAME_ARG);
         String paramVersion =  request.getParameter(Commands.CATEGORY_VERSION_ARG);
         String paramNewName = request.getParameter(Commands.CATEGORY_NEW_NAME_ARG);
         if (paramId != null && paramId.length() > 0 && paramName != null && paramName.length() > 0 && paramVersion != null && paramVersion.length() > 0) {
             Category category = new Category(Integer.parseInt(paramId), paramNewName, Integer.parseInt(paramVersion));
-            int id = Integer.parseInt(paramId);
-            HttpSession session = request.getSession();
-            Date date = (Date) session.getAttribute(Commands.CATEGORY_TS_ARG);
-            User user = (User) session.getAttribute(Commands.CURR_USER_ARG);
-            String access = user.getRole();
-            //switch (CategoryHandler.updateCategoryName(id, paramName, date, access)) {
             switch (CategoryHandler.updateCategory(category, access)) {
                 case CategoryHandler.UPDATE_FAILURE:
                 case CategoryHandler.UPDATE_OK:
@@ -107,10 +122,14 @@ public class ItemsServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String command = Commands.translateRequestToCommand(request);
         if (command != null && command.length() > 0) {
+            HttpSession session = request.getSession();
+            User user = (User) session.getAttribute(Commands.CURR_USER_ARG);
+            Collection<String> accessCollection = user.getAccessRoles();
+            String[] access = accessCollection.toArray(new String[accessCollection.size()]);
             switch (command) {
-                case Commands.CATEGORY_INSERT_COMMAND: doInsertCategory(request, response); break;
-                case Commands.CATEGORY_DELETE_COMMAND: doDeleteCategory(request, response); break;
-                case Commands.CATEGORY_UPDATE_COMMAND: doUpdateCategory(request, response); break;
+                case Commands.CATEGORY_INSERT_COMMAND: doInsertCategory(request, response, session, user, access); break;
+                case Commands.CATEGORY_DELETE_COMMAND: doDeleteCategory(request, response, session, user, access); break;
+                case Commands.CATEGORY_UPDATE_COMMAND: doUpdateCategory(request, response, session, user, access); break;
                 default:
             }
         }

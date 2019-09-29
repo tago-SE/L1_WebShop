@@ -34,7 +34,7 @@
             <input type="submit" value="logout">
         </form>
         <%
-        if (user.getRole() == null || !user.getRole().equals("Admin"))
+        if (!user.isAdmin())
         {
         %>
             Only Admins have access to this page!

@@ -13,11 +13,6 @@ public class ConvertTest {
 
     @Test
     public void toModel() {
-        CategoryEntity ce = new CategoryEntity();
-        ce.id = 1;
-        ce.name = "Hello";
-        Category c = Converter.toModel(ce);
-        assertEquals("Hello", c.getName());
-        assertEquals(1, c.getId());
+
     }
 }

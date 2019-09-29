@@ -35,7 +35,7 @@ public class CategoryHandler {
             return ACCESS_DENIED;
         CategoryEntity newCategory = new CategoryEntity(name);
         try {
-            if (CategoriesDB.insert(newCategory)) {
+            if (CategoriesDB.insert(newCategory) != null ) {
                 return INSERT_OK;
             }
             return INSERT_FAILURE;
@@ -49,7 +49,8 @@ public class CategoryHandler {
         if (!AccessList.validateAccess(CategoryHandler.class, access))
             return ACCESS_DENIED;
         try {
-            if (CategoriesDB.update(Converter.toEntity(category))) {
+            CategoryEntity entity = Converter.toCategoryEntity(category);;
+            if (CategoriesDB.update(entity) != null) {
                 return UPDATE_OK;
             }
             return UPDATE_FAILURE;
@@ -77,7 +78,7 @@ public class CategoryHandler {
 
     public static List<Category> getCategories() {
         try {
-            return Converter.toModel(CategoriesDB.findAll());
+            return Converter.toCategories(CategoriesDB.findAll());
         } catch (Exception e) {
             e.printStackTrace();
             return null;

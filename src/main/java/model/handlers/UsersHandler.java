@@ -1,7 +1,14 @@
 package model.handlers;
 
+import model.Converter;
+import model.handlers.exceptions.LoginException;
+import model.handlers.exceptions.RegisterException;
 import model.repository.DAO.UsersDB;
 import model.repository.entities.UserEntity;
+import view.viewmodels.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class UsersHandler {
 
@@ -10,50 +17,55 @@ public class UsersHandler {
     public static final int NO_PASSWORD             = 2;
     public static final int LOGIN_SUCCESS           = 3;
     public static final int LOGIN_FAILURE           = 4;
-    public static final int LOGIN_EXCEPTION         = 5;
     public static final int NO_PASSWORD_MATCH       = 6;
     public static final int REGISTRATION_SUCCESS    = 7;
     public static final int REGISTRATION_FAILURE    = 8;
-    public static final int REGISTRATION_EXCEPTION  = 9;
+    public static final int EXCEPTION               = 9;
 
-    public static int login(String username, String password) {
+    public static User login(String username, String password) throws Exception {
         if (username == null || username.length() == 0)
-            return NO_USERNAME;
+            throw new LoginException(NO_USERNAME);
         else if (password == null || password.length() == 0)
-            return NO_PASSWORD;
-        try {
-            UserEntity user = UsersDB.getUserByCredentials(username, password);
-            if (user != null) {
-                return LOGIN_SUCCESS;
-            }
-            return LOGIN_FAILURE;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return LOGIN_EXCEPTION;
+            throw new LoginException(NO_PASSWORD);
+        UserEntity user = UsersDB.findUserByCredentials(username, password);
+        if (user != null) {
+            return Converter.toUser(user);
         }
+        throw new LoginException(LOGIN_FAILURE);
     }
 
-    public static int register(String username, String password, String password1) {
+    public static User register(String username, String password, String password1) throws Exception {
         if (username == null || username.length() == 0)
-            return NO_USERNAME;
+            throw new RegisterException(NO_USERNAME);
         if (password == null || password.length() == 0 || password1 == null || password1.length() == 0)
-            return NO_PASSWORD;
+            throw new RegisterException(NO_PASSWORD);
         if (!password.equals(password1))
-            return NO_PASSWORD_MATCH;
-        try {
-            boolean result = UsersDB.insert(new UserEntity(username, password));
-            if (result) {
-                return REGISTRATION_SUCCESS;
-            }
-            return REGISTRATION_FAILURE;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return REGISTRATION_EXCEPTION;
-        }
+            throw new RegisterException(NO_PASSWORD_MATCH);
+        // New User
+        UserEntity newUser = new UserEntity(username, password);
+        newUser.addAccess("Admin");
+        newUser.addAccess("Customer");
+        newUser.addAccess("Worker");
+        UserEntity user = (UserEntity) UsersDB.insert(newUser);
+        if (user == null)
+            throw new RegisterException(REGISTRATION_FAILURE);
+        return Converter.toUser(user);
     }
 
     public static void logout() {
+        // Do Nothing
+    }
 
-    } // Do Nothing
+    public static User getUserById(int id) {
+        return null;
+    }
+
+    public static List<User> getUsers() {
+        try {
+            return Converter.toUsers(UsersDB.findAll());
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+    }
 
 }

@@ -18,11 +18,11 @@ public class CategoryEntity  implements EntityInt {
     @Column(name = "category_id", unique = true)
     public int id;
 
-    @Column(name = "name", nullable = false, unique = true)
-    public String name;
-
     @Version
     public int version;
+
+    @Column(name = "name", nullable = false, unique = true)
+    public String name;
 
     /*
     @ManyToMany(cascade = { CascadeType.ALL })
@@ -44,15 +44,42 @@ public class CategoryEntity  implements EntityInt {
     }
 
     @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public int getVersion() {
+        return version;
+    }
+
+    @Override
+    public void transferTo(EntityInt toEntity) {
+        CategoryEntity dest = (CategoryEntity) toEntity;
+        dest.name = this.name;
+    }
+
+    @Override
     public Query createVerifyIsUniqueQuery(EntityManager em) {
         return em.createNamedQuery("Category.findByName")
                 .setParameter("name", name);
     }
 
     @Override
+    public Query createFindByIdQuery(EntityManager em) {
+        return em.createNamedQuery("Category.findById")
+                .setParameter("id", id);
+    }
+
+    public Query createFindAll(EntityManager em) {
+        return em.createNamedQuery("Category.findAll");
+    }
+
+    @Override
     public String toString() {
         return "CategoryEntity{" +
                 "id=" + id +
+                ", version=" + version +
                 ", name='" + name + '\'' +
                 ", items=" + items +
                 '}';

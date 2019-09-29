@@ -9,9 +9,9 @@ import javax.persistence.Query;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class UsersDB extends AbstractDB {
+public class UsersDB extends BasicDBO {
 
-    public static UserEntity getUserByCredentials(String username, String password) throws Exception {
+    public static UserEntity findUserByCredentials(String username, String password) throws Exception {
         EntityManagerFactory factory = getEntityManagerFactory();
         EntityManager em = factory.createEntityManager();
         try {
@@ -31,6 +31,22 @@ public class UsersDB extends AbstractDB {
             throw new Exception(e);
         } finally {
             em.close();
+        }
+    }
+
+    public static List<UserEntity> findAll() throws Exception{
+        EntityManagerFactory factory = getEntityManagerFactory();
+        EntityManager em = factory.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            UserEntity entity = new UserEntity();
+            Query query = entity.createFindAll(em);
+            List<UserEntity> resultList = query.getResultList();
+            em.getTransaction().commit();
+            return resultList;
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw new Exception(e);
         }
     }
 

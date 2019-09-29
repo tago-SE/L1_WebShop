@@ -13,4 +13,28 @@
 <body>
     Users page
 </body>
+            <!-- <input type="checkbox" name="selected" value="${student.studentID}">
+                <select name="access rights">
+                    <option value="">Admin</option>
+                    <option value="">User</option>
+                    <option value="">Employee</option>
+                </select>
+                -->
+    <table>
+        <tr>
+            <td>
+                Customer
+                <input type="checkbox" name="s1" value="1">
+            </td>
+            <td>
+                Employee
+                <input type="checkbox" name="s2">
+            </td>
+            <td>
+                Admin
+                <input type="checkbox" name="s3" value="2" checked='checked'>
+            </td>
+        </tr>
+    </table>
+
 </html>
