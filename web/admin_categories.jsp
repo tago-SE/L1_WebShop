@@ -69,6 +69,7 @@
                                 <form method="post" action="Items">
                                     <input type="hidden" name=<%= Commands.COMMAND%> value=<%= Commands.CATEGORY_UPDATE_COMMAND%>>
                                     <input type="hidden" name=<%= Commands.CATEGORY_ID_ARG%> value=<%= category.getId()%>>
+                                    <input type="hidden" name=<%= Commands.CATEGORY_NAME_ARG%> value=<%= category.getName()%>>
                                     <td>
                                         <input type="text" name=<%= Commands.CATEGORY_NAME_ARG%> value=<%= category.getName()%>>
                                     </td>
@@ -80,6 +81,7 @@
                                 <form method="post" action="Items">
                                     <input type="hidden" name=<%= Commands.COMMAND%> value=<%= Commands.CATEGORY_DELETE_COMMAND%>>
                                     <input type="hidden" name=<%= Commands.CATEGORY_ID_ARG%> value=<%= category.getId()%>>
+                                    <input type="hidden" name=<%= Commands.CATEGORY_NAME_ARG%> value=<%= category.getName()%>>
                                     <td>
                                         <input type="submit" value="delete">
                                     </td>

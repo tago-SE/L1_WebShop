@@ -1,7 +1,7 @@
 package model.repository.entities;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.util.*;
 
 @Entity
 @Table(name = "Categories")
@@ -15,14 +15,25 @@ public class CategoryEntity  implements EntityInt {
 
     @Id
     @GeneratedValue(generator = "incrementor")
-    @Column(name = "id", unique = true)
+    @Column(name = "category_id", unique = true)
     public int id;
 
     @Column(name = "name", nullable = false, unique = true)
     public String name;
 
     @Column(name = "ts")
-    public Date timestamp;  // last modified
+    public Date timestamp;
+
+    /*
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "Category_Item",
+            joinColumns = { @JoinColumn(name = "category_id") },
+            inverseJoinColumns = { @JoinColumn(name = "item_id") }
+    )
+    */
+    @Transient
+    public List<ItemEntity> items = new ArrayList<>();
 
     public CategoryEntity() {
         this.timestamp = new Date();
@@ -34,13 +45,9 @@ public class CategoryEntity  implements EntityInt {
     }
 
     @Override
-    public int getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(int id) {
-        this.id = id;
+    public Query createVerifyIsUniqueQuery(EntityManager em) {
+        return em.createNamedQuery("Category.findByName")
+                .setParameter("name", name);
     }
 
     @Override
@@ -49,6 +56,7 @@ public class CategoryEntity  implements EntityInt {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", timestamp=" + timestamp +
+                ", items=" + items +
                 '}';
     }
 }

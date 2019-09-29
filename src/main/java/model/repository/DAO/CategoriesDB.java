@@ -14,6 +14,7 @@ public class CategoriesDB extends AbstractDB {
     private static final String QUERY_FIND_BY_ID = "Category.findById";
     private static final String QUERY_DELETE_BY_ID = "Category.deleteById";
 
+    /*
     public static boolean insert(CategoryEntity entity) throws Exception {
         EntityManagerFactory factory = getEntityManagerFactory();
         EntityManager em = factory.createEntityManager();
@@ -30,13 +31,13 @@ public class CategoriesDB extends AbstractDB {
             em.getTransaction().commit();
             return false;
         } catch (Exception e) {
-            e.printStackTrace();
             em.getTransaction().rollback();
             throw new Exception(e);
         } finally {
             em.close();
         }
     }
+    */
 
     public static boolean update(CategoryEntity updateEntity, Date sessionTimestamp) throws Exception {
         EntityManagerFactory factory = getEntityManagerFactory();
@@ -59,12 +60,12 @@ public class CategoriesDB extends AbstractDB {
             }
             throw new IllegalStateException(CategoryEntity.class.getName() + " no longer exists.");
         } catch (Exception e) {
-            e.printStackTrace();
             em.getTransaction().rollback();
             throw new Exception(e);
         }
     }
 
+    /*
     public static boolean delete(int id)  throws Exception {
         EntityManagerFactory factory = getEntityManagerFactory();
         EntityManager em = factory.createEntityManager();
@@ -74,7 +75,6 @@ public class CategoriesDB extends AbstractDB {
             em.getTransaction().commit();
             return result == 1; // success
         } catch (Exception e) {
-            e.printStackTrace();
             em.getTransaction().rollback();
             throw new Exception(e);
         } finally {
@@ -82,6 +82,7 @@ public class CategoriesDB extends AbstractDB {
         }
     }
 
+     */
 
     public static List<CategoryEntity> findAll() throws Exception {
         EntityManagerFactory factory = getEntityManagerFactory();

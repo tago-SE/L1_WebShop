@@ -5,12 +5,11 @@ import model.repository.entities.UserEntity;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
 import java.util.List;
 import java.util.logging.Logger;
 
 public class UsersDB extends AbstractDB {
-
-    private static final Logger LOGGER = Logger.getLogger(UsersDB.class.getName());
 
     public static UserEntity getUserByCredentials(String username, String password) throws Exception {
         EntityManagerFactory factory = getEntityManagerFactory();
@@ -28,7 +27,6 @@ public class UsersDB extends AbstractDB {
                 return null;
             throw new IllegalStateException("Found {" + resultList.size() + "} matching credentials.");
         } catch (Exception e) {
-            e.printStackTrace();
             em.getTransaction().rollback();
             throw new Exception(e);
         } finally {
@@ -36,16 +34,16 @@ public class UsersDB extends AbstractDB {
         }
     }
 
+    /*
     public static boolean insert(EntityInt entity) throws Exception {
         EntityManagerFactory factory = getEntityManagerFactory();
         EntityManager em = factory.createEntityManager();
         UserEntity newUser = (UserEntity) entity;
-        System.out.println("INSERT USER");
         try {
             em.getTransaction().begin();
-            List<UserEntity> users = (List<UserEntity>) em.createNamedQuery("User.findByName")
-                    .setParameter("name", newUser.name)
-                    .getResultList();
+
+            Query query = newUser.createVerifyIsUniqueQuery(em);
+            List<UserEntity> users = (List<UserEntity>) query.getResultList();
             if (users.size() == 0) {
                 em.persist(newUser);
             } else {
@@ -54,12 +52,12 @@ public class UsersDB extends AbstractDB {
             em.getTransaction().commit();
             return newUser != null;
         } catch (Exception e) {
-            e.printStackTrace();
             em.getTransaction().rollback();
             throw new Exception(e);
         } finally {
             em.close();
         }
     }
+    */
 
 }

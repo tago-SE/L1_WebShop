@@ -50,7 +50,6 @@ public class AccessList {
             accessHashMap.put(key, accessList);
         }
         for (String a: roles) {
-            System.out.println("R: " + a);
             if (!accessList.contains(a))
                 accessList.add(a);
         }

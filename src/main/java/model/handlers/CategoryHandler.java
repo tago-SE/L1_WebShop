@@ -40,6 +40,7 @@ public class CategoryHandler {
             }
             return INSERT_FAILURE;
         } catch (Exception e) {
+            e.printStackTrace();
             return EXCEPTION;
         }
     }
@@ -56,19 +57,23 @@ public class CategoryHandler {
                 }
             return UPDATE_FAILURE;
         } catch (Exception e) {
+            e.printStackTrace();
             return EXCEPTION;
         }
     }
 
-    public static int deleteCategory(int id, String... access) {
+    public static int deleteCategory(String categoryName, String... access) {
         if (!AccessList.validateAccess(CategoryHandler.class, access))
             return ACCESS_DENIED;
         try {
-            if (CategoriesDB.delete(id)) {
+            CategoryEntity toDelete = new CategoryEntity();
+            toDelete.name = categoryName;
+            if (CategoriesDB.delete(toDelete)) {
                 return DELETE_OK;
             }
             return DELETE_FAILURE;
         } catch (Exception e) {
+            e.printStackTrace();
             return EXCEPTION;
         }
     }

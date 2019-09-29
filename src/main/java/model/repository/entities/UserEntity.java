@@ -1,6 +1,7 @@
 package model.repository.entities;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "Users")
@@ -15,7 +16,7 @@ public class UserEntity implements EntityInt {
 
     @Id
     @GeneratedValue(generator = "incrementor")
-    @Column(name = "id", unique = true)
+    @Column(name = "user_id", unique = true)
     public int id;
 
     @Column(name = "name", nullable = false, unique = true)
@@ -33,13 +34,8 @@ public class UserEntity implements EntityInt {
     }
 
     @Override
-    public int getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(int id) {
-        this.id = id;
+    public Query createVerifyIsUniqueQuery(EntityManager em) {
+        return em.createNamedQuery("User.findByName").setParameter("name", name);
     }
 
     @Override

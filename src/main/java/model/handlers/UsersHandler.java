@@ -47,6 +47,7 @@ public class UsersHandler {
             }
             return REGISTRATION_FAILURE;
         } catch (Exception e) {
+            e.printStackTrace();
             return REGISTRATION_EXCEPTION;
         }
     }

@@ -1,6 +1,8 @@
 package model.repository.entities;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Items")
@@ -8,7 +10,7 @@ public class ItemEntity implements EntityInt {
 
     @Id
     @GeneratedValue(generator = "incrementor")
-    @Column(name = "id", unique = true)
+    @Column(name = "item_id", unique = true)
     public int id;
 
     @Column(name = "name", unique = true, nullable = false)
@@ -20,19 +22,14 @@ public class ItemEntity implements EntityInt {
     @Column(name = "quantity", nullable = false)
     public Integer quantity;
 
-    @Column(name = "category")
-    public String category;
+    //@ManyToMany(mappedBy = "items")
+    @Transient
+    public List<CategoryEntity> categories = new ArrayList<>();
 
     @Override
-    public int getId() {
-        return id;
+    public Query createVerifyIsUniqueQuery(EntityManager em) {
+        return null;
     }
-
-    @Override
-    public void setId(int id) {
-        this.id = id;
-    }
-
 
     @Override
     public String toString() {
@@ -41,8 +38,7 @@ public class ItemEntity implements EntityInt {
                 ", name='" + name + '\'' +
                 ", price=" + price +
                 ", quantity=" + quantity +
-                ", category='" + category + '\'' +
+                ", categories=" + categories +
                 '}';
     }
-
 }

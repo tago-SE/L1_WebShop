@@ -4,27 +4,29 @@
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
              http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
 
-    <persistence-unit name="org.hibernate.lab1_web_shop.jpa"  transaction-type="RESOURCE_LOCAL">
-        <properties>
-            <property name="hibernate.connection.driver_class" value="com.mysql.cj.jdbc.Driver"/>
-            <property name="hibernate.connection.url" value="jdbc:mysql://192.168.99.100:32769/DB_WEB_SHOP"/>
-            <property name="hibernate.connection.autocommit" value="false"/>
-            <property name="hibernate.connection.username" value="remoteuser"/>
-            <property name="hibernate.connection.password" value="remotepassword"/>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
-            <property name="hibernate.connection.CharSet" value="utf8"/>
-            <property name="hibernate.connection.characterEncoding" value="utf8"/>
-            <property name="hibernate.connection.useUnicode" value="true"/>
-            <property name="hibernate.show_sql" value="true"/>
-            <property name="hibernate.hbm2ddl.auto" value="update"/>
-            <!-- use encache provider-->
-            <!--<property name="hibernate.cache.region.factory_class"-->
-            <!--value="org.hibernate.cache.ehcache.EhCacheRegionFactory"/>-->
-            <!--<property name="hibernate.javax.cache.provider" value="org.ehcache.jsr107.EhcacheCachingProvider"/>-->
-            <!--&lt;!&ndash;use second level cache&ndash;&gt;-->
-            <!--<property name="hibernate.cache.use_second_level_cache" value="true"/>-->
-            <!--&lt;!&ndash;use 3rd level cache&ndash;&gt;-->
-            <!--<property name="hibernate.cache.use_query_cache" value="true"/>-->
-        </properties>
-    </persistence-unit>
+<persistence-unit name="org.hibernate.lab1_web_shop.jpa"  transaction-type="RESOURCE_LOCAL">
+    <properties>
+        <property name="hibernate.connection.driver_class" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="hibernate.connection.url" value="jdbc:mysql://192.168.99.100:32774/DB_WEB_SHOP"/>
+        <property name="hibernate.connection.autocommit" value="false"/>
+        <property name="hibernate.connection.username" value="remoteuser"/>
+        <property name="hibernate.connection.password" value="remotepassword"/>
+        <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
+        <property name="hibernate.connection.CharSet" value="utf8"/>
+        <property name="hibernate.connection.characterEncoding" value="utf8"/>
+        <property name="hibernate.connection.useUnicode" value="true"/>
+        <property name="hibernate.show_sql" value="true"/>
+        <property name="hibernate.hbm2ddl.auto" value="update"/>
+        <!-- Scan for annotated classes and Hibernate mapping XML files -->
+        <property name="hibernate.archive.autodetection" value="class, hbm"/>
+        <!-- use encache provider-->
+        <!--<property name="hibernate.cache.region.factory_class"-->
+        <!--value="org.hibernate.cache.ehcache.EhCacheRegionFactory"/>-->
+        <!--<property name="hibernate.javax.cache.provider" value="org.ehcache.jsr107.EhcacheCachingProvider"/>-->
+        <!--&lt;!&ndash;use second level cache&ndash;&gt;-->
+        <!--<property name="hibernate.cache.use_second_level_cache" value="true"/>-->
+        <!--&lt;!&ndash;use 3rd level cache&ndash;&gt;-->
+        <!--<property name="hibernate.cache.use_query_cache" value="true"/>-->
+    </properties>
+</persistence-unit>
 </persistence>

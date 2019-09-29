@@ -15,12 +15,8 @@ public class PurchaseEntity implements EntityInt {
     public int amount;
 
     @Override
-    public int getId() {
-        return id;
+    public Query createVerifyIsUniqueQuery(EntityManager em) {
+        return null;
     }
 
-    @Override
-    public void setId(int id) {
-        this.id = id;
-    }
 }

@@ -62,12 +62,13 @@ public class ItemsServlet extends HttpServlet {
 
     private void doDeleteCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String paramId = request.getParameter(Commands.CATEGORY_ID_ARG);
+        String paramName = request.getParameter(Commands.CATEGORY_NAME_ARG);
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute(Commands.CURR_USER_ARG);
         String access = user.getRole();
-        if (paramId != null && paramId.length() > 0) {
-            int id = Integer.parseInt(paramId);
-            switch (CategoryHandler.deleteCategory(id, access)) {
+        if (paramName != null && paramName.length() > 0) {
+            System.out.println("Servlet want to delete: " + paramName);
+            switch (CategoryHandler.deleteCategory(paramName, access)) {
                 case CategoryHandler.DELETE_OK:
                 case CategoryHandler.DELETE_FAILURE:
                 case CategoryHandler.ACCESS_DENIED:
