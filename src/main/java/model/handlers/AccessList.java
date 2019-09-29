@@ -3,10 +3,8 @@ package model.handlers;
 import view.viewmodels.Category;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * This class is used to provide protection to certain classes by matching access roles to class names.

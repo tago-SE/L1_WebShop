@@ -27,10 +27,25 @@
     else
     {
     %>
+        <form method="post" action="Users">
+            <input type="hidden" name=<%= Commands.COMMAND%> value=<%= Commands.LOGOUT_COMMAND%>>
+            <input type="submit" value="logout">
+        </form>
 
         Welcome [<%= user.getRole() %>] <%= user.getName() %>
 
-        </br>
+        <%
+            if (user.getRole() != null && user.getRole().equals("Admin"))
+            {
+                %>
+                <h3>Admin Control</h3>
+                    <a href = "admin_categories.jsp">Categories</a><br>
+                    <a href = "admin_items.jsp">Items</a><br>
+                    <a href = "admin_users.jsp">Users</a><br>
+                <%
+            }
+        %>
+
         </br>
         <table>
             <TR>
@@ -51,11 +66,6 @@
         </table>
         </br>
         </br>
-        <form method="post" action="Users">
-            <input type="hidden" name=<%= Commands.COMMAND%> value=<%= Commands.LOGOUT_COMMAND%>>
-            <input type="submit" value="logout">
-        </form>
-
     <%
     }
     %>
