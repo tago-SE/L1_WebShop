@@ -45,16 +45,13 @@ public class CategoryHandler {
         }
     }
 
-    public static int updateCategoryName(int id, String name, Date sessionTimestamp, String... access) {
+    public static int updateCategory(Category category, String... access) {
         if (!AccessList.validateAccess(CategoryHandler.class, access))
             return ACCESS_DENIED;
-
-        CategoryEntity toUpdate = new CategoryEntity(name);
-        toUpdate.id = id;
-            try {
-                if (CategoriesDB.update(toUpdate, sessionTimestamp)) {
-                    return UPDATE_OK;
-                }
+        try {
+            if (CategoriesDB.update(Converter.toEntity(category))) {
+                return UPDATE_OK;
+            }
             return UPDATE_FAILURE;
         } catch (Exception e) {
             e.printStackTrace();

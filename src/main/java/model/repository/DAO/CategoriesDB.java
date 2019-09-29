@@ -39,32 +39,6 @@ public class CategoriesDB extends AbstractDB {
     }
     */
 
-    public static boolean update(CategoryEntity updateEntity, Date sessionTimestamp) throws Exception {
-        EntityManagerFactory factory = getEntityManagerFactory();
-        EntityManager em = factory.createEntityManager();
-        try {
-            em.getTransaction().begin();
-            List<CategoryEntity> resultList =
-                    em.createNamedQuery(QUERY_FIND_BY_ID).setParameter("id", updateEntity.id).getResultList();
-            if (resultList.size() == 1) {
-                CategoryEntity persistentEntity = resultList.get(0);
-                // Verify timestamp of the persistent entity is older than the session timestamp
-                if (sessionTimestamp.after(persistentEntity.timestamp)) {
-                    persistentEntity.timestamp = updateEntity.timestamp;
-                    persistentEntity.name = updateEntity.name;
-                    em.getTransaction().commit();
-                    return true;
-                }
-                em.getTransaction().rollback();
-                return false;
-            }
-            throw new IllegalStateException(CategoryEntity.class.getName() + " no longer exists.");
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            throw new Exception(e);
-        }
-    }
-
     /*
     public static boolean delete(int id)  throws Exception {
         EntityManagerFactory factory = getEntityManagerFactory();
@@ -98,4 +72,28 @@ public class CategoriesDB extends AbstractDB {
         }
     }
 
+    public static boolean update(CategoryEntity entity) throws Exception {
+        EntityManagerFactory factory = getEntityManagerFactory();
+        EntityManager em = factory.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            List<CategoryEntity> resultList =
+                    em.createNamedQuery(QUERY_FIND_BY_ID).setParameter("id", entity.id).getResultList();
+            if (resultList.size() == 1) {
+                CategoryEntity persistentEntity = resultList.get(0);
+                // Verify timestamp of the persistent entity is older than the session timestamp
+               if (entity.version == persistentEntity.version) {
+                    persistentEntity.name = entity.name;
+                    em.getTransaction().commit();
+                    return true;
+                }
+                em.getTransaction().rollback();
+                return false;
+            }
+            throw new IllegalStateException(CategoryEntity.class.getName() + " no longer exists.");
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw new Exception(e);
+        }
+    }
 }

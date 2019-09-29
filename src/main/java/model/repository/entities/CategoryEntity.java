@@ -21,8 +21,8 @@ public class CategoryEntity  implements EntityInt {
     @Column(name = "name", nullable = false, unique = true)
     public String name;
 
-    @Column(name = "ts")
-    public Date timestamp;
+    @Version
+    public int version;
 
     /*
     @ManyToMany(cascade = { CascadeType.ALL })
@@ -36,12 +36,11 @@ public class CategoryEntity  implements EntityInt {
     public List<ItemEntity> items = new ArrayList<>();
 
     public CategoryEntity() {
-        this.timestamp = new Date();
+
     }
 
     public CategoryEntity(String name) {
         this.name = name;
-        this.timestamp = new Date();
     }
 
     @Override
@@ -55,7 +54,6 @@ public class CategoryEntity  implements EntityInt {
         return "CategoryEntity{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", timestamp=" + timestamp +
                 ", items=" + items +
                 '}';
     }

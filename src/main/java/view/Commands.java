@@ -21,10 +21,12 @@ public class Commands {
     public static final String ERROR_RESPONSE_COMMAND       = "errorResponse";
 
     // Arguments
+    public static final String CATEGORY_VERSION_ARG         = "cat_ver";
     public static final String CATEGORY_TS_ARG              = "cat_ts";
     public static final String CATEGORY_ID_ARG              = "cat_id";
     public static final String CATEGORY_LIST_ARG            = "categories";
     public static final String CATEGORY_NAME_ARG            = "cat_name";
+    public static final String CATEGORY_NEW_NAME_ARG        = "cat_new_name";
     public static final String CURR_USER_ARG                = "curr_user";
     public static final String USER_NAME_ARG                = "username";
     public static final String USER_PASS_ARG                = "password";

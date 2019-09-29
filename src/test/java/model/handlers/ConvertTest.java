@@ -15,7 +15,6 @@ public class ConvertTest {
     public void toModel() {
         CategoryEntity ce = new CategoryEntity();
         ce.id = 1;
-        ce.timestamp = new Date();
         ce.name = "Hello";
         Category c = Converter.toModel(ce);
         assertEquals("Hello", c.getName());

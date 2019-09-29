@@ -33,6 +33,7 @@ public class CategoriesDBTest {
 
     @Test
     public void delete() throws Exception {
+
         String name0 = "" + Math.random();
         CategoryEntity category = new CategoryEntity(name0);
         List<CategoryEntity> resultList = CategoriesDB.findAll();

@@ -70,8 +70,9 @@
                                     <input type="hidden" name=<%= Commands.COMMAND%> value=<%= Commands.CATEGORY_UPDATE_COMMAND%>>
                                     <input type="hidden" name=<%= Commands.CATEGORY_ID_ARG%> value=<%= category.getId()%>>
                                     <input type="hidden" name=<%= Commands.CATEGORY_NAME_ARG%> value=<%= category.getName()%>>
+                                    <input type="hidden" name=<%= Commands.CATEGORY_VERSION_ARG%> value=<%= category.getVersion()%>>
                                     <td>
-                                        <input type="text" name=<%= Commands.CATEGORY_NAME_ARG%> value=<%= category.getName()%>>
+                                        <input type="text" name=<%= Commands.CATEGORY_NEW_NAME_ARG%> value=<%= category.getName()%>>
                                     </td>
                                     <td>
                                         <input type="submit" value="update">

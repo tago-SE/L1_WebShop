@@ -3,6 +3,7 @@ package view.controllers;
 import model.handlers.CategoryHandler;
 import model.handlers.UsersHandler;
 import view.Commands;
+import view.viewmodels.Category;
 import view.viewmodels.User;
 
 import javax.servlet.ServletException;
@@ -83,18 +84,21 @@ public class ItemsServlet extends HttpServlet {
     private void doUpdateCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String paramId = request.getParameter(Commands.CATEGORY_ID_ARG);
         String paramName = request.getParameter(Commands.CATEGORY_NAME_ARG);
-        if (paramId != null && paramId.length() > 0 && paramName != null && paramName.length() > 0) {
+        String paramVersion =  request.getParameter(Commands.CATEGORY_VERSION_ARG);
+        String paramNewName = request.getParameter(Commands.CATEGORY_NEW_NAME_ARG);
+        if (paramId != null && paramId.length() > 0 && paramName != null && paramName.length() > 0 && paramVersion != null && paramVersion.length() > 0) {
+            Category category = new Category(Integer.parseInt(paramId), paramNewName, Integer.parseInt(paramVersion));
             int id = Integer.parseInt(paramId);
             HttpSession session = request.getSession();
             Date date = (Date) session.getAttribute(Commands.CATEGORY_TS_ARG);
             User user = (User) session.getAttribute(Commands.CURR_USER_ARG);
             String access = user.getRole();
-            switch (CategoryHandler.updateCategoryName(id, paramName, date, access)) {
+            //switch (CategoryHandler.updateCategoryName(id, paramName, date, access)) {
+            switch (CategoryHandler.updateCategory(category, access)) {
                 case CategoryHandler.UPDATE_FAILURE:
                 case CategoryHandler.UPDATE_OK:
                 case CategoryHandler.ACCESS_DENIED:
                 default:
-                    // TODO: Currently updates, failed updates and exceptions all lead to the page being reloaded.
                     doReloadPage(request, response);
             }
         }
