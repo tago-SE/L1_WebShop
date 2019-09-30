@@ -1,11 +1,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="view.Commands" %>
 <%@ page import="view.viewmodels.Category" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="view.viewmodels.User" %>
-<%@ page import="model.handlers.CategoryHandler" %>
 <%@ page import="java.util.List" %>
-<%@ page import="view.controllers.ItemsServlet" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
@@ -41,13 +38,13 @@
         else {
 %>
             <!-- Refresh Categories -->
-            <form method="post" action="Items">
+            <form method="post" action="Categories">
                 <input type="hidden" name=<%=Commands.COMMAND%> value=<%=Commands.CMD_CATEGORY_GET_ALL%>>
                 <input type="submit" value="Refresh">
             </form>
 
             <h1>New Category</h1>
-            <form method="post" action="Items">
+            <form method="post" action="Categories">
                 <input type="hidden" name=<%= Commands.COMMAND%> value=<%= Commands.CMD_INSERT_CATEGORY%>>
                 <input type="text" name=<%= Commands.CATEGORY_NAME_ARG%>>
                 <input type="submit" value="insert">
@@ -62,25 +59,25 @@
                 <th>Operators</th>
 
                 <%
-                    List<Category> categories = (List<Category>) session.getAttribute(Commands.ARG_ALL_CATEGORIES);
+                    List<Category> categories = (List<Category>) session.getAttribute(Commands.CATEGORIES_ARG);
                     if (categories != null) for (Category category : categories) {
                         %>
                             <tr>
                                 <td> <%= category.getId() %> </td>
                                 <td> <%= category.getName() %> </td>
-                                <form method="post" action="Items">
+                                <form method="post" action="Categories">
                                     <input type="hidden" name=<%= Commands.COMMAND%> value=<%= Commands.CMD_UPDATE_CATEGORY%>>
                                     <input type="hidden" name=<%= Commands.CATEGORY_ID_ARG%> value=<%= category.getId()%>>
                                     <input type="hidden" name=<%= Commands.CATEGORY_NAME_ARG%> value=<%= category.getName()%>>
                                     <input type="hidden" name=<%= Commands.CATEGORY_VERSION_ARG%> value=<%= category.getVersion()%>>
                                     <td>
-                                        <input type="text" name=<%= Commands.CATEGORY_NEW_NAME_ARG%> value=<%= category.getName()%>>
+                                        <input type="text" name=<%= Commands.CATEGORY_NEW_NAME_ARG%> >
                                     </td>
                                     <td>
                                         <input type="submit" value="update">
                                     </td>
                                 </form>
-                                <form method="post" action="Items">
+                                <form method="post" action="Categories">
                                     <input type="hidden" name=<%= Commands.COMMAND%> value=<%= Commands.CMD_DELETE_CATEGORY%>>
                                     <input type="hidden" name=<%= Commands.CATEGORY_ID_ARG%> value=<%= category.getId()%>>
                                     <input type="hidden" name=<%= Commands.CATEGORY_NAME_ARG%> value=<%= category.getName()%>>

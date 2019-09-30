@@ -21,7 +21,6 @@
         if (editUser != null)
         {
         %>
-
             Editing User: <%= editUser.getName() %>
 
         <%
@@ -35,23 +34,5 @@
 
 
 
-<!--
-<table>
-    <tr>
-        <td>
-            Customer
-            <input type="checkbox" name="s1" value="1">
-        </td>
-        <td>
-            Employee
-            <input type="checkbox" name="s2">
-        </td>
-        <td>
-            Admin
-            <input type="checkbox" name="s3" value="2" checked='checked'>
-        </td>
-    </tr>
-</table>
--->
 </body>
 </html>

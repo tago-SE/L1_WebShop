@@ -72,6 +72,7 @@
                 <%
                         }
                 %>
+                <div style="color: #FF0000;">${errorResponse}</div><br>
             </table>
 <%
         }

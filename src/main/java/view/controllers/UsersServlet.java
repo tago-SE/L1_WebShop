@@ -16,6 +16,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
+import static view.Commands.*;
+import static view.Pages.*;
+
 @WebServlet(name = "Users")
 public class UsersServlet extends HttpServlet {
 
@@ -28,12 +31,13 @@ public class UsersServlet extends HttpServlet {
     private static final String REG_EXCEPTION_MSG       = "Unknown exception raised.";
     private static final String ILLEGAL_ACCESS_MSG      = "Unauthorized Access.";
     private static final String UNKNOWN_EXCEPTION_MSG   = "Unknown exception raised";
+    private static final String CANNOT_DELETE_SELF      = "Cannot delete yourself";
 
     private void errorResponse(HttpServletRequest request,
                                  HttpServletResponse response,
                                  String msg,
                                  String redirect) throws ServletException, IOException {
-        request.setAttribute("errorResponse", msg);
+        request.setAttribute(ERR_RESPONSE, msg);
         request.getRequestDispatcher(redirect).forward(request, response);
     }
 
@@ -42,16 +46,16 @@ public class UsersServlet extends HttpServlet {
                                 User user) throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-        session.setAttribute(Commands.USER_NAME_ARG, user.getName());
-        session.setAttribute(Commands.ARG_CURR_USER, user);
+        session.setAttribute(USER_NAME_ARG, user.getName());
+        session.setAttribute(ARG_CURR_USER, user);
 
-        response.sendRedirect("home.jsp");
+        response.sendRedirect(HOME_JSP);
 
     }
 
     private void doLogin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String username = request.getParameter(Commands.USER_NAME_ARG);
-        String password = request.getParameter(Commands.USER_PASS_ARG);
+        String username = request.getParameter(USER_NAME_ARG);
+        String password = request.getParameter(USER_PASS_ARG);
         int result = -1;
         User user = null;
         try {
@@ -69,34 +73,34 @@ public class UsersServlet extends HttpServlet {
         }
         switch (result) {
             case UsersHandler.NO_PASSWORD:
-                errorResponse(request, response, NO_PASSWORD_MSG, "login.jsp");
+                errorResponse(request, response, NO_PASSWORD_MSG, LOGIN_JSP);
                 break;
             case UsersHandler.NO_USERNAME:
-                errorResponse(request, response, NO_USERNAME_MSG, "login.jsp");
+                errorResponse(request, response, NO_USERNAME_MSG, LOGIN_JSP);
                 break;
             case UsersHandler.LOGIN_SUCCESS:
                 onLoginSuccess(request, response, user);
                 break;
             case UsersHandler.LOGIN_FAILURE:
-                errorResponse(request, response, LOGIN_FAILURE_MSG, "login.jsp");
+                errorResponse(request, response, LOGIN_FAILURE_MSG, LOGIN_JSP);
                 break;
             default:
-                errorResponse(request, response, LOGIN_EXCEPTION_MSG, "login.jsp");
+                errorResponse(request, response, LOGIN_EXCEPTION_MSG, LOGIN_JSP);
         }
     }
 
     private void doLogout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        session.removeAttribute(Commands.USER_NAME_ARG);
-        session.removeAttribute(Commands.ARG_CURR_USER);
+        session.removeAttribute(USER_NAME_ARG);
+        session.removeAttribute(ARG_CURR_USER);
         session.invalidate();
-        response.sendRedirect("login.jsp");
+        response.sendRedirect(LOGIN_JSP);
     }
 
     private void doRegister(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String username = request.getParameter(Commands.USER_NAME_ARG);
-        String password = request.getParameter(Commands.USER_PASS_ARG);
-        String password1 = request.getParameter(Commands.USER_PASS_1_ARG);
+        String username = request.getParameter(USER_NAME_ARG);
+        String password = request.getParameter(USER_PASS_ARG);
+        String password1 = request.getParameter(USER_PASS_1_ARG);
 
         int result = -1;
         User user = null;
@@ -115,75 +119,83 @@ public class UsersServlet extends HttpServlet {
         }
         switch (result) {
             case UsersHandler.NO_USERNAME:
-                errorResponse(request, response, NO_USERNAME_MSG, "register.jsp");
+                errorResponse(request, response, NO_USERNAME_MSG, REGISTER_JSP);
                 break;
             case UsersHandler.NO_PASSWORD:
-                errorResponse(request, response, NO_PASSWORD_MSG, "register.jsp");
+                errorResponse(request, response, NO_PASSWORD_MSG, REGISTER_JSP);
                 break;
             case UsersHandler.NO_PASSWORD_MATCH:
-                errorResponse(request, response, REG_PASSWORD_FAIL_MSG, "register.jsp");
+                errorResponse(request, response, REG_PASSWORD_FAIL_MSG, REGISTER_JSP);
                 break;
             case UsersHandler.REGISTRATION_SUCCESS:
                 onLoginSuccess(request, response, user);
                 break;
             case UsersHandler.REGISTRATION_FAILURE:
-                errorResponse(request, response, USERNAME_TAKEN_MSG, "register.jsp");
+                errorResponse(request, response, USERNAME_TAKEN_MSG, REGISTER_JSP);
                 break;
             default:
-                errorResponse(request, response, REG_EXCEPTION_MSG, "register.jsp");
+                errorResponse(request, response, REG_EXCEPTION_MSG, REGISTER_JSP);
         }
     }
 
-    private void getAllUsers(HttpSession session, HttpServletResponse response) throws ServletException, IOException {
-        User user = (User) session.getAttribute(Commands.ARG_CURR_USER);
+    private void adminGetAllUsers(HttpSession session, HttpServletResponse response) throws ServletException, IOException {
+        User user = (User) session.getAttribute(ARG_CURR_USER);
         List<User> users = UsersHandler.getAllUsers((List<String>) user.getAccessRoles());
-        session.setAttribute(Commands.ARG_ALL_USERS, users);
-        session.setAttribute(Commands.ARG_ACCESS_ROLES, UserRoles.asList());
-        response.sendRedirect((String) session.getAttribute(Commands.ARG_CURR_PAGE));
+        session.setAttribute(ARG_ALL_USERS, users);
+        session.setAttribute(ARG_ACCESS_ROLES, UserRoles.asList());
+        response.sendRedirect(ADMIN_USERS_JSP);
     }
 
     private void deleteUser(HttpSession session,  HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String paramId = request.getParameter(Commands.ARG_USER_ID);
+        String paramId = request.getParameter(ARG_USER_ID);
         if (paramId != null && paramId.length() > 0) {
             int id = Integer.parseInt(paramId);
-            User currUser = (User) session.getAttribute(Commands.ARG_CURR_USER);
-            switch (UsersHandler.deleteUser(id, (List<String>) currUser.getAccessRoles())) {
-                case UsersHandler.DELETE_OK:
-                case UsersHandler.DELETE_FAILURE:
-                case UsersHandler.ACCESS_DENIED:
-                default:
-                    getAllUsers(session, response);
+            User currUser = (User) session.getAttribute(ARG_CURR_USER);
+            String currPage = (String) session.getAttribute(ARG_CURR_PAGE);
+            if (currUser.getId() != id) {
+                switch (UsersHandler.deleteUser(id, (List<String>) currUser.getAccessRoles())) {
+                    case UsersHandler.ACCESS_DENIED:
+                        errorResponse(request, response, ILLEGAL_ACCESS_MSG, currPage);
+                        break;
+                    case UsersHandler.DELETE_OK:
+                    case UsersHandler.DELETE_FAILURE:
+                    default:
+                        adminGetAllUsers(session, response);
+                }
+            }
+            else {
+                errorResponse(request, response, CANNOT_DELETE_SELF, ADMIN_USERS_JSP);
             }
         }
     }
 
     private void gotoEditUser(HttpSession session,  HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String paramId = request.getParameter(Commands.ARG_USER_ID);
+        String paramId = request.getParameter(ARG_USER_ID);
         if (paramId != null && paramId.length() > 0) try {
-            User currUser = (User) session.getAttribute(Commands.ARG_CURR_USER);
+            User currUser = (User) session.getAttribute(ARG_CURR_USER);
             if (currUser != null && currUser.isAdmin()) {
                 User editUser = UsersHandler.getUserById(Integer.parseInt(paramId));
-                session.setAttribute(Commands.USER_TO_EDIT_ARG, editUser);
-                response.sendRedirect("admin_edit_user.jsp");
+                session.setAttribute(USER_TO_EDIT_ARG, editUser);
+                response.sendRedirect(ADMIN_EDIT_USER_JSP);
             } else {
-                errorResponse(request, response, ILLEGAL_ACCESS_MSG, "home.jsp");
+                errorResponse(request, response, ILLEGAL_ACCESS_MSG, HOME_JSP);
             }
         } catch (Exception e) {
-            getAllUsers(session, response);
+            errorResponse(request, response, UNKNOWN_EXCEPTION_MSG, ADMIN_USERS_JSP);
         }
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String command = Commands.translateRequestToCommand(request);
+        String command = translateRequestToCommand(request);
         HttpSession session = request.getSession();
         if (command != null && command.length() > 0) {
             switch (command) {
-                case Commands.LOGIN_COMMAND: doLogin(request, response); break;
-                case Commands.LOGOUT_COMMAND: doLogout(request, response); break;
-                case Commands.REGISTER_COMMAND: doRegister(request, response); break;
-                case Commands.CMD_USERS_GET_ALL: getAllUsers(session, response); break;
-                case Commands.CMD_DELETE_USER: deleteUser(session, request, response); break;
-                case Commands.CMD_GOTO_EDIT_USER: gotoEditUser(session, request, response); break;
+                case LOGIN_COMMAND: doLogin(request, response); break;
+                case LOGOUT_COMMAND: doLogout(request, response); break;
+                case REGISTER_COMMAND: doRegister(request, response); break;
+                case CMD_USERS_GET_ALL: adminGetAllUsers(session, response); break;
+                case CMD_DELETE_USER: deleteUser(session, request, response); break;
+                case CMD_GOTO_EDIT_USER: gotoEditUser(session, request, response); break;
                 default:
             }
         }

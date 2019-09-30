@@ -8,7 +8,7 @@ import model.repository.entities.CategoryEntity;
 import java.util.Arrays;
 import java.util.List;
 
-public class CategoryHandler {
+public class CategoriesHandler {
 
     // Authorized roles
     public static final String[] accessRoles = {"Admin", "Worker"};
@@ -58,13 +58,11 @@ public class CategoryHandler {
         }
     }
 
-    public static int deleteCategory(String categoryName, List<String> access) {
+    public static int deleteCategory(int id, List<String> access) {
         if (!accessControl.validateAccess(null, access))
             return ACCESS_DENIED;
         try {
-            CategoryEntity toDelete = new CategoryEntity();
-            toDelete.name = categoryName;
-            if (CategoriesDao.delete(toDelete)) {
+            if (CategoriesDao.delete(id)) {
                 return DELETE_OK;
             }
             return DELETE_FAILURE;

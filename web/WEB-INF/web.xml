@@ -13,6 +13,15 @@
         <servlet-name>Users</servlet-name>
         <url-pattern>/Users</url-pattern>
     </servlet-mapping>
+    <!-- Categories -->
+    <servlet>
+        <servlet-name>Categories</servlet-name>
+        <servlet-class>view.controllers.CategoriesServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Categories</servlet-name>
+        <url-pattern>/Categories</url-pattern>
+    </servlet-mapping>
     <!-- Items -->
     <servlet>
         <servlet-name>Items</servlet-name>
@@ -22,7 +31,6 @@
         <servlet-name>Items</servlet-name>
         <url-pattern>/Items</url-pattern>
     </servlet-mapping>
-
 
     <session-config>
         <session-timeout>
