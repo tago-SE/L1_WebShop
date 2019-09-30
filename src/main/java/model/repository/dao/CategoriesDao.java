@@ -1,11 +1,10 @@
-package model.repository.DAO;
+package model.repository.dao;
 
 import model.repository.entities.CategoryEntity;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
-import java.util.Date;
 import java.util.List;
 
 public class CategoriesDao extends BasicDao {

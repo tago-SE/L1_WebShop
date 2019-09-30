@@ -1,6 +1,5 @@
-package model.repository.DAO;
+package model.repository.dao;
 
-import model.repository.entities.EntityInt;
 import model.repository.entities.UserEntity;
 
 import javax.persistence.EntityManager;

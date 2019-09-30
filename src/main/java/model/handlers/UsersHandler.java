@@ -3,12 +3,11 @@ package model.handlers;
 import utils.Converter;
 import model.handlers.exceptions.LoginException;
 import model.handlers.exceptions.RegisterException;
-import model.repository.DAO.UsersDao;
+import model.repository.dao.UsersDao;
 import model.repository.entities.UserEntity;
 import view.viewmodels.User;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 

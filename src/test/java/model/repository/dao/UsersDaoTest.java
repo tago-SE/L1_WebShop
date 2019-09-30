@@ -1,7 +1,6 @@
-package model.repository.DAO;
+package model.repository.dao;
 
 import model.repository.entities.UserEntity;
-import org.junit.After;
 import org.junit.Test;
 
 import java.util.List;

@@ -2,10 +2,9 @@ package model.handlers;
 
 import utils.Converter;
 import view.viewmodels.Category;
-import model.repository.DAO.CategoriesDao;
+import model.repository.dao.CategoriesDao;
 import model.repository.entities.CategoryEntity;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class CategoriesHandler {

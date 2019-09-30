@@ -1,6 +1,6 @@
 package model.handlers;
 
-import model.repository.DAO.ItemsDao;
+import model.repository.dao.ItemsDao;
 import model.repository.entities.ItemEntity;
 import utils.Converter;
 import view.viewmodels.Item;

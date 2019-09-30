@@ -1,4 +1,4 @@
-package model.repository.DAO;
+package model.repository.dao;
 
 import model.repository.entities.CategoryEntity;
 import model.repository.entities.EntityInt;
@@ -100,12 +100,6 @@ public abstract class BasicDao {
         }
     }
 
-    /**
-     * Takes a token entity object and performs a query based on the id of that entity.
-     * @param entity, Token entity
-     * @return found persistent entity
-     * @throws Exception
-     */
     public static EntityInt findById(EntityInt entity) throws Exception {
         EntityManagerFactory factory = getEntityManagerFactory();
         EntityManager em = factory.createEntityManager();

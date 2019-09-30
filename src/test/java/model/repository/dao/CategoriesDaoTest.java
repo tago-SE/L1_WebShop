@@ -1,12 +1,8 @@
-package model.repository.DAO;
+package model.repository.dao;
 
 import model.repository.entities.CategoryEntity;
-import model.repository.entities.UserEntity;
 import org.junit.Test;
-import org.junit.experimental.categories.Categories;
-import view.viewmodels.Category;
 
-import javax.persistence.PersistenceException;
 import java.util.List;
 
 import static org.junit.Assert.*;
