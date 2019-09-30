@@ -30,6 +30,8 @@ public class Commands {
     public static final String ITEM_NAME_ARG                = "i_name";
     public static final String ITEM_ID_ARG                  = "i_id";
     public static final String ITEM_VER_ARG                 = "i_ver";
+    public static final String ITEM_PRICE_ARG               = "i_price";
+    public static final String ITEM_AMOUNT_ARG              = "i_amount";
 
 
     // User Management

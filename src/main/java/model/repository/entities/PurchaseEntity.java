@@ -18,6 +18,21 @@ public class PurchaseEntity implements EntityInt {
     public int amount;
 
     @Override
+    public boolean onInsert() {
+        return true;
+    }
+
+    @Override
+    public boolean onDelete() {
+        return true;
+    }
+
+    @Override
+    public boolean onUpdate() {
+        return true;
+    }
+
+    @Override
     public int getId() {
         return id;
     }
@@ -31,6 +46,7 @@ public class PurchaseEntity implements EntityInt {
     public void transferTo(EntityInt toEntity) {
 
     }
+
 
     @Override
     public Query createVerifyIsUniqueQuery(EntityManager em) {

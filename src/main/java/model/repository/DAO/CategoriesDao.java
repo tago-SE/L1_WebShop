@@ -10,8 +10,6 @@ import java.util.List;
 
 public class CategoriesDao extends BasicDao {
 
-    private static final String QUERY_FIND_ALL = "Category.findAll";
-
     public static CategoryEntity findById(int id) throws Exception {
         return (CategoryEntity) findById(new CategoryEntity(id));
     }
@@ -25,7 +23,8 @@ public class CategoriesDao extends BasicDao {
         EntityManager em = factory.createEntityManager();
         try {
             em.getTransaction().begin();
-            List<CategoryEntity> resultList = em.createNamedQuery(QUERY_FIND_ALL).getResultList();
+            Query query = (new CategoryEntity()).createFindAllQuery(em);
+            List<CategoryEntity> resultList = query.getResultList();
             em.getTransaction().commit();
             return resultList;
         } catch (Exception e) {

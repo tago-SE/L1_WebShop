@@ -57,6 +57,21 @@ public class UserEntity implements EntityInt {
     }
 
     @Override
+    public boolean onInsert() {
+        return true;
+    }
+
+    @Override
+    public boolean onDelete() {
+        return true;
+    }
+
+    @Override
+    public boolean onUpdate() {
+        return true;
+    }
+
+    @Override
     public int getId() {
         return id;
     }

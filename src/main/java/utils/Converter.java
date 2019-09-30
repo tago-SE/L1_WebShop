@@ -1,11 +1,14 @@
 package utils;
 
+import model.repository.entities.ItemEntity;
 import model.repository.entities.UserEntity;
 import view.viewmodels.Category;
 import model.repository.entities.CategoryEntity;
+import view.viewmodels.Item;
 import view.viewmodels.User;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -30,11 +33,11 @@ public class Converter {
     }
 
     public static CategoryEntity toCategoryEntity(Category model) {
-        CategoryEntity entity = new CategoryEntity();
-        entity.name = model.getName();
-        entity.id = model.getId();
-        entity.version = model.getVersion();
-        return entity;
+        CategoryEntity e = new CategoryEntity();
+        e.name = model.getName();
+        e.id = model.getId();
+        e.version = model.getVersion();
+        return e;
     }
 
     public static List<CategoryEntity> toCategoryEntities(List<Category> models) {
@@ -43,6 +46,26 @@ public class Converter {
             resultList.add(toCategoryEntity(m));
         }
         return resultList;
+    }
+
+    // ~~~~~~~
+    //  Item
+    // ~~~~~~~
+
+    public static ItemEntity toItemEntity(Item model) {
+        ItemEntity e = new ItemEntity();
+        e.id = model.getId();
+        e.version = model.getVersion();
+        e.name = model.getName();
+        e.price = model.getPrice();
+        e.quantity = model.getQuantity();
+        List<Category> categories = (List<Category>) model.getCategories();
+        List<String> categoriesAsStr = new ArrayList<>();
+        for (Category c : categories) {
+            categoriesAsStr.add(c.getName());
+        }
+        e.categories = new HashSet<String>(categoriesAsStr);
+        return e;
     }
 
     // ~~~~~~~

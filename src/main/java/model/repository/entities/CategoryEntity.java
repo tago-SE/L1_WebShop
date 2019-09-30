@@ -35,6 +35,21 @@ public class CategoryEntity  implements EntityInt {
     }
 
     @Override
+    public boolean onInsert() {
+        return true;
+    }
+
+    @Override
+    public boolean onDelete() {
+        return true;
+    }
+
+    @Override
+    public boolean onUpdate() {
+        return true;
+    }
+
+    @Override
     public int getId() {
         return id;
     }
@@ -62,7 +77,7 @@ public class CategoryEntity  implements EntityInt {
                 .setParameter("id", id);
     }
 
-    public Query createFindAll(EntityManager em) {
+    public Query createFindAllQuery(EntityManager em) {
         return em.createNamedQuery("Category.findAll");
     }
 

@@ -2,7 +2,9 @@ package model.repository.entities;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "Items")
@@ -25,9 +27,25 @@ public class ItemEntity implements EntityInt {
     @Column(name = "quantity", nullable = false)
     public Integer quantity;
 
-    //@ManyToMany(mappedBy = "items")
-    @Transient
-    public List<CategoryEntity> categories = new ArrayList<>();
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name="ItemCategories", joinColumns=@JoinColumn(name="item_id"))
+    @Column(name="category")
+    public Set<String> categories = new HashSet<>();
+
+    @Override
+    public boolean onInsert() {
+        return true;
+    }
+
+    @Override
+    public boolean onDelete() {
+        return true;
+    }
+
+    @Override
+    public boolean onUpdate() {
+        return true;
+    }
 
     @Override
     public int getId() {
