@@ -1,9 +1,9 @@
 package view.controllers;
 
+import model.UserRoles;
 import model.handlers.exceptions.LoginException;
 import model.handlers.exceptions.RegisterException;
 import view.viewmodels.User;
-import model.handlers.CategoryHandler;
 import model.handlers.UsersHandler;
 import view.Commands;
 
@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Date;
+import java.util.List;
 
 @WebServlet(name = "Users")
 public class UsersServlet extends HttpServlet {
@@ -26,12 +26,13 @@ public class UsersServlet extends HttpServlet {
     private static final String REG_PASSWORD_FAIL_MSG   = "Passwords do not match";
     private static final String USERNAME_TAKEN_MSG      = "Username is already taken.";
     private static final String REG_EXCEPTION_MSG       = "Unknown exception raised.";
+    private static final String ILLEGAL_ACCESS_MSG      = "Unauthorized Access.";
+    private static final String UNKNOWN_EXCEPTION_MSG   = "Unknown exception raised";
 
     private void errorResponse(HttpServletRequest request,
                                  HttpServletResponse response,
                                  String msg,
                                  String redirect) throws ServletException, IOException {
-
         request.setAttribute("errorResponse", msg);
         request.getRequestDispatcher(redirect).forward(request, response);
     }
@@ -40,22 +41,11 @@ public class UsersServlet extends HttpServlet {
                                 HttpServletResponse response,
                                 User user) throws ServletException, IOException {
 
-
-
         HttpSession session = request.getSession();
         session.setAttribute(Commands.USER_NAME_ARG, user.getName());
-        session.setAttribute(Commands.CURR_USER_ARG, user);
-
-        System.out.println("UsersServlet__onLoginSuccess: " + user.toString());
-        // Set Categories
-        session.setAttribute(Commands.CATEGORY_LIST_ARG, CategoryHandler.getCategories());
-        session.setAttribute(Commands.CATEGORY_TS_ARG, new Date());
-
-        // TODO: Should be reserved for admins
-        // Set Users
+        session.setAttribute(Commands.ARG_CURR_USER, user);
 
         response.sendRedirect("home.jsp");
-
 
     }
 
@@ -98,7 +88,7 @@ public class UsersServlet extends HttpServlet {
     private void doLogout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         session.removeAttribute(Commands.USER_NAME_ARG);
-        session.removeAttribute(Commands.CURR_USER_ARG);
+        session.removeAttribute(Commands.ARG_CURR_USER);
         session.invalidate();
         response.sendRedirect("login.jsp");
     }
@@ -144,13 +134,56 @@ public class UsersServlet extends HttpServlet {
         }
     }
 
+    private void getAllUsers(HttpSession session, HttpServletResponse response) throws ServletException, IOException {
+        User user = (User) session.getAttribute(Commands.ARG_CURR_USER);
+        List<User> users = UsersHandler.getAllUsers((List<String>) user.getAccessRoles());
+        session.setAttribute(Commands.ARG_ALL_USERS, users);
+        session.setAttribute(Commands.ARG_ACCESS_ROLES, UserRoles.asList());
+        response.sendRedirect((String) session.getAttribute(Commands.ARG_CURR_PAGE));
+    }
+
+    private void deleteUser(HttpSession session,  HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String paramId = request.getParameter(Commands.ARG_USER_ID);
+        if (paramId != null && paramId.length() > 0) {
+            int id = Integer.parseInt(paramId);
+            User currUser = (User) session.getAttribute(Commands.ARG_CURR_USER);
+            switch (UsersHandler.deleteUser(id, (List<String>) currUser.getAccessRoles())) {
+                case UsersHandler.DELETE_OK:
+                case UsersHandler.DELETE_FAILURE:
+                case UsersHandler.ACCESS_DENIED:
+                default:
+                    getAllUsers(session, response);
+            }
+        }
+    }
+
+    private void gotoEditUser(HttpSession session,  HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String paramId = request.getParameter(Commands.ARG_USER_ID);
+        if (paramId != null && paramId.length() > 0) try {
+            User currUser = (User) session.getAttribute(Commands.ARG_CURR_USER);
+            if (currUser != null && currUser.isAdmin()) {
+                User editUser = UsersHandler.getUserById(Integer.parseInt(paramId));
+                session.setAttribute(Commands.USER_TO_EDIT_ARG, editUser);
+                response.sendRedirect("admin_edit_user.jsp");
+            } else {
+                errorResponse(request, response, ILLEGAL_ACCESS_MSG, "home.jsp");
+            }
+        } catch (Exception e) {
+            getAllUsers(session, response);
+        }
+    }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String command = Commands.translateRequestToCommand(request);
+        HttpSession session = request.getSession();
         if (command != null && command.length() > 0) {
             switch (command) {
                 case Commands.LOGIN_COMMAND: doLogin(request, response); break;
                 case Commands.LOGOUT_COMMAND: doLogout(request, response); break;
                 case Commands.REGISTER_COMMAND: doRegister(request, response); break;
+                case Commands.CMD_USERS_GET_ALL: getAllUsers(session, response); break;
+                case Commands.CMD_DELETE_USER: deleteUser(session, request, response); break;
+                case Commands.CMD_GOTO_EDIT_USER: gotoEditUser(session, request, response); break;
                 default:
             }
         }

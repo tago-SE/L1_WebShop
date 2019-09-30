@@ -24,19 +24,10 @@ public class CategoryEntity  implements EntityInt {
     @Column(name = "name", nullable = false, unique = true)
     public String name;
 
-    /*
-    @ManyToMany(cascade = { CascadeType.ALL })
-    @JoinTable(
-            name = "Category_Item",
-            joinColumns = { @JoinColumn(name = "category_id") },
-            inverseJoinColumns = { @JoinColumn(name = "item_id") }
-    )
-    */
-    @Transient
-    public List<ItemEntity> items = new ArrayList<>();
+    public CategoryEntity() { }
 
-    public CategoryEntity() {
-
+    public CategoryEntity(int id) {
+        this.id = id;
     }
 
     public CategoryEntity(String name) {
@@ -81,7 +72,6 @@ public class CategoryEntity  implements EntityInt {
                 "id=" + id +
                 ", version=" + version +
                 ", name='" + name + '\'' +
-                ", items=" + items +
                 '}';
     }
 }

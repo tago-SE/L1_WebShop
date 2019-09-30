@@ -8,7 +8,7 @@ import javax.persistence.Query;
 import java.util.Date;
 import java.util.List;
 
-public class CategoriesDB extends BasicDBO {
+public class CategoriesDao extends BasicDao {
 
     private static final String QUERY_FIND_ALL = "Category.findAll";
 

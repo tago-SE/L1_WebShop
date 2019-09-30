@@ -1,4 +1,4 @@
-package model;
+package utils;
 
 import model.repository.entities.UserEntity;
 import view.viewmodels.Category;

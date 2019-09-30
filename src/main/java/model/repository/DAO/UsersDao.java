@@ -7,9 +7,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import java.util.List;
-import java.util.logging.Logger;
 
-public class UsersDB extends BasicDBO {
+public class UsersDao extends BasicDao {
 
     public static UserEntity findUserByCredentials(String username, String password) throws Exception {
         EntityManagerFactory factory = getEntityManagerFactory();
@@ -49,31 +48,4 @@ public class UsersDB extends BasicDBO {
             throw new Exception(e);
         }
     }
-
-    /*
-    public static boolean insert(EntityInt entity) throws Exception {
-        EntityManagerFactory factory = getEntityManagerFactory();
-        EntityManager em = factory.createEntityManager();
-        UserEntity newUser = (UserEntity) entity;
-        try {
-            em.getTransaction().begin();
-
-            Query query = newUser.createVerifyIsUniqueQuery(em);
-            List<UserEntity> users = (List<UserEntity>) query.getResultList();
-            if (users.size() == 0) {
-                em.persist(newUser);
-            } else {
-                newUser = null;
-            }
-            em.getTransaction().commit();
-            return newUser != null;
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            throw new Exception(e);
-        } finally {
-            em.close();
-        }
-    }
-    */
-
 }

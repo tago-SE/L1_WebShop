@@ -20,13 +20,16 @@
 <body>
     <!-- Redirects the user to login if not logged in -->
     <%
-        User user = (User) session.getAttribute(Commands.CURR_USER_ARG);
+        User user = (User) session.getAttribute(Commands.ARG_CURR_USER);
     if (user == null) {
         response.sendRedirect("login.jsp");
     }
     else
     {
+        // Set current page
+        session.setAttribute(Commands.ARG_CURR_PAGE, "home.jsp");
     %>
+
         <form method="post" action="Users">
             <input type="hidden" name=<%= Commands.COMMAND%> value=<%= Commands.LOGOUT_COMMAND%>>
             <input type="submit" value="logout">

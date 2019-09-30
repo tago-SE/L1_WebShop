@@ -1,40 +1,81 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: tiago
-  Date: 2019-09-29
-  Time: 02:23
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page import="model.handlers.UsersHandler" %>
+<%@ page import="view.viewmodels.User" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.Arrays" %>
+<%@ page import="view.Commands" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>Manage Users</title>
 </head>
 <body>
-    Users page
+<%
+    User user = (User) session.getAttribute(Commands.ARG_CURR_USER);
+    if (user == null)
+    {
+        response.sendRedirect("login.jsp");
+    }
+    else
+    {
+        // Set current page
+        session.setAttribute(Commands.ARG_CURR_PAGE, "admin_users.jsp");
+%>
+        <!-- Logout -->
+        <form method="post" action="Users">
+            <input type="hidden" name=<%= Commands.COMMAND%> value=<%= Commands.LOGOUT_COMMAND%>>
+            <input type="submit" value="logout">
+        </form>
+<%
+        if (!user.isAdmin())
+        {
+%>
+            Only Admins have access to this page!
+<%
+        }
+        else
+        {
+%>
+            <!-- Refresh Users -->
+            <form method="post" action="Users">
+                <input type="hidden" name=<%=Commands.COMMAND%> value=<%=Commands.CMD_USERS_GET_ALL%>>
+                <input type="submit" value="Refresh">
+            </form>
+            <h1>Users</h1>
+            <table>
+                <th>username</th>
+                <th></th>
+                <th>Access</th>
+                <th></th>
+                <th>Actions</th>
+                <%
+                    List<User> users = (List<User>) session.getAttribute(Commands.ARG_ALL_USERS);
+                    if (users != null) for (User u : users) {
+                %>
+                <tr>
+                    <td><%= u.getName() %><td>
+                    <td><%= u.getAccessRoles().toString() %><td>
+                    <td>
+                        <form method="post" action="Users">
+                            <input type="hidden" name=<%= Commands.COMMAND%> value=<%= Commands.CMD_GOTO_EDIT_USER%>>
+                            <input type="hidden" name=<%= Commands.ARG_USER_ID%> value=<%= u.getId()%>>
+                            <input type="submit" value="Edit">
+                        </form>
+                    </td>
+                    <td>
+                    <form method="post" action="Users">
+                        <input type="hidden" name=<%= Commands.COMMAND%> value=<%= Commands.CMD_DELETE_USER%>>
+                        <input type="hidden" name=<%= Commands.ARG_USER_ID%> value=<%= u.getId()%>>
+                        <input type="submit" value="delete">
+                    </form>
+                    </td>
+                </tr>
+                <%
+                        }
+                %>
+            </table>
+<%
+        }
+    }
+%>
 </body>
-            <!-- <input type="checkbox" name="selected" value="${student.studentID}">
-                <select name="access rights">
-                    <option value="">Admin</option>
-                    <option value="">User</option>
-                    <option value="">Employee</option>
-                </select>
-                -->
-    <table>
-        <tr>
-            <td>
-                Customer
-                <input type="checkbox" name="s1" value="1">
-            </td>
-            <td>
-                Employee
-                <input type="checkbox" name="s2">
-            </td>
-            <td>
-                Admin
-                <input type="checkbox" name="s3" value="2" checked='checked'>
-            </td>
-        </tr>
-    </table>
-
 </html>

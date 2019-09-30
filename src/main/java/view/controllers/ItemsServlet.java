@@ -24,7 +24,8 @@ public class ItemsServlet extends HttpServlet {
     private static final String ACCESS_DENIED_MSG = "Unauthorized access";
     private static final String INSERT_FAILURE_MSG = "Category already exists.";
     private static final String NO_CATEGORY_NAME_MSG = "No name provided.";
-    private static final String UNKNWON_EXCEPTION_MSG = "Unknown exception raised.";
+    private static final String UNKNOWN_EXCEPTION_MSG = "Unknown exception raised.";
+
 
     private void errorResponse(HttpServletRequest request,
                                HttpServletResponse response,
@@ -36,10 +37,9 @@ public class ItemsServlet extends HttpServlet {
         System.out.println("ItemsServlet__errorResponse: " + msg);
     }
 
-    private void doReloadPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        session.setAttribute(Commands.CATEGORY_LIST_ARG, CategoryHandler.getCategories());
-        session.setAttribute(Commands.CATEGORY_TS_ARG, new Date());
+    private void doReloadPage(HttpSession session, HttpServletResponse response) throws ServletException, IOException {
+        List<Category> categories = CategoryHandler.getCategories();
+        session.setAttribute(Commands.CMD_CATEGORY_GET_ALL, categories);
         response.sendRedirect("admin_categories.jsp");
     }
 
@@ -48,14 +48,14 @@ public class ItemsServlet extends HttpServlet {
             HttpServletResponse response,
             HttpSession session,
             User user,
-            String... access
+            List<String> access
     ) throws ServletException, IOException {
 
         String paramName = request.getParameter(Commands.CATEGORY_NAME_ARG);
         if (paramName != null && paramName.length() > 0) {
             switch (CategoryHandler.newCategory(paramName, access)) {
                 case CategoryHandler.INSERT_OK:
-                    doReloadPage(request, response);
+                    doReloadPage(session, response);
                     break;
                 case CategoryHandler.INSERT_FAILURE:
                     errorResponse(request, response, INSERT_FAILURE_MSG, "admin_categories.jsp");
@@ -64,7 +64,7 @@ public class ItemsServlet extends HttpServlet {
                     errorResponse(request, response, ACCESS_DENIED_MSG, "admin_categories.jsp");
                     break;
                 default:
-                    errorResponse(request, response, UNKNWON_EXCEPTION_MSG, "admin_categories.jsp");
+                    errorResponse(request, response, UNKNOWN_EXCEPTION_MSG, "admin_categories.jsp");
             }
         } else {
             errorResponse(request, response, NO_CATEGORY_NAME_MSG, "admin_categories.jsp");
@@ -76,21 +76,19 @@ public class ItemsServlet extends HttpServlet {
             HttpServletResponse response,
             HttpSession session,
             User user,
-            String... access
+            List<String> access
     ) throws ServletException, IOException {
-
         String paramId = request.getParameter(Commands.CATEGORY_ID_ARG);
         String paramName = request.getParameter(Commands.CATEGORY_NAME_ARG);
         if (paramName != null && paramName.length() > 0) {
-            System.out.println("Inserting: " + paramName + " " + paramName.length());
             switch (CategoryHandler.deleteCategory(paramName, access)) {
                 case CategoryHandler.DELETE_OK:
                 case CategoryHandler.DELETE_FAILURE:
                 case CategoryHandler.ACCESS_DENIED:
-                    doReloadPage(request, response);
+                    doReloadPage(session, response);
                     break;
                 default:
-                    errorResponse(request, response, UNKNWON_EXCEPTION_MSG, "admin_categories.jsp");
+                    errorResponse(request, response, UNKNOWN_EXCEPTION_MSG, "admin_categories.jsp");
             }
         }
     }
@@ -100,7 +98,7 @@ public class ItemsServlet extends HttpServlet {
             HttpServletResponse response,
             HttpSession session,
             User user,
-            String... access
+            List<String> access
     ) throws ServletException, IOException {
 
         String paramId = request.getParameter(Commands.CATEGORY_ID_ARG);
@@ -114,22 +112,28 @@ public class ItemsServlet extends HttpServlet {
                 case CategoryHandler.UPDATE_OK:
                 case CategoryHandler.ACCESS_DENIED:
                 default:
-                    doReloadPage(request, response);
+                    doReloadPage(session, response);
             }
         }
+    }
+
+    private void doGetCategories(HttpSession session, HttpServletResponse response) throws IOException {
+        List<Category> categories = CategoryHandler.getCategories();
+        session.setAttribute(Commands.ARG_ALL_CATEGORIES, categories);
+        response.sendRedirect("admin_categories.jsp");
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String command = Commands.translateRequestToCommand(request);
         if (command != null && command.length() > 0) {
             HttpSession session = request.getSession();
-            User user = (User) session.getAttribute(Commands.CURR_USER_ARG);
-            Collection<String> accessCollection = user.getAccessRoles();
-            String[] access = accessCollection.toArray(new String[accessCollection.size()]);
+            User user = (User) session.getAttribute(Commands.ARG_CURR_USER);
+            List<String> access = (List<String>) user.getAccessRoles();
             switch (command) {
-                case Commands.CATEGORY_INSERT_COMMAND: doInsertCategory(request, response, session, user, access); break;
-                case Commands.CATEGORY_DELETE_COMMAND: doDeleteCategory(request, response, session, user, access); break;
-                case Commands.CATEGORY_UPDATE_COMMAND: doUpdateCategory(request, response, session, user, access); break;
+                case Commands.CMD_INSERT_CATEGORY: doInsertCategory(request, response, session, user, access); break;
+                case Commands.CMD_DELETE_CATEGORY: doDeleteCategory(request, response, session, user, access); break;
+                case Commands.CMD_UPDATE_CATEGORY: doUpdateCategory(request, response, session, user, access); break;
+                case Commands.CMD_CATEGORY_GET_ALL: doGetCategories(session, response); break;
                 default:
             }
         }

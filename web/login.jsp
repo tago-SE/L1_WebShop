@@ -12,6 +12,10 @@
     <title>Login</title>
 </head>
 <body>
+    <%
+        // Set current page
+        session.setAttribute(Commands.ARG_CURR_PAGE, "login.jsp");
+    %>
     <form method="post" action="Users">
         <input type="hidden" name=<%= Commands.COMMAND%> value=<%= Commands.LOGIN_COMMAND%>>
         Enter username : <input type="text" name=<%= Commands.USER_NAME_ARG%>></br>

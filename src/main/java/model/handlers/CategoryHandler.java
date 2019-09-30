@@ -1,11 +1,11 @@
 package model.handlers;
 
-import model.Converter;
+import utils.Converter;
 import view.viewmodels.Category;
-import model.repository.DAO.CategoriesDB;
+import model.repository.DAO.CategoriesDao;
 import model.repository.entities.CategoryEntity;
 
-import java.util.Date;
+import java.util.Arrays;
 import java.util.List;
 
 public class CategoryHandler {
@@ -23,19 +23,17 @@ public class CategoryHandler {
     public static final int UPDATE_FAILURE              = 7;
     public static final int ACCESS_DENIED               = 8;
 
-    // Singleton used for initialization
-    private static final CategoryHandler instance = new CategoryHandler();
 
-    private CategoryHandler() {
-        AccessList.addAccessRights(CategoryHandler.class, accessRoles);
-    }
+    public static final AccessControl accessControl = new AccessControl(accessRoles);
 
-    public static int newCategory(String name, String... access) {
-        if (!AccessList.validateAccess(CategoryHandler.class, access))
+
+
+    public static int newCategory(String name, List<String> access) {
+        if (!accessControl.validateAccess(null, access))
             return ACCESS_DENIED;
         CategoryEntity newCategory = new CategoryEntity(name);
         try {
-            if (CategoriesDB.insert(newCategory) != null ) {
+            if (CategoriesDao.insert(newCategory) != null ) {
                 return INSERT_OK;
             }
             return INSERT_FAILURE;
@@ -45,12 +43,12 @@ public class CategoryHandler {
         }
     }
 
-    public static int updateCategory(Category category, String... access) {
-        if (!AccessList.validateAccess(CategoryHandler.class, access))
+    public static int updateCategory(Category category, List<String> access) {
+        if (!accessControl.validateAccess(null, access))
             return ACCESS_DENIED;
         try {
             CategoryEntity entity = Converter.toCategoryEntity(category);;
-            if (CategoriesDB.update(entity) != null) {
+            if (CategoriesDao.update(entity) != null) {
                 return UPDATE_OK;
             }
             return UPDATE_FAILURE;
@@ -60,13 +58,13 @@ public class CategoryHandler {
         }
     }
 
-    public static int deleteCategory(String categoryName, String... access) {
-        if (!AccessList.validateAccess(CategoryHandler.class, access))
+    public static int deleteCategory(String categoryName, List<String> access) {
+        if (!accessControl.validateAccess(null, access))
             return ACCESS_DENIED;
         try {
             CategoryEntity toDelete = new CategoryEntity();
             toDelete.name = categoryName;
-            if (CategoriesDB.delete(toDelete)) {
+            if (CategoriesDao.delete(toDelete)) {
                 return DELETE_OK;
             }
             return DELETE_FAILURE;
@@ -78,11 +76,11 @@ public class CategoryHandler {
 
     public static List<Category> getCategories() {
         try {
-            return Converter.toCategories(CategoriesDB.findAll());
+            return Converter.toCategories(CategoriesDao.findAll());
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
+        return null;
     }
 
 }

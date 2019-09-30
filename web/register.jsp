@@ -12,6 +12,10 @@
     <title>Register</title>
 </head>
 <body>
+<%
+    // Set current page
+    session.setAttribute(Commands.ARG_CURR_PAGE, "register.jsp");
+%>
     <form method="post" action="Users">
         <input type="hidden" name=<%= Commands.COMMAND%> value=<%= Commands.REGISTER_COMMAND%>>
         Enter username : <input type="text" name = "username"></br>

@@ -12,10 +12,24 @@ public class Commands {
     public static final String LOGOUT_COMMAND               = "logout";
     public static final String REGISTER_COMMAND             = "register";
 
-    // Category Actions
-    public static final String CATEGORY_INSERT_COMMAND      = "cat_insert";
-    public static final String CATEGORY_UPDATE_COMMAND      = "cat_update";
-    public static final String CATEGORY_DELETE_COMMAND      = "cat_delete";
+    // Category Management
+    public static final String CMD_INSERT_CATEGORY          = "cat_insert";
+    public static final String CMD_UPDATE_CATEGORY          = "cat_update";
+    public static final String CMD_DELETE_CATEGORY          = "cat_delete";
+    public static final String CMD_CATEGORY_GET_ALL         = "cmd_cat_all";
+    public static final String ARG_ALL_CATEGORIES           = "cat_all";
+    public static final String ARG_ALL_USERS                = "users_all";
+    public static final String ARG_ACCESS_ROLES             = "users_roles";
+
+
+    // User Management
+    public static final String CMD_USERS_GET_ALL            = "cmd_u_all";
+    public static final String CMD_GOTO_EDIT_USER           = "goto_edit_user";
+    public static final String CMD_DELETE_USER              = "delete_user";
+    public static final String CMD_EDIT_USER                ="delete_user";
+    public static final String ARG_USER_ID                  = "id_user";
+
+    public static final String USER_TO_EDIT_ARG             = "watch_user";
 
     // Error response
     public static final String ERROR_RESPONSE_COMMAND       = "errorResponse";
@@ -27,10 +41,14 @@ public class Commands {
     public static final String CATEGORY_LIST_ARG            = "categories";
     public static final String CATEGORY_NAME_ARG            = "cat_name";
     public static final String CATEGORY_NEW_NAME_ARG        = "cat_new_name";
-    public static final String CURR_USER_ARG                = "curr_user";
+    public static final String ARG_CURR_USER                = "curr_user";
     public static final String USER_NAME_ARG                = "username";
     public static final String USER_PASS_ARG                = "password";
     public static final String USER_PASS_1_ARG              = "password1";
+
+    public static final String USER_LIST_ARG                = "all_users";
+
+    public static final String ARG_CURR_PAGE                 = "curr_page";
 
 
 

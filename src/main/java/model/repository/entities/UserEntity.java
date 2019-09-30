@@ -1,10 +1,7 @@
 package model.repository.entities;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "Users")
@@ -38,6 +35,10 @@ public class UserEntity implements EntityInt {
 
     public UserEntity() {}
 
+    public UserEntity(int id) {
+        this.id = id;
+    }
+
     public UserEntity(String name, String password) {
         this.name = name;
         this.password = password;
@@ -68,7 +69,7 @@ public class UserEntity implements EntityInt {
     @Override
     public void transferTo(EntityInt toEntity) {
         UserEntity dest = (UserEntity) toEntity;
-        // Should only transfer user access roles...
+        dest.accessRoles = this.accessRoles;
         dest.name = this.name;
     }
 
@@ -92,6 +93,7 @@ public class UserEntity implements EntityInt {
     public Query createFindAll(EntityManager em) {
         return em.createNamedQuery("User.findAll");
     }
+
 
     @Override
     public String toString() {
