@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 
 public class CategoriesDaoTest {
 
-    // @Test
+    @Test
     public void insert() throws Exception {
         String name0 = "" + Math.random();
         // Should be able to insert a entity with a unique name
@@ -30,7 +30,7 @@ public class CategoriesDaoTest {
         });
     }
 
-   // @Test
+    @Test
     public void update() throws Exception {
         String name0 = "" + Math.random();
         CategoryEntity category = new CategoryEntity(name0);
@@ -66,7 +66,7 @@ public class CategoriesDaoTest {
         CategoriesDao.delete(category);
     }
 
-   // @Test
+    @Test
     public void delete() throws Exception {
         String name0 = "" + Math.random();
         CategoryEntity category = new CategoryEntity(name0);
@@ -89,19 +89,23 @@ public class CategoriesDaoTest {
 
     @Test
     public void categoryItemsMapping() throws Exception {
-        String cName = "" + Math.random();
-        CategoryEntity category = new CategoryEntity(cName);
-        String iName = "" + Math.random();
-        category = (CategoryEntity) CategoriesDao.insert(category); // returns the persistent entity
 
-        ItemEntity item = new ItemEntity(0, 0, iName, 0, 0);
 
-        category.items.add(item);
+        CategoryEntity category = new CategoryEntity("Pants" + Math.random());
+        ItemEntity i1 = new ItemEntity(0, 0, "Red", 0, 0);
+        ItemEntity i2 = new ItemEntity(0, 0, "Blue", 0, 0);
+        category.items.add(i1);
+        category.items.add(i2);
+        i1.categories.add(category);
+        i2.categories.add(category);
 
-        CategoriesDao.insert(category);
+        CategoryEntity inserted = (CategoryEntity) CategoriesDao.insert(category);
+        System.out.println("Inserted Category: " + inserted.id);
+        System.out.println("Inserted items: " + i1.id + " " + i2.id);
 
-        assertNotNull(category);
+        assertNotNull(inserted);
 
+        CategoriesDao.delete(inserted);
     }
 
     //@Test

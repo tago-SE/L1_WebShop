@@ -62,7 +62,7 @@ public class UserEntity implements EntityInt {
     }
 
     @Override
-    public boolean onDelete() {
+    public boolean onDelete(EntityManager em) {
         return true;
     }
 
@@ -91,12 +91,6 @@ public class UserEntity implements EntityInt {
     @Override
     public Query createVerifyIsUniqueQuery(EntityManager em) {
         return em.createNamedQuery("User.findByName").setParameter("name", name);
-    }
-
-    @Override
-    public Query createFindByIdQuery(EntityManager em) {
-        return em.createNamedQuery("User.findById")
-                .setParameter("id", id);
     }
 
     public Query createValidateCredentials(EntityManager em) {

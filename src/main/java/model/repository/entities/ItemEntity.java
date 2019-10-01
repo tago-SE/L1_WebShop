@@ -30,7 +30,6 @@ public class ItemEntity implements EntityInt {
     @ManyToMany(mappedBy="items", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public Set<CategoryEntity> categories = new HashSet<>();
 
-
     /*
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name="ItemCategories", joinColumns=@JoinColumn(name="item_id"))
@@ -58,7 +57,10 @@ public class ItemEntity implements EntityInt {
     }
 
     @Override
-    public boolean onDelete() {
+    public boolean onDelete(EntityManager em) {
+        categories.forEach(category -> {
+            category.items.remove(this); // removes all foreign key references
+        });
         return true;
     }
 
@@ -84,11 +86,6 @@ public class ItemEntity implements EntityInt {
 
     @Override
     public Query createVerifyIsUniqueQuery(EntityManager em) {
-        return null;
-    }
-
-    @Override
-    public Query createFindByIdQuery(EntityManager em) {
         return null;
     }
 

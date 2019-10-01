@@ -59,12 +59,7 @@ public class Converter {
         e.name = model.getName();
         e.price = model.getPrice();
         e.quantity = model.getQuantity();
-        List<Category> categories = (List<Category>) model.getCategories();
-        List<String> categoriesAsStr = new ArrayList<>();
-        for (Category c : categories) {
-            categoriesAsStr.add(c.getName());
-        }
-        //e.categories = new HashSet<String>(categoriesAsStr);
+        e.categories = new HashSet<>(toCategoryEntities((List<Category>) model.getCategories()));
         return e;
     }
 

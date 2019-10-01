@@ -26,12 +26,14 @@ public abstract class BasicDao {
             if (isUniqueQuery != null) {
                 List<EntityInt> resultList = isUniqueQuery.getResultList();
                 if (resultList.size() == 0) {
+                    entity.onInsert();
                     em.persist(entity);
                 } else {
                     entity = null;
                 }
             } else {
                 // There is no uniqueness filter so we insert it as is
+                entity.onInsert();
                 em.persist(entity);
             }
             em.getTransaction().commit();
@@ -52,19 +54,15 @@ public abstract class BasicDao {
             throw new IllegalArgumentException("Entity id must be defined: id=" + entity.getId());
         try {
             em.getTransaction().begin();
-            Query query = entity.createFindByIdQuery(em);
-            if (query != null) {
-                List<EntityInt> resultList = query.getResultList();
-                if (resultList.size() == 1) {
-                    em.remove(resultList.get(0));
-                } else {
-                    entity = null;
-                }
-            } else {
-                entity = null;
+            EntityInt foundEntity = em.find(entity.getClass(), entity.getId());
+            if (foundEntity != null) {
+                foundEntity.onDelete(em);
+                em.remove(foundEntity);
+                em.getTransaction().commit();
+                return true;
             }
             em.getTransaction().commit();
-            return entity != null;
+            return false;
         } catch (Exception e) {
             em.getTransaction().rollback();
             throw new Exception(e);
@@ -80,19 +78,12 @@ public abstract class BasicDao {
             throw new IllegalArgumentException("Entity id must be defined: id=" + entity.getId());
         try {
             em.getTransaction().begin();
-            Query query = entity.createFindByIdQuery(em);
-            if (query != null) {
-                List<EntityInt> resultList = query.getResultList();
-                if (resultList.size() == 1) {
-                    EntityInt persistentEntity = resultList.get(0);
-                    // Confirms that the update version is not out of date
-                    if (persistentEntity.getVersion() == entity.getVersion()) {
-                        // Transfer entity data to the persistent entity
-                        entity.transferTo(persistentEntity);
-                        em.getTransaction().commit();
-                        return persistentEntity;
-                    }
-                }
+            EntityInt foundEntity = em.find(entity.getClass(), entity.getId());
+            if (foundEntity != null && foundEntity.getVersion() == entity.getVersion()) {
+                foundEntity.onUpdate();
+                entity.transferTo(foundEntity);
+                em.getTransaction().commit();
+                return foundEntity;
             }
             em.getTransaction().commit();
             return null;
@@ -109,13 +100,9 @@ public abstract class BasicDao {
         EntityManager em = factory.createEntityManager();
         try {
             em.getTransaction().begin();
-            Query query = entity.createFindByIdQuery(em);
-            List<CategoryEntity> resultList = query.getResultList();
-            if (resultList.size() > 0) {
-                em.getTransaction().commit();
-                return resultList.get(0);
-            }
-            return null;
+            EntityInt foundEntity = em.find(entity.getClass(), entity.getId());
+            em.getTransaction().commit();
+            return foundEntity;
         } catch (Exception e) {
             em.getTransaction().rollback();
             throw new Exception(e);

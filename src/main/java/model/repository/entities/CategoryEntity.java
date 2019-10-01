@@ -41,12 +41,15 @@ public class CategoryEntity  implements EntityInt {
     }
 
     @Override
-    public boolean onInsert() {
+    public boolean onDelete(EntityManager em) {
+        items.forEach(item -> {
+            item.categories.remove(this); // removes all foreign key references
+        });
         return true;
     }
 
     @Override
-    public boolean onDelete() {
+    public boolean onInsert() {
         return true;
     }
 
@@ -75,12 +78,6 @@ public class CategoryEntity  implements EntityInt {
     public Query createVerifyIsUniqueQuery(EntityManager em) {
         return em.createNamedQuery("Category.findByName")
                 .setParameter("name", name);
-    }
-
-    @Override
-    public Query createFindByIdQuery(EntityManager em) {
-        return em.createNamedQuery("Category.findById")
-                .setParameter("id", id);
     }
 
     public Query createFindAllQuery(EntityManager em) {

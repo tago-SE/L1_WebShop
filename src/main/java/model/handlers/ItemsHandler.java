@@ -17,6 +17,7 @@ public class ItemsHandler {
             throw new IllegalAccessException();
         ItemEntity entity = Converter.toItemEntity(item);
         System.out.println("ITEM_HANDLER___" + entity.toString());
+        System.out.println(entity.categories.toString());
         ItemsDao.insert(entity);
     }
 }

@@ -16,7 +16,7 @@ public interface EntityInt extends Serializable {
      * Used to maintain consistency during CRUD operations of entities, return true if DELETE is allowed to continue.
      * @return
      */
-    boolean onDelete();
+    boolean onDelete(EntityManager em);
 
     /**
      * Used to maintain consistency during CRUD operations of entities, return true if UPDATE is allowed to continue.
@@ -50,10 +50,4 @@ public interface EntityInt extends Serializable {
      */
     Query createVerifyIsUniqueQuery(EntityManager em);
 
-    /**
-     * Factory method, creates a query for a entity by its id, typically used when updating or deleting entities.
-     * @param em, EntityManger
-     * @return Query
-     */
-    Query createFindByIdQuery(EntityManager em);
 }
