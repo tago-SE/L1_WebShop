@@ -10,7 +10,7 @@ public interface EntityInt extends Serializable {
      * Used to maintain consistency during CRUD operations of entities, return true if INSERT is allowed to continue.
      * @return
      */
-    boolean onInsert();
+    boolean onInsert(EntityManager em);
 
     /**
      * Used to maintain consistency during CRUD operations of entities, return true if DELETE is allowed to continue.

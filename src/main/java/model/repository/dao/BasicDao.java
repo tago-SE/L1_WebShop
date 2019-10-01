@@ -26,14 +26,14 @@ public abstract class BasicDao {
             if (isUniqueQuery != null) {
                 List<EntityInt> resultList = isUniqueQuery.getResultList();
                 if (resultList.size() == 0) {
-                    entity.onInsert();
+                    entity.onInsert(em);
                     em.persist(entity);
                 } else {
                     entity = null;
                 }
             } else {
                 // There is no uniqueness filter so we insert it as is
-                entity.onInsert();
+                entity.onInsert(em);
                 em.persist(entity);
             }
             em.getTransaction().commit();

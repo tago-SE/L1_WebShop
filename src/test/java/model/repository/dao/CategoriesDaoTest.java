@@ -98,8 +98,8 @@ public class CategoriesDaoTest {
         category.items.add(i2);
         i1.categories.add(category);
         i2.categories.add(category);
-
         CategoryEntity inserted = (CategoryEntity) CategoriesDao.insert(category);
+
         System.out.println("Inserted Category: " + inserted.id);
         System.out.println("Inserted items: " + i1.id + " " + i2.id);
 

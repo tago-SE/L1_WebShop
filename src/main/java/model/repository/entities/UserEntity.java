@@ -57,7 +57,7 @@ public class UserEntity implements EntityInt {
     }
 
     @Override
-    public boolean onInsert() {
+    public boolean onInsert(EntityManager em) {
         return true;
     }
 

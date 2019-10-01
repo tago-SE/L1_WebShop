@@ -52,7 +52,14 @@ public class ItemEntity implements EntityInt {
     }
 
     @Override
-    public boolean onInsert() {
+    public boolean onInsert(EntityManager em) {
+        List<CategoryEntity> list = new ArrayList<>(categories);
+        categories.clear();
+        list.forEach(category -> {
+            CategoryEntity found = em.find(category.getClass(), category.getId());
+            found.items.add(this);
+            categories.add(found);
+        });
         return true;
     }
 
