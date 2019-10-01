@@ -1,5 +1,6 @@
 package model.repository.dao;
 
+import model.repository.entities.ItemEntity;
 import model.repository.entities.UserEntity;
 
 import javax.persistence.EntityManager;
@@ -8,6 +9,22 @@ import javax.persistence.Query;
 import java.util.List;
 
 public class UsersDao extends BasicDao {
+
+    public static List<UserEntity> findAll() throws Exception {
+        EntityManagerFactory factory = getEntityManagerFactory();
+        EntityManager em = factory.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            List<UserEntity> found = em.createNamedQuery("User.findAll").getResultList();
+            em.getTransaction().commit();
+            return found;
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw new Exception(e);
+        } finally {
+            em.close();
+        }
+    }
 
     public static UserEntity findUserByCredentials(String username, String password) throws Exception {
         EntityManagerFactory factory = getEntityManagerFactory();
@@ -29,22 +46,6 @@ public class UsersDao extends BasicDao {
             throw new Exception(e);
         } finally {
             em.close();
-        }
-    }
-
-    public static List<UserEntity> findAll() throws Exception{
-        EntityManagerFactory factory = getEntityManagerFactory();
-        EntityManager em = factory.createEntityManager();
-        try {
-            em.getTransaction().begin();
-            UserEntity entity = new UserEntity();
-            Query query = entity.createFindAll(em);
-            List<UserEntity> resultList = query.getResultList();
-            em.getTransaction().commit();
-            return resultList;
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            throw new Exception(e);
         }
     }
 }

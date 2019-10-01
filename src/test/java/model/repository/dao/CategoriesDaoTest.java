@@ -108,7 +108,9 @@ public class CategoriesDaoTest {
         CategoriesDao.delete(inserted);
     }
 
-    //@Test
+    @Test
     public void findAll() throws Exception {
+        List<CategoryEntity> categories = CategoriesDao.findAll();
+        System.out.println("NUM CATEGORIES = " + categories.size());
     }
 }

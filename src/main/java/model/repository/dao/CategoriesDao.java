@@ -1,6 +1,7 @@
 package model.repository.dao;
 
 import model.repository.entities.CategoryEntity;
+import model.repository.entities.UserEntity;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -8,6 +9,7 @@ import javax.persistence.Query;
 import java.util.List;
 
 public class CategoriesDao extends BasicDao {
+
 
     public static CategoryEntity findById(int id) throws Exception {
         return (CategoryEntity) findById(new CategoryEntity(id));
@@ -22,10 +24,9 @@ public class CategoriesDao extends BasicDao {
         EntityManager em = factory.createEntityManager();
         try {
             em.getTransaction().begin();
-            Query query = (new CategoryEntity()).createFindAllQuery(em);
-            List<CategoryEntity> resultList = query.getResultList();
+            List<CategoryEntity> found = em.createNamedQuery("Category.findAll").getResultList();
             em.getTransaction().commit();
-            return resultList;
+            return found;
         } catch (Exception e) {
             em.getTransaction().rollback();
             throw new Exception(e);

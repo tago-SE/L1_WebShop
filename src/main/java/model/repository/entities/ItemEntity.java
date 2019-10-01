@@ -1,14 +1,20 @@
 package model.repository.entities;
 
+import view.viewmodels.Category;
+
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "Items")
+@NamedQueries({
+        @NamedQuery(name = "Item.findAll", query = "SELECT i FROM  ItemEntity i"),
+        @NamedQuery(name = "Item.findByName", query = "SELECT i FROM  ItemEntity i WHERE i.name = :name"),
+        @NamedQuery(name = "Item.deleteById", query = "DELETE FROM ItemEntity i WHERE i.id =:id"),
+})
 public class ItemEntity implements EntityInt {
+
+    public static String TABLE = "Items";
 
     @Id
     @GeneratedValue(generator = "incrementor")
@@ -27,15 +33,8 @@ public class ItemEntity implements EntityInt {
     @Column(name = "quantity", nullable = false)
     public int quantity;
 
-    @ManyToMany(mappedBy="items", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy="items", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     public Set<CategoryEntity> categories = new HashSet<>();
-
-    /*
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name="ItemCategories", joinColumns=@JoinColumn(name="item_id"))
-    @Column(name="category")
-    public Set<String> categories = new HashSet<>();
-    */
 
     public ItemEntity() { }
 
@@ -52,7 +51,7 @@ public class ItemEntity implements EntityInt {
     }
 
     @Override
-    public boolean onInsert(EntityManager em) {
+    public boolean beforeInsert(EntityManager em) {
         List<CategoryEntity> list = new ArrayList<>(categories);
         categories.clear();
         list.forEach(category -> {
@@ -64,7 +63,7 @@ public class ItemEntity implements EntityInt {
     }
 
     @Override
-    public boolean onDelete(EntityManager em) {
+    public boolean beforeDelete(EntityManager em) {
         categories.forEach(category -> {
             category.items.remove(this); // removes all foreign key references
         });
@@ -72,8 +71,40 @@ public class ItemEntity implements EntityInt {
     }
 
     @Override
-    public boolean onUpdate() {
-        return true;
+    public void update(EntityManager em, EntityInt fromEntity) {
+        // Displays the categories as seen inside the database
+        System.out.println("ItemEntity__Before: " + categories.toString());
+        ItemEntity source = (ItemEntity) fromEntity;
+        // New set of categories
+        final List<CategoryEntity> newCategories = new ArrayList<>(source.categories);
+        // Displays the new set of categories we want to use (Should also exist inside the database)
+        System.out.println("ItemEntity__Source: " + newCategories.toString());
+
+        this.name = source.name;
+        this.price = source.price;
+        this.quantity = source.quantity;
+
+        // this part triggers a rollback exception
+        this.categories = source.categories;
+
+        // 1: Need to remove this item from the categories of before
+        this.categories.forEach(oldCategory -> {
+            boolean keepCategory = false;
+            for (CategoryEntity newCategory : newCategories) {
+                if (oldCategory.id == newCategory.id) {
+                    keepCategory = true;
+                }
+            }
+            if (!keepCategory) {
+                this.categories.remove(oldCategory);
+            }
+        });
+        // 2: Need to add this item to any newly added categories
+    }
+
+    @Override
+    public Query createVerifyIsUniqueQuery(EntityManager em) {
+        return null;
     }
 
     @Override
@@ -84,16 +115,6 @@ public class ItemEntity implements EntityInt {
     @Override
     public int getVersion() {
         return version;
-    }
-
-    @Override
-    public void transferTo(EntityInt toEntity) {
-
-    }
-
-    @Override
-    public Query createVerifyIsUniqueQuery(EntityManager em) {
-        return null;
     }
 
     @Override

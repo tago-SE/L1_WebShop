@@ -26,14 +26,14 @@ public abstract class BasicDao {
             if (isUniqueQuery != null) {
                 List<EntityInt> resultList = isUniqueQuery.getResultList();
                 if (resultList.size() == 0) {
-                    entity.onInsert(em);
+                    entity.beforeInsert(em);
                     em.persist(entity);
                 } else {
                     entity = null;
                 }
             } else {
                 // There is no uniqueness filter so we insert it as is
-                entity.onInsert(em);
+                entity.beforeInsert(em);
                 em.persist(entity);
             }
             em.getTransaction().commit();
@@ -56,7 +56,7 @@ public abstract class BasicDao {
             em.getTransaction().begin();
             EntityInt foundEntity = em.find(entity.getClass(), entity.getId());
             if (foundEntity != null) {
-                foundEntity.onDelete(em);
+                foundEntity.beforeDelete(em);
                 em.remove(foundEntity);
                 em.getTransaction().commit();
                 return true;
@@ -78,12 +78,22 @@ public abstract class BasicDao {
             throw new IllegalArgumentException("Entity id must be defined: id=" + entity.getId());
         try {
             em.getTransaction().begin();
-            EntityInt foundEntity = em.find(entity.getClass(), entity.getId());
-            if (foundEntity != null && foundEntity.getVersion() == entity.getVersion()) {
-                foundEntity.onUpdate();
-                entity.transferTo(foundEntity);
-                em.getTransaction().commit();
-                return foundEntity;
+            EntityInt persistentEntity = em.find(entity.getClass(), entity.getId());
+            if (persistentEntity != null && persistentEntity.getVersion() == entity.getVersion()) {
+
+                Query isUniqueQuery = entity.createVerifyIsUniqueQuery(em);
+                boolean performUpdate = true;
+                if (isUniqueQuery != null) {
+                    List<EntityInt> resultList = isUniqueQuery.getResultList();
+                    if ((resultList.size() == 1 && resultList.get(0).getId()!= persistentEntity.getId()) || resultList.size() > 1) {
+                        performUpdate = false;
+                    }
+                }
+                if (performUpdate) {
+                    persistentEntity.update(em, entity);
+                    em.getTransaction().commit();
+                    return persistentEntity;
+                }
             }
             em.getTransaction().commit();
             return null;
@@ -110,4 +120,5 @@ public abstract class BasicDao {
             em.close();
         }
     }
+
 }

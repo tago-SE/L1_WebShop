@@ -14,4 +14,5 @@ public class Pages {
 
     // Items
     public static final String EDIT_ITEM_JSP            = "edit_item.jsp";
+    public static final String ADMIN_ITEMS_JSP          = "admin_items.jsp";
 }

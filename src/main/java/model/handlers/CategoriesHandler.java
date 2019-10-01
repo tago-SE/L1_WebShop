@@ -43,6 +43,9 @@ public class CategoriesHandler {
     public static int updateCategory(Category category, List<String> access) {
         if (!accessControl.validateAccess(null, access))
             return ACCESS_DENIED;
+        String name = category.getName();
+        if (name == null || name.length() == 0 || name.equals(""))
+            return UPDATE_FAILURE;
         try {
             CategoryEntity entity = Converter.toCategoryEntity(category);;
             if (CategoriesDao.update(entity) != null) {

@@ -10,19 +10,20 @@ public interface EntityInt extends Serializable {
      * Used to maintain consistency during CRUD operations of entities, return true if INSERT is allowed to continue.
      * @return
      */
-    boolean onInsert(EntityManager em);
+    boolean beforeInsert(EntityManager em);
 
     /**
      * Used to maintain consistency during CRUD operations of entities, return true if DELETE is allowed to continue.
      * @return
      */
-    boolean onDelete(EntityManager em);
+    boolean beforeDelete(EntityManager em);
 
     /**
-     * Used to maintain consistency during CRUD operations of entities, return true if UPDATE is allowed to continue.
-     * @return
+     * Method used to perform an update on an entity
+     * @param em
+     * @param toEntity
      */
-    boolean onUpdate();
+    void update(EntityManager em, EntityInt toEntity);
 
     /**
      * Returns the entity identifier
@@ -35,12 +36,6 @@ public interface EntityInt extends Serializable {
      * @return version
      */
     int getVersion();
-
-    /**
-     * Used to copy data from one entity to another when its being updated
-     * @param toEntity
-     */
-    void transferTo(EntityInt toEntity);
 
     /**
      * Factory method, creates a query that verifies that the unique constraints are met.

@@ -4,12 +4,12 @@ import java.util.Collection;
 
 public class Item {
 
-    private int id;
-    private int version;
-    private String name;
-    private int price;
-    private int quantity;
-    private Collection<Category> categories;
+    private final int id;
+    private final int version;
+    private final String name;
+    private final int price;
+    private final int quantity;
+    private final Collection<Category> categories;
 
     public Item(int id, int version, String name, int price, int quantity, Collection<Category> categories) {
         this.id = id;
@@ -42,6 +42,14 @@ public class Item {
 
     public Collection<Category> getCategories() {
         return categories;
+    }
+
+    public boolean hasCategory(Category category) {
+        for (Category c : categories) {
+            if (c.getName().equals(category.getName()))
+                return true;
+        }
+        return false;
     }
 
     @Override

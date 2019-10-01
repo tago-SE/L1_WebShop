@@ -100,11 +100,10 @@ public class ItemsServlet extends HttpServlet {
                 return;
             }
         }
-        Item item = new Item(id, version, nameParam, price, quantity, selectedCategories);
+        Item newItem = new Item(id, version, nameParam, price, quantity, selectedCategories);
         if (id == 0) {
-            System.out.println("INSERTING: " + item.toString());
             try {
-                ItemsHandler.newItem(item, access);
+                ItemsHandler.newItem(newItem, access);
                 response.sendRedirect(EDIT_ITEM_JSP);
             } catch (Exception e) {
                 if (e instanceof IllegalAccessException)
@@ -115,14 +114,56 @@ public class ItemsServlet extends HttpServlet {
                 }
             }
         } else {
-            System.out.println("UPDATING: " + item.toString());
+            try {
+                ItemsHandler.updateItem(newItem, access);
+                // Return to admin items page regardless of success or failure
+                getAdminItems(session, response);
+            } catch (Exception e) {
+                if (e instanceof IllegalAccessException) {
+                    errorResponse(request, response, ACCESS_DENIED_MSG, EDIT_ITEM_JSP);
+                } else {
+                    e.printStackTrace();
+                    errorResponse(request, response, UNKNOWN_EXCEPTION_MSG, EDIT_ITEM_JSP);
+                }
+            }
         }
     }
 
     private void gotoEditItem(HttpSession session,  HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Category> categories = CategoriesHandler.getCategories();
-        session.setAttribute(Commands.CATEGORIES_ARG, categories);
+        String idParam = request.getParameter(ITEM_ID_ARG);
+        try {
+            int id = Integer.parseInt(idParam);
+            session.setAttribute(ITEM_ARG, null);
+            if (id != 0) {
+                Item item = ItemsHandler.getItemById(Integer.parseInt(idParam));
+                session.setAttribute(ITEM_ARG, item);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        session.setAttribute(CATEGORIES_ARG, categories);
         response.sendRedirect(EDIT_ITEM_JSP);
+    }
+
+    private void getAdminItems(HttpSession session, HttpServletResponse response) throws IOException {
+        session.setAttribute(Commands.ITEMS_ARG, ItemsHandler.getItems());
+        response.sendRedirect(ADMIN_ITEMS_JSP);
+    }
+
+    private void deleteItem(HttpSession session,  List<String> access, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String idParam = request.getParameter(ITEM_ID_ARG);
+        try {
+            int id = Integer.parseInt(idParam);
+            ItemsHandler.deleteItem(id, access);
+            getAdminItems(session, response);
+        } catch (Exception e) {
+            if (e instanceof IllegalAccessException) {
+                errorResponse(request, response, ACCESS_DENIED_MSG, ADMIN_ITEMS_JSP);
+            } else {
+                errorResponse(request, response, ACCESS_DENIED_MSG, ADMIN_ITEMS_JSP);
+            }
+        }
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -132,8 +173,10 @@ public class ItemsServlet extends HttpServlet {
         List<String> access = (List<String>) user.getAccessRoles();
         if (command != null && command.length() > 0) {
             switch (command) {
-                case GOTO_INSERT_ITEM_CMD: gotoEditItem(session, request, response); break;
+                case GOTO_UPSERT_ITEM_CMD: gotoEditItem(session, request, response); break;
                 case UPSERT_ITEM_CDM: insertOrUpdateItem(session, request, response, access); break;
+                case ITEMS_GET_ALL_CMD: getAdminItems(session, response); break;
+                case DELETE_ITEM_CMD: deleteItem(session, access, request, response); break;
             }
         }
     }

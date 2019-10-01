@@ -23,15 +23,18 @@ public class Commands {
     public static final String ARG_ACCESS_ROLES             = "users_roles";
 
     // Items
-    public static final String UPSERT_ITEM_CDM             = "i_upsert";
+    public static final String GOTO_UPSERT_ITEM_CMD         = "i_goto_upsert";
     public static final String ITEMS_GET_ALL_CMD            = "i_get_all";
-    public static final String GOTO_INSERT_ITEM_CMD         = "i_goto_insert";
+    public static final String DELETE_ITEM_CMD              = "i_delete";
+    public static final String UPSERT_ITEM_CDM              = "i_upsert";
 
     public static final String ITEM_NAME_ARG                = "i_name";
     public static final String ITEM_ID_ARG                  = "i_id";
     public static final String ITEM_VER_ARG                 = "i_ver";
     public static final String ITEM_PRICE_ARG               = "i_price";
     public static final String ITEM_AMOUNT_ARG              = "i_amount";
+    public static final String ITEMS_ARG                    = "i_all";
+    public static final String ITEM_ARG                     = "i";
 
 
     // User Management
@@ -64,6 +67,10 @@ public class Commands {
     public static final String ERR_RESPONSE                 = "errorResponse";
 
 
+    // Servlets as defined in web.xml
+    public static final String USERS_SERVLET                = "Users";
+    public static final String ITEMS_SERVLET                = "Items";
+    public static final String CATEGORIES_SERVLET           = "Categories";
 
     public static String translateRequestToCommand(HttpServletRequest request) {
         return request.getParameter(Commands.COMMAND);

@@ -25,7 +25,7 @@ public class CategoryEntity  implements EntityInt {
 
     @ManyToMany( cascade = {
             CascadeType.PERSIST, CascadeType.MERGE
-    })
+    }, fetch = FetchType.EAGER)
     @JoinTable(name = "CategoryItems", joinColumns = { @JoinColumn(name = "category_id") }, inverseJoinColumns = { @JoinColumn(name = "item_id") })
     public Set<ItemEntity> items = new HashSet<>();
 
@@ -40,7 +40,7 @@ public class CategoryEntity  implements EntityInt {
     }
 
     @Override
-    public boolean onDelete(EntityManager em) {
+    public boolean beforeDelete(EntityManager em) {
         items.forEach(item -> {
             item.categories.remove(this); // removes all foreign key references
         });
@@ -48,13 +48,14 @@ public class CategoryEntity  implements EntityInt {
     }
 
     @Override
-    public boolean onInsert(EntityManager em) {
+    public boolean beforeInsert(EntityManager em) {
         return true;
     }
 
     @Override
-    public boolean onUpdate() {
-        return true;
+    public void update(EntityManager em, EntityInt fromEntity) {
+        CategoryEntity source = (CategoryEntity) fromEntity;
+        this.name = source.name;
     }
 
     @Override
@@ -65,12 +66,6 @@ public class CategoryEntity  implements EntityInt {
     @Override
     public int getVersion() {
         return version;
-    }
-
-    @Override
-    public void transferTo(EntityInt toEntity) {
-        CategoryEntity dest = (CategoryEntity) toEntity;
-        dest.name = this.name;
     }
 
     @Override

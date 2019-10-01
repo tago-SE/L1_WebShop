@@ -2,19 +2,24 @@ package view.viewmodels;
 
 public class Category {
 
-    private int id = 0;
-    private String name = null;
-    private int version = 0;
+    private final int id;
+    private final String name;
+    private final int version;
 
-    public Category() { }
+    public Category() {
+        id = version = 0;
+        name = null;
+    }
 
     public Category(String name) {
         this.name = name;
+        id = version = 0;
     }
 
     public Category(int id, String name) {
         this.name = name;
         this.id = id;
+        version = 0;
     }
 
     public Category(int id, String name, int version) {

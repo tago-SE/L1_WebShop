@@ -56,18 +56,20 @@ public class UserEntity implements EntityInt {
     }
 
     @Override
-    public boolean onInsert(EntityManager em) {
+    public boolean beforeInsert(EntityManager em) {
         return true;
     }
 
     @Override
-    public boolean onDelete(EntityManager em) {
+    public boolean beforeDelete(EntityManager em) {
         return true;
     }
 
     @Override
-    public boolean onUpdate() {
-        return true;
+    public void update(EntityManager em, EntityInt fromEntity) {
+        UserEntity source = (UserEntity) fromEntity;
+        this.accessRoles = source.accessRoles;
+        this.name = source.name;
     }
 
     @Override
@@ -78,13 +80,6 @@ public class UserEntity implements EntityInt {
     @Override
     public int getVersion() {
         return version;
-    }
-
-    @Override
-    public void transferTo(EntityInt toEntity) {
-        UserEntity dest = (UserEntity) toEntity;
-        dest.accessRoles = this.accessRoles;
-        dest.name = this.name;
     }
 
     @Override

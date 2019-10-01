@@ -63,6 +63,18 @@ public class Converter {
         return e;
     }
 
+    public static Item toItem(ItemEntity entity) {
+        return new Item(entity.id, entity.version, entity.name, entity.price, entity.quantity, toCategories(new ArrayList<>(entity.categories)));
+    }
+
+    public static List<Item> toItems(List<ItemEntity> entities) {
+        List<Item> resultList = new ArrayList<>();
+        for (ItemEntity e : entities) {
+            resultList.add(toItem(e));
+        }
+        return resultList;
+    }
+
     // ~~~~~~~
     //  User
     // ~~~~~~~
