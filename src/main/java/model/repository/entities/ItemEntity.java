@@ -14,8 +14,6 @@ import java.util.*;
 })
 public class ItemEntity implements EntityInt {
 
-    public static String TABLE = "Items";
-
     @Id
     @GeneratedValue(generator = "incrementor")
     @Column(name = "item_id", unique = true)
@@ -72,34 +70,39 @@ public class ItemEntity implements EntityInt {
 
     @Override
     public void update(EntityManager em, EntityInt fromEntity) {
-        // Displays the categories as seen inside the database
-        System.out.println("ItemEntity__Before: " + categories.toString());
         ItemEntity source = (ItemEntity) fromEntity;
-        // New set of categories
-        final List<CategoryEntity> newCategories = new ArrayList<>(source.categories);
-        // Displays the new set of categories we want to use (Should also exist inside the database)
-        System.out.println("ItemEntity__Source: " + newCategories.toString());
-
         this.name = source.name;
         this.price = source.price;
         this.quantity = source.quantity;
 
-        // this part triggers a rollback exception
-        this.categories = source.categories;
-
-        // 1: Need to remove this item from the categories of before
-        this.categories.forEach(oldCategory -> {
-            boolean keepCategory = false;
-            for (CategoryEntity newCategory : newCategories) {
-                if (oldCategory.id == newCategory.id) {
-                    keepCategory = true;
+        // Removes any relations that no longer exists between Categories and Items
+        //
+        final List<CategoryEntity> newCategories = new ArrayList<>(source.categories);
+        categories.forEach(oldCategory -> {
+            Iterator<CategoryEntity> itr = newCategories.iterator();
+            boolean doRemove = true;
+            while (itr.hasNext()) {
+                CategoryEntity newCategory = itr.next();
+                if (newCategory.id == oldCategory.id) {
+                    // Remove from new category list those categories that have been retained
+                    newCategories.remove(newCategory);
+                    doRemove = false;
+                    break;
                 }
             }
-            if (!keepCategory) {
+            if (doRemove) {
+                // Remove relation between item and category
                 this.categories.remove(oldCategory);
+                oldCategory.items.remove(this);
             }
         });
-        // 2: Need to add this item to any newly added categories
+        // We fetch the persistent category for those that were added to not get any unattached errors.
+        newCategories.forEach(category -> {
+            // Add relation between item and category
+            CategoryEntity persistentCategory = em.find(CategoryEntity.class, category.id);
+            categories.add(persistentCategory);
+            persistentCategory.items.add(this);
+        });
     }
 
     @Override
