@@ -7,7 +7,6 @@ import java.util.*;
 @Table(name = "Users")
 @NamedQueries({
         @NamedQuery(name = "User.findAll", query = "SELECT u FROM  UserEntity u"),
-        @NamedQuery(name = "User.findById", query = "SELECT u FROM  UserEntity u WHERE u.id = :id"),
         @NamedQuery(name = "User.findByName", query = "SELECT u FROM  UserEntity u WHERE u.name = :name"),
         @NamedQuery(name = "User.findByNameContains", query = "SELECT u FROM UserEntity u WHERE u.name LIKE :search"),
         @NamedQuery(name = "User.validateCredentials", query = "SELECT u FROM  UserEntity u WHERE u.name = :name and u.password = :password")

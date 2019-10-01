@@ -7,7 +7,6 @@ import java.util.*;
 @Table(name = "Categories")
 @NamedQueries({
         @NamedQuery(name = "Category.findAll", query = "SELECT c FROM  CategoryEntity c"),
-        @NamedQuery(name = "Category.findById", query = "SELECT c FROM  CategoryEntity c WHERE c.id = :id"),
         @NamedQuery(name = "Category.findByName", query = "SELECT c FROM  CategoryEntity c WHERE c.name = :name"),
         @NamedQuery(name = "Category.deleteById", query = "DELETE FROM CategoryEntity c WHERE c.id =:id"),
 })
