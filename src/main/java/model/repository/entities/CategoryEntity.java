@@ -9,7 +9,7 @@ import java.util.*;
         @NamedQuery(name = "Category.findAll", query = "SELECT c FROM  CategoryEntity c"),
         @NamedQuery(name = "Category.findById", query = "SELECT c FROM  CategoryEntity c WHERE c.id = :id"),
         @NamedQuery(name = "Category.findByName", query = "SELECT c FROM  CategoryEntity c WHERE c.name = :name"),
-        @NamedQuery(name = "Category.deleteById", query = "DELETE FROM CategoryEntity c WHERE c.id =:id")
+        @NamedQuery(name = "Category.deleteById", query = "DELETE FROM CategoryEntity c WHERE c.id =:id"),
 })
 public class CategoryEntity  implements EntityInt {
 
@@ -23,6 +23,12 @@ public class CategoryEntity  implements EntityInt {
 
     @Column(name = "name", nullable = false, unique = true)
     public String name;
+
+    @ManyToMany( cascade = {
+            CascadeType.PERSIST, CascadeType.MERGE
+    })
+    @JoinTable(name = "CategoryItems", joinColumns = { @JoinColumn(name = "category_id") }, inverseJoinColumns = { @JoinColumn(name = "item_id") })
+    public Set<ItemEntity> items = new HashSet<>();
 
     public CategoryEntity() { }
 
@@ -81,12 +87,37 @@ public class CategoryEntity  implements EntityInt {
         return em.createNamedQuery("Category.findAll");
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Set<ItemEntity> getItems() {
+        return items;
+    }
+
+    public void setItems(Set<ItemEntity> items) {
+        this.items = items;
+    }
+
     @Override
     public String toString() {
         return "CategoryEntity{" +
                 "id=" + id +
                 ", version=" + version +
                 ", name='" + name + '\'' +
+                ", items=" + items +
                 '}';
     }
 }

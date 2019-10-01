@@ -25,8 +25,6 @@ public class CategoriesHandler {
 
     public static final AccessControl accessControl = new AccessControl(accessRoles);
 
-
-
     public static int newCategory(String name, List<String> access) {
         if (!accessControl.validateAccess(null, access))
             return ACCESS_DENIED;

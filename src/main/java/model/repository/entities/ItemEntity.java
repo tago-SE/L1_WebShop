@@ -22,15 +22,35 @@ public class ItemEntity implements EntityInt {
     public String name;
 
     @Column(name = "price", nullable = false)
-    public Integer price;
+    public int price;
 
     @Column(name = "quantity", nullable = false)
-    public Integer quantity;
+    public int quantity;
 
+    @ManyToMany(mappedBy="items", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    public Set<CategoryEntity> categories = new HashSet<>();
+
+
+    /*
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name="ItemCategories", joinColumns=@JoinColumn(name="item_id"))
     @Column(name="category")
     public Set<String> categories = new HashSet<>();
+    */
+
+    public ItemEntity() { }
+
+    public ItemEntity(int id) {
+        this.id = id;
+    }
+
+    public ItemEntity(int id, int version, String name, int price, int quantity) {
+        this.id = id;
+        this.version = version;
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+    }
 
     @Override
     public boolean onInsert() {
@@ -80,7 +100,6 @@ public class ItemEntity implements EntityInt {
                 ", name='" + name + '\'' +
                 ", price=" + price +
                 ", quantity=" + quantity +
-                ", categories=" + categories +
                 '}';
     }
 }

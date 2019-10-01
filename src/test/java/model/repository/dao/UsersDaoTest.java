@@ -63,4 +63,18 @@ public class UsersDaoTest {
         UsersDao.delete(found);
     }
 
+    @Test
+    public void deleteChildEntities() throws Exception {
+        String name1 = "" +  Math.random();
+        UserEntity u = new UserEntity(name1, name1);
+        u.addAccess("Admin");
+        u.addAccess("Customer");
+        u.addAccess("Worker");
+        u = (UserEntity) UsersDao.insert(u);
+
+        UserEntity toDelete = new UserEntity();
+        toDelete.id = u.id;
+        UsersDao.delete(u);
+    }
+
 }

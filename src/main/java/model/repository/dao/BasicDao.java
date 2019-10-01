@@ -48,6 +48,8 @@ public abstract class BasicDao {
     public static boolean delete(EntityInt entity) throws Exception {
         EntityManagerFactory factory = getEntityManagerFactory();
         EntityManager em = factory.createEntityManager();
+        if (entity.getId() == 0)
+            throw new IllegalArgumentException("Entity id must be defined: id=" + entity.getId());
         try {
             em.getTransaction().begin();
             Query query = entity.createFindByIdQuery(em);
@@ -74,6 +76,8 @@ public abstract class BasicDao {
     public static EntityInt update(EntityInt entity) throws Exception {
         EntityManagerFactory factory = getEntityManagerFactory();
         EntityManager em = factory.createEntityManager();
+        if (entity.getId() == 0)
+            throw new IllegalArgumentException("Entity id must be defined: id=" + entity.getId());
         try {
             em.getTransaction().begin();
             Query query = entity.createFindByIdQuery(em);

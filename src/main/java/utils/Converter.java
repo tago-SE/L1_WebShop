@@ -64,7 +64,7 @@ public class Converter {
         for (Category c : categories) {
             categoriesAsStr.add(c.getName());
         }
-        e.categories = new HashSet<String>(categoriesAsStr);
+        //e.categories = new HashSet<String>(categoriesAsStr);
         return e;
     }
 
