@@ -6,6 +6,7 @@ import view.viewmodels.Category;
 import view.viewmodels.Item;
 import view.viewmodels.User;
 
+import javax.persistence.Basic;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,7 +21,7 @@ import static view.Commands.*;
 import static view.Pages.*;
 
 @WebServlet(name = "Items")
-public class ItemsServlet extends HttpServlet {
+public class ItemsServlet extends BasicServlet {
 
     private static final String ACCESS_DENIED_MSG = "Unauthorized access";
     private static final String INSERT_FAILURE_MSG = "Category already exists.";
@@ -33,15 +34,6 @@ public class ItemsServlet extends HttpServlet {
     private static final String COULD_NOT_READ_VER_MSG = "Failed to read version from client.";
     private static final String UNKNOWN_EXCEPTION_MSG = "Unknown exception raised.";
     private static final String SELECT_MIN_CAT_MSG = "Select at least one category.";
-
-    private void errorResponse(HttpServletRequest request,
-                               HttpServletResponse response,
-                               String msg,
-                               String redirect) throws ServletException, IOException {
-
-        request.setAttribute(ERR_RESPONSE_ARG, msg);
-        request.getRequestDispatcher(redirect).forward(request, response);
-    }
 
     private void insertOrUpdateItem(
             HttpSession session,
@@ -203,6 +195,7 @@ public class ItemsServlet extends HttpServlet {
                 case ITEMS_GET_ALL_CMD: getAdminItems(session, response); break;
                 case DELETE_ITEM_CMD: deleteItem(session, access, request, response); break;
                 case QUERY_BY_CATEGORY_CMD: queryItemsByCategory(session, request, response); break;
+                case GOTO_CMD: gotoPage(session, request, response); break;
             }
         }
     }

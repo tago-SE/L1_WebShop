@@ -26,11 +26,40 @@
         // Set current page
         session.setAttribute( ARG_CURR_PAGE, "admin_categories.jsp");
 %>
+<table>
+    <td>
         <!-- Logout -->
-        <form method="post" action="Users">
+        <form method="post" action=<%=USERS_SERVLET%>>
             <input type="hidden" name=<%=  COMMAND%> value=<%=  LOGOUT_COMMAND%>>
             <input type="submit" value="logout">
         </form>
+    </td>
+
+    <td>
+        <!-- Go Home -->
+        <form method="post" action=<%=USERS_SERVLET%>>
+            <input type="hidden" name=<%=  COMMAND%> value=<%=  GOTO_CMD%>>
+            <input type="hidden" name=<%=REDIRECT_ARG%> value=<%=HOME_JSP%>>
+            <input type="submit" value="home">
+    </form>
+<%
+    if (user.isAdmin())
+    {
+%>
+        <td>
+            <!-- Refresh Categories -->
+            <form method="post" action=<%=CATEGORIES_SERVLET%>>
+                <input type="hidden" name=<%= COMMAND%> value=<%= CMD_CATEGORY_GET_ALL%>>
+                <input type="hidden" name=<%=REDIRECT_ARG%> value=<%=ADMIN_CATEGORIES_JSP%>>
+                <input type="submit" value="Refresh">
+            </form>
+        </td>
+<%
+    }
+%>
+    </td>
+</table>
+
 <%
         if (!user.isAdmin())
         {
@@ -40,22 +69,15 @@
         }
         else {
 %>
-            <!-- Refresh Categories -->
+            <h3>New Category</h3>
             <form method="post" action="Categories">
-                <input type="hidden" name=<%= COMMAND%> value=<%= CMD_CATEGORY_GET_ALL%>>
-                <input type="hidden" name=<%=REDIRECT_ARG%> value=<%=ADMIN_CATEGORIES_JSP%>>
-                <input type="submit" value="Refresh">
-            </form>
-
-            <h1>New Category</h1>
-            <form method="post" action="Categories">
-                <input type="hidden" name=<%=  COMMAND%> value=<%=  CMD_INSERT_CATEGORY%>>
-                <input type="text" name=<%=  CATEGORY_NAME_ARG%>>
+                <input type="hidden" name=<%=COMMAND%> value=<%=CMD_INSERT_CATEGORY%>>
+                <input type="text" name=<%=CATEGORY_NAME_ARG%>>
                 <input type="submit" value="insert">
                 <div style="color: #FF0000;">${errorResponse}</div><br>
                 </td>
             </form>
-            <h1>Edit Categories</h1>
+            <h3>Edit Categories</h3>
             <table>
                 <th>ID</th>
                 <th>Category</th>

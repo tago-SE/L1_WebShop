@@ -17,12 +17,20 @@
         return;
     }
 %>
+    <div style="color:#00FF00;">${successResponse}</div><br>
+    <div style="color:#FF0000;">${errorResponse}</div><br>
     <table>
         <tr>
             <!-- Logout -->
             <form method="post" action="Users">
                 <input type="hidden" name=<%=  COMMAND%> value=<%=  LOGOUT_COMMAND%>>
                 <input type="submit" value="logout">
+            </form>
+            <!-- Go Home -->
+            <form method="post" action=<%=USERS_SERVLET%>>
+                <input type="hidden" name=<%=  COMMAND%> value=<%=  GOTO_CMD%>>
+                <input type="hidden" name=<%=REDIRECT_ARG%> value=<%=HOME_JSP%>>
+                <input type="submit" value="home">
             </form>
         </tr><tr>
             <form method="post" action=<%=SHOPPING_SERVLET%>>

@@ -22,7 +22,7 @@ import static view.Commands.*;
 import static view.Pages.*;
 
 @WebServlet(name = "Users")
-public class UsersServlet extends HttpServlet {
+public class UsersServlet extends BasicServlet {
 
     private static final String NO_PASSWORD_MSG         = "No specified password.";
     private static final String NO_USERNAME_MSG         = "No specified username.";
@@ -41,14 +41,6 @@ public class UsersServlet extends HttpServlet {
 
     }
 
-
-    private void errorResponse(HttpServletRequest request,
-                                 HttpServletResponse response,
-                                 String msg,
-                                 String redirect) throws ServletException, IOException {
-        request.setAttribute(ERR_RESPONSE_ARG, msg);
-        request.getRequestDispatcher(redirect).forward(request, response);
-    }
 
     private void onLoginSuccess(HttpServletRequest request,
                                 HttpServletResponse response,
@@ -211,6 +203,7 @@ public class UsersServlet extends HttpServlet {
                 case CMD_USERS_GET_ALL: adminGetAllUsers(session, response); break;
                 case CMD_DELETE_USER: deleteUser(session, request, response); break;
                 case CMD_GOTO_EDIT_USER: gotoEditUser(session, request, response); break;
+                case GOTO_CMD: gotoPage(session, request, response); break;
                 default:
             }
         }

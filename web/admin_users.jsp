@@ -2,7 +2,9 @@
 <%@ page import="view.viewmodels.User" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Arrays" %>
-<%@ page import="view.Commands" %>
+<%@ page import="static view.Pages.LOGIN_JSP" %>
+<%@ page import="static view.Pages.ADMIN_USERS_JSP" %>
+<%@ page import="static view.Commands.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -10,21 +12,22 @@
 </head>
 <body>
 <%
-    User user = (User) session.getAttribute(Commands.ARG_CURR_USER);
+    User user = (User) session.getAttribute(ARG_CURR_USER);
     if (user == null)
     {
-        response.sendRedirect("login.jsp");
+        response.sendRedirect(LOGIN_JSP);
     }
     else
     {
         // Set current page
-        session.setAttribute(Commands.ARG_CURR_PAGE, "admin_users.jsp");
+        session.setAttribute(ARG_CURR_PAGE, ADMIN_USERS_JSP);
 %>
         <!-- Logout -->
-        <form method="post" action="Users">
-            <input type="hidden" name=<%= Commands.COMMAND%> value=<%= Commands.LOGOUT_COMMAND%>>
+        <form method="post" action=<%=USERS_SERVLET%>>
+            <input type="hidden" name=<%= COMMAND%> value=<%= LOGOUT_COMMAND%>>
             <input type="submit" value="logout">
         </form>
+
 <%
         if (!user.isAdmin())
         {
@@ -37,7 +40,7 @@
 %>
             <!-- Refresh Users -->
             <form method="post" action="Users">
-                <input type="hidden" name=<%=Commands.COMMAND%> value=<%=Commands.CMD_USERS_GET_ALL%>>
+                <input type="hidden" name=<%=COMMAND%> value=<%=CMD_USERS_GET_ALL%>>
                 <input type="submit" value="Refresh">
             </form>
             <h1>Users</h1>
@@ -48,7 +51,7 @@
                 <th></th>
                 <th>Actions</th>
                 <%
-                    List<User> users = (List<User>) session.getAttribute(Commands.ARG_ALL_USERS);
+                    List<User> users = (List<User>) session.getAttribute(ARG_ALL_USERS);
                     if (users != null) for (User u : users) {
                 %>
                 <tr>
@@ -56,15 +59,15 @@
                     <td><%= u.getAccessRoles().toString() %><td>
                     <td>
                         <form method="post" action="Users">
-                            <input type="hidden" name=<%= Commands.COMMAND%> value=<%= Commands.CMD_GOTO_EDIT_USER%>>
-                            <input type="hidden" name=<%= Commands.ARG_USER_ID%> value=<%= u.getId()%>>
+                            <input type="hidden" name=<%=COMMAND%> value=<%=CMD_GOTO_EDIT_USER%>>
+                            <input type="hidden" name=<%=ARG_USER_ID%> value=<%= u.getId()%>>
                             <input type="submit" value="Edit">
                         </form>
                     </td>
                     <td>
                     <form method="post" action="Users">
-                        <input type="hidden" name=<%= Commands.COMMAND%> value=<%= Commands.CMD_DELETE_USER%>>
-                        <input type="hidden" name=<%= Commands.ARG_USER_ID%> value=<%= u.getId()%>>
+                        <input type="hidden" name=<%=COMMAND%> value=<%=CMD_DELETE_USER%>>
+                        <input type="hidden" name=<%=ARG_USER_ID%> value=<%= u.getId()%>>
                         <input type="submit" value="delete">
                     </form>
                     </td>

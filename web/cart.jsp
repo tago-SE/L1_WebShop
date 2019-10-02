@@ -33,6 +33,14 @@
         </form>
     </tr>
     <tr>
+        <!-- Go Home -->
+        <form method="post" action=<%=USERS_SERVLET%>>
+            <input type="hidden" name=<%=  COMMAND%> value=<%=  GOTO_CMD%>>
+            <input type="hidden" name=<%=REDIRECT_ARG%> value=<%=HOME_JSP%>>
+            <input type="submit" value="home">
+        </form>
+    </tr>
+    <tr>
     <form method="post" action=<%=SHOPPING_SERVLET%>>
         <input type="hidden" name=<%=COMMAND%> value=<%=GOTO_CMD%>>
         <input type="hidden" name=<%=REDIRECT_ARG%> value=<%=SHOP_JSP%>>

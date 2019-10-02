@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  view.viewmodels.User: tiago
-  Date: 2019-09-25
-  Time: 17:57
-  To change this template use File | Settings | File Templates.
---%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="view.Commands" %>
 <%@ page import="view.viewmodels.Category" %>
@@ -34,7 +27,8 @@
         session.setAttribute(Commands.ARG_CURR_PAGE, HOME_JSP);
     %>
 
-        <form method="post" action="Users">
+        <!-- Logout -->
+        <form method="post" action=<%=USERS_SERVLET%>>
             <input type="hidden" name=<%= Commands.COMMAND%> value=<%= Commands.LOGOUT_COMMAND%>>
             <input type="submit" value="logout">
         </form>

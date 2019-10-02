@@ -1,11 +1,6 @@
-<%--
-  Created by IntelliJ IDEA.
-  view.viewmodels.User: tiago
-  Date: 2019-09-25
-  Time: 18:29
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page import="view.Commands" %>
+<%@ page import="static view.Pages.REGISTER_JSP" %>
+<%@ page import="static view.Commands.USERS_SERVLET" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -14,9 +9,9 @@
 <body>
 <%
     // Set current page
-    session.setAttribute(Commands.ARG_CURR_PAGE, "register.jsp");
+    session.setAttribute(Commands.ARG_CURR_PAGE, REGISTER_JSP);
 %>
-    <form method="post" action="Users">
+    <form method="post" action=<%=USERS_SERVLET%>>
         <input type="hidden" name=<%= Commands.COMMAND%> value=<%= Commands.REGISTER_COMMAND%>>
         Enter username : <input type="text" name = "username"></br>
         Enter password : <input type="password" name = "password"></br>

@@ -22,22 +22,12 @@ import static view.Commands.*;
 import static view.Pages.*;
 
 @WebServlet(name = "Categories")
-public class CategoriesServlet extends HttpServlet {
+public class CategoriesServlet extends BasicServlet {
 
     private static final String ACCESS_DENIED_MSG = "Unauthorized access";
     private static final String INSERT_FAILURE_MSG = "Category already exists.";
     private static final String NO_CATEGORY_NAME_MSG = "No name provided.";
     private static final String UNKNOWN_EXCEPTION_MSG = "Unknown exception raised.";
-
-
-    private void errorResponse(HttpServletRequest request,
-                               HttpServletResponse response,
-                               String msg,
-                               String redirect) throws ServletException, IOException {
-
-        request.setAttribute(ERR_RESPONSE_ARG, msg);
-        request.getRequestDispatcher(redirect).forward(request, response);
-    }
 
     private void doReloadPage(HttpSession session, HttpServletResponse response) throws ServletException, IOException {
         List<Category> categories = CategoriesHandler.getCategories();
@@ -137,6 +127,7 @@ public class CategoriesServlet extends HttpServlet {
                 case CMD_DELETE_CATEGORY: doDeleteCategory(request, response, session, user, access); break;
                 case CMD_UPDATE_CATEGORY: doUpdateCategory(request, response, session, user, access); break;
                 case CMD_CATEGORY_GET_ALL: doGetCategories(session, request, response); break;
+                case GOTO_CMD: gotoPage(session, request, response); break;
                 default:
             }
         }
