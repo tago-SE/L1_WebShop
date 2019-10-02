@@ -31,6 +31,15 @@
         <servlet-name>Items</servlet-name>
         <url-pattern>/Items</url-pattern>
     </servlet-mapping>
+    <!-- Shopping -->
+    <servlet>
+        <servlet-name>Shopping</servlet-name>
+        <servlet-class>view.controllers.ShoppingServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Shopping</servlet-name>
+        <url-pattern>/Shopping</url-pattern>
+    </servlet-mapping>
 
     <session-config>
         <session-timeout>

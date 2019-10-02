@@ -68,8 +68,8 @@ public class UsersHandler {
         return Converter.toUser(user);
     }
 
-    public static void logout() {
-        // Do Nothing
+    public static void logout(Integer userId) {
+        ShoppingHandler.instance.removeUserCart(userId);
     }
 
     public static User getUserById(int id) throws Exception {
@@ -96,7 +96,6 @@ public class UsersHandler {
             return null;
         try {
             List<User> users = Converter.toUsers(UsersDao.findAll());
-            System.out.println(users.toString());
             return Converter.toUsers(UsersDao.findAll());
         } catch (Exception e) {
             return new ArrayList<>();

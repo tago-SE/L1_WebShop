@@ -1,5 +1,6 @@
 <%@ page import="view.viewmodels.User" %>
-<%@ page import="view.Commands" %>
+<%@ page import="static view.Commands.*" %>
+<%@ page import="static view.Pages.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -7,17 +8,17 @@
 </head>
 <body>
 <%
-    User user = (User) session.getAttribute(Commands.ARG_CURR_USER);
+    User user = (User) session.getAttribute(ARG_CURR_USER);
     if (user == null)
     {
-        response.sendRedirect("login.jsp");
+        response.sendRedirect(LOGIN_JSP);
     }
     else {
         // Set current page
-        session.setAttribute(Commands.ARG_CURR_PAGE, "admin_edit_user.jsp");
+        session.setAttribute(ARG_CURR_PAGE, ADMIN_EDIT_USER_JSP);
 
         // User to edit
-        User editUser = (User) session.getAttribute(Commands.USER_TO_EDIT_ARG);
+        User editUser = (User) session.getAttribute(USER_TO_EDIT_ARG);
         if (editUser != null)
         {
         %>

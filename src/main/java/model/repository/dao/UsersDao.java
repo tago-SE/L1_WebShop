@@ -48,4 +48,33 @@ public class UsersDao extends BasicDao {
             em.close();
         }
     }
+
+    /*
+    public static void addItemToCart(int userId, int itemId, int amount) {
+        EntityManagerFactory factory = getEntityManagerFactory();
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
+        UserEntity user = em.find(UserEntity.class, userId);
+        final ItemEntity item = em.find(ItemEntity.class, itemId);
+
+        System.out.println("DATA\n\n" + user.toString() + "\n" + item.toString());
+
+        boolean wasInCart = false;
+        for (CartItemEntity cartItem : user.cart.cartItems) {
+            if (cartItem.item.id == item.id) {
+                wasInCart = true;
+                cartItem.amount += amount;
+                if (cartItem.amount < 0)
+                    cartItem.amount = 0;
+            }
+        }
+        if (!wasInCart) {
+            CartItemEntity cartItem = new CartItemEntity(item, amount);
+            em.persist(cartItem);
+            user.cart.cartItems.add(cartItem);
+        }
+
+        em.getTransaction().commit();
+    }
+     */
 }

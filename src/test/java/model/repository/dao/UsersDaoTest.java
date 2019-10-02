@@ -1,5 +1,6 @@
 package model.repository.dao;
 
+import model.repository.entities.ItemEntity;
 import model.repository.entities.UserEntity;
 import org.junit.Test;
 
@@ -9,11 +10,11 @@ import static org.junit.Assert.*;
 
 public class UsersDaoTest {
     
-    @Test
+    //@Test
     public void getUserByCredentials() {
     }
 
-    @Test
+    //@Test
     public void insert() throws Exception {
         String name0 = "" + Math.random();
         // Should be able to insert a user with a unique name
@@ -26,7 +27,7 @@ public class UsersDaoTest {
         UsersDao.delete(oldUser);
     }
 
-    @Test
+    //@Test
     public void findAll() throws Exception {
         String name1 = "" +  Math.random();
         String name2 = name1 + "asd";
@@ -40,7 +41,7 @@ public class UsersDaoTest {
         UsersDao.delete(u2);
     }
 
-    @Test
+    //@Test
     public void delete() throws Exception {
         String name1 = "" +  Math.random();
         UserEntity u1 = (UserEntity) UsersDao.insert(new UserEntity(name1, name1));
@@ -50,7 +51,7 @@ public class UsersDaoTest {
         assertNull(UsersDao.findUserByCredentials(name1, name1));
     }
 
-    @Test
+    //@Test
     public void findById() throws Exception {
         String name1 = "" +  Math.random();
         UserEntity u1 = (UserEntity) UsersDao.insert(new UserEntity(name1, name1));
@@ -63,7 +64,7 @@ public class UsersDaoTest {
         UsersDao.delete(found);
     }
 
-    @Test
+    //@Test
     public void deleteChildEntities() throws Exception {
         String name1 = "" +  Math.random();
         UserEntity u = new UserEntity(name1, name1);
@@ -75,6 +76,22 @@ public class UsersDaoTest {
         UserEntity toDelete = new UserEntity();
         toDelete.id = u.id;
         UsersDao.delete(u);
+    }
+
+    public void addItemToCart() throws Exception {
+        String uname = "" + Math.random();
+        UserEntity u1 = new UserEntity(uname, uname);
+        UsersDao.insert(u1);
+
+        String iname = "" + Math.random();
+        ItemEntity i = new ItemEntity(0, 0, iname, 0, 0);
+        i = (ItemEntity) ItemsDao.insert(i);
+
+        System.out.println("ITEM: " + i.toString());
+        System.out.println("USER: " + u1.toString());
+
+        System.out.println("DONE\n\n" + u1.toString());
+
     }
 
 }

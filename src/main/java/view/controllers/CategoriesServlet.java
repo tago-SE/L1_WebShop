@@ -3,7 +3,6 @@ package view.controllers;
 import model.handlers.CategoriesHandler;
 import model.handlers.CategoriesHandler;
 import model.handlers.UsersHandler;
-import view.Commands;
 import view.viewmodels.Category;
 import view.viewmodels.User;
 
@@ -19,6 +18,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import static view.Commands.*;
+import static view.Pages.*;
+
 @WebServlet(name = "Categories")
 public class CategoriesServlet extends HttpServlet {
 
@@ -33,14 +35,14 @@ public class CategoriesServlet extends HttpServlet {
                                String msg,
                                String redirect) throws ServletException, IOException {
 
-        request.setAttribute(Commands.ERROR_RESPONSE_COMMAND, msg);
+        request.setAttribute(ERR_RESPONSE_ARG, msg);
         request.getRequestDispatcher(redirect).forward(request, response);
     }
 
     private void doReloadPage(HttpSession session, HttpServletResponse response) throws ServletException, IOException {
         List<Category> categories = CategoriesHandler.getCategories();
-        session.setAttribute(Commands.CATEGORIES_ARG, categories);
-        response.sendRedirect("admin_categories.jsp");
+        session.setAttribute(CATEGORIES_ARG, categories);
+        response.sendRedirect(ADMIN_CATEGORIES_JSP);
     }
 
     private void doInsertCategory(
@@ -51,7 +53,7 @@ public class CategoriesServlet extends HttpServlet {
             List<String> access
     ) throws ServletException, IOException {
 
-        String paramName = request.getParameter(Commands.CATEGORY_NAME_ARG);
+        String paramName = request.getParameter( CATEGORY_NAME_ARG);
         if (paramName != null && paramName.length() > 0) {
             switch (CategoriesHandler.newCategory(paramName, access)) {
                 case CategoriesHandler.INSERT_OK:
@@ -78,8 +80,8 @@ public class CategoriesServlet extends HttpServlet {
             User user,
             List<String> access
     ) throws ServletException, IOException {
-        String paramId = request.getParameter(Commands.CATEGORY_ID_ARG);
-        String paramName = request.getParameter(Commands.CATEGORY_NAME_ARG);
+        String paramId = request.getParameter( CATEGORY_ID_ARG);
+        String paramName = request.getParameter( CATEGORY_NAME_ARG);
         if (paramName != null && paramName.length() > 0) {
             switch (CategoriesHandler.deleteCategory(Integer.parseInt(paramId), access)) {
                 case CategoriesHandler.DELETE_OK:
@@ -101,10 +103,10 @@ public class CategoriesServlet extends HttpServlet {
             List<String> access
     ) throws ServletException, IOException {
 
-        String paramId = request.getParameter(Commands.CATEGORY_ID_ARG);
-        String paramName = request.getParameter(Commands.CATEGORY_NAME_ARG);
-        String paramVersion =  request.getParameter(Commands.CATEGORY_VERSION_ARG);
-        String paramNewName = request.getParameter(Commands.CATEGORY_NEW_NAME_ARG);
+        String paramId = request.getParameter( CATEGORY_ID_ARG);
+        String paramName = request.getParameter( CATEGORY_NAME_ARG);
+        String paramVersion =  request.getParameter( CATEGORY_VERSION_ARG);
+        String paramNewName = request.getParameter( CATEGORY_NEW_NAME_ARG);
         if (paramId != null && paramId.length() > 0 && paramName != null && paramName.length() > 0 && paramVersion != null && paramVersion.length() > 0) {
             Category category = new Category(Integer.parseInt(paramId), paramNewName, Integer.parseInt(paramVersion));
             switch (CategoriesHandler.updateCategory(category, access)) {
@@ -117,23 +119,24 @@ public class CategoriesServlet extends HttpServlet {
         }
     }
 
-    private void doGetCategories(HttpSession session, HttpServletResponse response) throws IOException {
+    private void doGetCategories(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String redirect = request.getParameter(REDIRECT_ARG);
         List<Category> categories = CategoriesHandler.getCategories();
-        session.setAttribute(Commands.CATEGORIES_ARG, categories);
-        response.sendRedirect("admin_categories.jsp");
+        session.setAttribute(CATEGORIES_ARG, categories);
+        response.sendRedirect(redirect);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String command = Commands.translateRequestToCommand(request);
+        String command =  translateRequestToCommand(request);
         if (command != null && command.length() > 0) {
             HttpSession session = request.getSession();
-            User user = (User) session.getAttribute(Commands.ARG_CURR_USER);
+            User user = (User) session.getAttribute( ARG_CURR_USER);
             List<String> access = (List<String>) user.getAccessRoles();
             switch (command) {
-                case Commands.CMD_INSERT_CATEGORY: doInsertCategory(request, response, session, user, access); break;
-                case Commands.CMD_DELETE_CATEGORY: doDeleteCategory(request, response, session, user, access); break;
-                case Commands.CMD_UPDATE_CATEGORY: doUpdateCategory(request, response, session, user, access); break;
-                case Commands.CMD_CATEGORY_GET_ALL: doGetCategories(session, response); break;
+                case CMD_INSERT_CATEGORY: doInsertCategory(request, response, session, user, access); break;
+                case CMD_DELETE_CATEGORY: doDeleteCategory(request, response, session, user, access); break;
+                case CMD_UPDATE_CATEGORY: doUpdateCategory(request, response, session, user, access); break;
+                case CMD_CATEGORY_GET_ALL: doGetCategories(session, request, response); break;
                 default:
             }
         }

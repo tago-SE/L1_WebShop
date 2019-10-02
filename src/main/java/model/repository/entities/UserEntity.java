@@ -32,8 +32,11 @@ public class UserEntity implements EntityInt {
     @Column(name="access")
     public Set<String> accessRoles = new HashSet<>();
 
-    @Transient
-    public List<OrderEntity> orders;
+    /*
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER, optional = false)
+    public UserCartEntity cart = new UserCartEntity();
+    */
 
     public UserEntity() {}
 
@@ -60,6 +63,9 @@ public class UserEntity implements EntityInt {
 
     @Override
     public boolean beforeInsert(EntityManager em) {
+
+        // Setup cart reference
+        //cart.user = this;
         return true;
     }
 
@@ -100,7 +106,6 @@ public class UserEntity implements EntityInt {
         return em.createNamedQuery("User.findAll");
     }
 
-
     @Override
     public String toString() {
         return "UserEntity{" +
@@ -109,6 +114,8 @@ public class UserEntity implements EntityInt {
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
                 ", accessRoles=" + accessRoles +
+                //", cart=" + cart +
                 '}';
     }
+
 }

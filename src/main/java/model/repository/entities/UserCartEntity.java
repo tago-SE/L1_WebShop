@@ -1,32 +1,26 @@
 package model.repository.entities;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-
-@Deprecated
-public class OrderEntity implements EntityInt {
+/*
+@Entity
+@Table(name = "Carts")
+public class UserCartEntity implements EntityInt {
 
     @Id
     public int id;
 
-    @Version
-    public int version;
-
-    @Column
-    public String status;
-
-    @Column
-    public Date dateRequest;
-
-    @Column
-    public Date dateSent;
-
-    @Column
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
     public UserEntity user;
 
-    //public Set<CartItemEntity> orderItems = new HashSet<>();
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    public Set<CartItemEntity> cartItems = new HashSet<>();
 
     @Override
     public boolean beforeInsert(EntityManager em) {
@@ -45,16 +39,27 @@ public class OrderEntity implements EntityInt {
 
     @Override
     public int getId() {
-        return id;
+        return 0;
     }
 
     @Override
     public int getVersion() {
-        return version;
+        return 0;
     }
 
     @Override
     public Query createVerifyIsUniqueQuery(EntityManager em) {
         return null;
     }
+
+    @Override
+    public String toString() {
+        return "UserCartEntity{" +
+                "id=" + id +
+                ", user_id=" + user.id +
+                ", orderItems=" + cartItems +
+                '}';
+    }
 }
+
+ */

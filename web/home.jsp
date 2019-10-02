@@ -10,6 +10,10 @@
 <%@ page import="view.viewmodels.Category" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="view.viewmodels.User" %>
+<%@ page import="static view.Commands.*" %>
+<%@ page import="static view.Pages.HOME_JSP" %>
+<%@ page import="java.util.List" %>
+<%@ page import="static view.Pages.LOGIN_JSP" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
@@ -22,12 +26,12 @@
     <%
         User user = (User) session.getAttribute(Commands.ARG_CURR_USER);
     if (user == null) {
-        response.sendRedirect("login.jsp");
+        response.sendRedirect(LOGIN_JSP);
     }
     else
     {
         // Set current page
-        session.setAttribute(Commands.ARG_CURR_PAGE, "home.jsp");
+        session.setAttribute(Commands.ARG_CURR_PAGE, HOME_JSP);
     %>
 
         <form method="post" action="Users">
@@ -49,24 +53,38 @@
             }
         %>
 
+
+        <!-- Refresh Categories -->
         </br>
-        <table>
-            <TR>
+        </br>
+        <form method="post" action="Categories">
+            <input type="hidden" name=<%=COMMAND%> value=<%=CMD_CATEGORY_GET_ALL%>>
+            <input type="hidden" name=<%=REDIRECT_ARG%> value=<%=HOME_JSP%>>
+            <input type="submit" value="Refresh Categories">
+        </form>
+        </br>
+        </br>
+        <form method="post" action="Items">
+            <input type="hidden" name=<%=COMMAND%> value=<%=QUERY_BY_CATEGORY_CMD%>>
+            <input type="hidden" name=<%=REDIRECT_ARG%> value=<%=HOME_JSP%>>
+            <input type="submit" value="Query">
+            </br>
+            <div style="color: #FF0000;">${errorResponse}</div><br>
+            </br>
+            <table>
                 <TH>Categories</TH>
-            </TR>
-            <%
-                ArrayList<Category> categories = (ArrayList<Category>) session.getAttribute("categories");
-                if (categories != null) {
-                    for(Category category : categories) {
-                %>
-                    <TR>
-                    <TD> <%= category.getName() %> </TD>
-                    </TR>
-                <%
-                    }
-                }
-            %>
-        </table>
+<%
+            List<Category> categories = (List<Category>) session.getAttribute(CATEGORIES_ARG);
+            if (categories != null) for (Category category : categories)
+            {   %>
+                <tr><td>
+                    <%= category.getName()%>
+                    <input type="checkbox" name=<%= category.getName()%> value="1">
+                </td></tr>
+<%          }
+%>
+            </table>
+        </form>
         </br>
         </br>
     <%

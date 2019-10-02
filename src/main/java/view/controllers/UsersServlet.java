@@ -1,12 +1,14 @@
 package view.controllers;
 
 import model.UserRoles;
+import model.handlers.ShoppingHandler;
 import model.handlers.exceptions.LoginException;
 import model.handlers.exceptions.RegisterException;
 import view.viewmodels.User;
 import model.handlers.UsersHandler;
 import view.Commands;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -33,11 +35,18 @@ public class UsersServlet extends HttpServlet {
     private static final String UNKNOWN_EXCEPTION_MSG   = "Unknown exception raised";
     private static final String CANNOT_DELETE_SELF      = "Cannot delete yourself";
 
+    private ShoppingHandler shoppingHandler = ShoppingHandler.getInstance();
+
+    public void init(ServletConfig config) {
+
+    }
+
+
     private void errorResponse(HttpServletRequest request,
                                  HttpServletResponse response,
                                  String msg,
                                  String redirect) throws ServletException, IOException {
-        request.setAttribute(ERR_RESPONSE, msg);
+        request.setAttribute(ERR_RESPONSE_ARG, msg);
         request.getRequestDispatcher(redirect).forward(request, response);
     }
 
@@ -91,10 +100,16 @@ public class UsersServlet extends HttpServlet {
 
     private void doLogout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
+        User user = (User) session.getAttribute(ARG_CURR_USER);
+        UsersHandler.logout(user.getId());
+        // User
         session.removeAttribute(USER_NAME_ARG);
         session.removeAttribute(ARG_CURR_USER);
+        // User Cart
+        session.removeAttribute(CART_ARG);
         session.invalidate();
         response.sendRedirect(LOGIN_JSP);
+
     }
 
     private void doRegister(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -34,6 +34,12 @@ public class ItemEntity implements EntityInt {
     @ManyToMany(mappedBy="items", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     public Set<CategoryEntity> categories = new HashSet<>();
 
+    /*
+    @OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.ALL,CascadeType.PERSIST,CascadeType.MERGE }, mappedBy = "item")
+    @Column(nullable = false)
+    public Set<CartItemEntity> orderItems = new HashSet<>();
+     */
+
     public ItemEntity() { }
 
     public ItemEntity(int id) {
@@ -65,6 +71,7 @@ public class ItemEntity implements EntityInt {
         categories.forEach(category -> {
             category.items.remove(this); // removes all foreign key references
         });
+        //orderItems.forEach(em::remove);
         return true;
     }
 

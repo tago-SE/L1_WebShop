@@ -2,7 +2,6 @@ package view.controllers;
 
 import model.handlers.CategoriesHandler;
 import model.handlers.ItemsHandler;
-import view.Commands;
 import view.viewmodels.Category;
 import view.viewmodels.Item;
 import view.viewmodels.User;
@@ -33,13 +32,14 @@ public class ItemsServlet extends HttpServlet {
     private static final String COULD_NOT_READ_ID_MSG = "Failed to read id from client.";
     private static final String COULD_NOT_READ_VER_MSG = "Failed to read version from client.";
     private static final String UNKNOWN_EXCEPTION_MSG = "Unknown exception raised.";
+    private static final String SELECT_MIN_CAT_MSG = "Select at least one category.";
 
     private void errorResponse(HttpServletRequest request,
                                HttpServletResponse response,
                                String msg,
                                String redirect) throws ServletException, IOException {
 
-        request.setAttribute(Commands.ERROR_RESPONSE_COMMAND, msg);
+        request.setAttribute(ERR_RESPONSE_ARG, msg);
         request.getRequestDispatcher(redirect).forward(request, response);
     }
 
@@ -147,7 +147,7 @@ public class ItemsServlet extends HttpServlet {
     }
 
     private void getAdminItems(HttpSession session, HttpServletResponse response) throws IOException {
-        session.setAttribute(Commands.ITEMS_ARG, ItemsHandler.getItems());
+        session.setAttribute(ITEMS_ARG, ItemsHandler.getItems());
         response.sendRedirect(ADMIN_ITEMS_JSP);
     }
 
@@ -166,17 +166,43 @@ public class ItemsServlet extends HttpServlet {
         }
     }
 
+    private void queryItemsByCategory(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Category> categories = (List<Category>) session.getAttribute(CATEGORIES_ARG);
+        List<String> queryList = new ArrayList<>();
+        if (categories != null) {
+            categories.forEach(category -> {
+                String catParam = request.getParameter(category.getName());
+                if (catParam != null && catParam.equals("1"))
+                   queryList.add(category.getName());
+            });
+        }
+        if (queryList.size() > 0) {
+            String[] args = new String[queryList.size()];
+            queryList.toArray(args);
+            try {
+                session.setAttribute(ITEMS_ARG, ItemsHandler.getItemsByCategories(args));
+                response.sendRedirect(SHOP_JSP);
+            } catch (Exception e) {
+                e.printStackTrace();
+                errorResponse(request, response, UNKNOWN_EXCEPTION_MSG, request.getParameter(REDIRECT_ARG));
+            }
+        } else {
+            errorResponse(request, response, SELECT_MIN_CAT_MSG, request.getParameter(REDIRECT_ARG));
+        }
+    }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String command = Commands.translateRequestToCommand(request);
+        String command = translateRequestToCommand(request);
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute(Commands.ARG_CURR_USER);
+        User user = (User) session.getAttribute(ARG_CURR_USER);
         List<String> access = (List<String>) user.getAccessRoles();
         if (command != null && command.length() > 0) {
             switch (command) {
                 case GOTO_UPSERT_ITEM_CMD: gotoEditItem(session, request, response); break;
-                case UPSERT_ITEM_CDM: insertOrUpdateItem(session, request, response, access); break;
+                case UPSERT_ITEM_CMD: insertOrUpdateItem(session, request, response, access); break;
                 case ITEMS_GET_ALL_CMD: getAdminItems(session, response); break;
                 case DELETE_ITEM_CMD: deleteItem(session, access, request, response); break;
+                case QUERY_BY_CATEGORY_CMD: queryItemsByCategory(session, request, response); break;
             }
         }
     }

@@ -1,7 +1,9 @@
 package utils;
 
+import model.handlers.ShoppingHandler;
 import model.repository.entities.ItemEntity;
 import model.repository.entities.UserEntity;
+import view.viewmodels.Cart;
 import view.viewmodels.Category;
 import model.repository.entities.CategoryEntity;
 import view.viewmodels.Item;
@@ -15,6 +17,18 @@ import java.util.List;
  * Converts Entity objects into Model objects and vice versa.
  */
 public class Converter {
+
+    // ~~~~~~~~~~
+    //  Cart
+    // ~~~~~~~~~~
+
+    public static Cart toCart(ShoppingHandler.Cart entity) {
+        List<Cart.CartItem> cartItems = new ArrayList<>();
+        for (ShoppingHandler.Cart.Item item : entity.items.values()) {
+            cartItems.add(new Cart.CartItem(toItem(item.item), item.amount));
+        }
+        return  new Cart(cartItems);
+    }
 
     // ~~~~~~~~~~
     //  Category

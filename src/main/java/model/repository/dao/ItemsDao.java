@@ -29,4 +29,7 @@ public class ItemsDao extends BasicDao {
         }
     }
 
+    public static ItemEntity findById(int id) throws Exception {
+        return (ItemEntity) findById(new ItemEntity(id));
+    }
 }

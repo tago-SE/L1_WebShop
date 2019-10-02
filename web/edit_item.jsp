@@ -21,7 +21,7 @@
     <h1>Edit Item</h1>
     <div style="color: #FF0000;">${errorResponse}</div><br>
     <form method="post" action="Items">
-        <input type="hidden" name=<%= COMMAND%> value=<%= UPSERT_ITEM_CDM%>>
+        <input type="hidden" name=<%= COMMAND%> value=<%= UPSERT_ITEM_CMD%>>
 <%
         Item item = (Item) session.getAttribute(ITEM_ARG);
         if (item == null)
