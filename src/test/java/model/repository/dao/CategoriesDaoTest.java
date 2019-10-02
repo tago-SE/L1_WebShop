@@ -3,6 +3,7 @@ package model.repository.dao;
 import model.repository.entities.CategoryEntity;
 import model.repository.entities.ItemEntity;
 import org.junit.Test;
+import view.viewmodels.Category;
 
 import java.util.List;
 
@@ -85,6 +86,20 @@ public class CategoriesDaoTest {
         }
         assertFalse(foundDeleted);
         // Double deletions
+    }
+
+    @Test
+    public void findByName() throws Exception {
+        String name ="Pants";
+       // CategoryEntity category = new CategoryEntity(name);
+        //category = (CategoryEntity) CategoriesDao.insert(category);
+        //assertNotNull(category);
+        CategoryEntity found = CategoriesDao.findByName(name);
+        assertNotNull(found);
+        System.out.println("ITEMS: " + found.items.toString());
+        found = CategoriesDao.findByName(name + "asdlasd");
+        assertNull(found);
+        //CategoriesDao.delete(category);
     }
 
     @Test

@@ -32,6 +32,9 @@ public class UserEntity implements EntityInt {
     @Column(name="access")
     public Set<String> accessRoles = new HashSet<>();
 
+    @Transient
+    public List<OrderEntity> orders;
+
     public UserEntity() {}
 
     public UserEntity(int id) {

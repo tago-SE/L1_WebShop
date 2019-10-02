@@ -34,4 +34,23 @@ public class CategoriesDao extends BasicDao {
             em.close();
         }
     }
+
+    public static CategoryEntity findByName(String name) throws Exception {
+        EntityManagerFactory factory = getEntityManagerFactory();
+        EntityManager em = factory.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            List<CategoryEntity> found = em.createNamedQuery("Category.findByName").setParameter("name", name).getResultList();
+            em.getTransaction().commit();
+            System.out.println(found.size());
+            if (found.size() == 1)
+                return found.get(0);
+            return null;
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw new Exception(e);
+        } finally {
+            em.close();
+        }
+    }
 }
