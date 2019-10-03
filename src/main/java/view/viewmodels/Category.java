@@ -2,9 +2,9 @@ package view.viewmodels;
 
 public class Category {
 
-    private final int id;
-    private final String name;
-    private final int version;
+    public final int id;
+    public final String name;
+    public final int version;
 
     public Category() {
         id = version = 0;

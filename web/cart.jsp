@@ -18,7 +18,22 @@
         return;
     }
 %>
-
+<table>
+    <td>
+        <!-- Logout -->
+        <form method="post" action=<%=USERS_SERVLET%>>
+            <input type="hidden" name=<%=  COMMAND%> value=<%=  LOGOUT_COMMAND%>>
+            <input type="submit" value="logout">
+        </form>
+    </td><td>
+        <!-- Go Home -->
+        <form method="post" action=<%=USERS_SERVLET%>>
+            <input type="hidden" name=<%=  COMMAND%> value=<%=  GOTO_CMD%>>
+            <input type="hidden" name=<%=REDIRECT_ARG%> value=<%=HOME_JSP%>>
+            <input type="submit" value="home">
+        </form>
+    </td>
+</table>
 <table>
     <th>Name</th><th>Price</th><th>Cost</th><th>stock</th><th>amount</th>
     <br>
@@ -26,25 +41,10 @@
     <div style="color:#00FF00;">${successResponse}</div><br>
     <div style="color:#FF0000;">${errorResponse}</div><br>
     <tr>
-        <!-- Logout -->
-        <form method="post" action=<%=USERS_SERVLET%>>
-            <input type="hidden" name=<%=  COMMAND%> value=<%=  LOGOUT_COMMAND%>>
-            <input type="submit" value="logout">
-        </form>
-    </tr>
-    <tr>
-        <!-- Go Home -->
-        <form method="post" action=<%=USERS_SERVLET%>>
-            <input type="hidden" name=<%=  COMMAND%> value=<%=  GOTO_CMD%>>
-            <input type="hidden" name=<%=REDIRECT_ARG%> value=<%=HOME_JSP%>>
-            <input type="submit" value="home">
-        </form>
-    </tr>
-    <tr>
     <form method="post" action=<%=SHOPPING_SERVLET%>>
         <input type="hidden" name=<%=COMMAND%> value=<%=GOTO_CMD%>>
         <input type="hidden" name=<%=REDIRECT_ARG%> value=<%=SHOP_JSP%>>
-        <input type="submit" value="Continue Shopping">
+        <input type="submit" value="Close Shopping Cart">
     </form>
     </tr><tr>
     <form method="post" action=<%=SHOPPING_SERVLET%>>

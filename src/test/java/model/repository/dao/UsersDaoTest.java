@@ -84,7 +84,7 @@ public class UsersDaoTest {
         UsersDao.insert(u1);
 
         String iname = "" + Math.random();
-        ItemEntity i = new ItemEntity(0, 0, iname, 0, 0);
+        ItemEntity i = new ItemEntity( iname, 0, 0);
         i = (ItemEntity) ItemsDao.insert(i);
 
         System.out.println("ITEM: " + i.toString());

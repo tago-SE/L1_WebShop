@@ -1,5 +1,6 @@
 package model.repository.dao;
 
+import model.handlers.exceptions.DatabaseException;
 import model.repository.entities.CategoryEntity;
 import model.repository.entities.EntityInt;
 
@@ -71,12 +72,12 @@ public abstract class BasicDao {
         }
     }
 
-    public static EntityInt update(EntityInt entity) throws Exception {
+    public static EntityInt update(EntityInt entity) throws DatabaseException {
         EntityManagerFactory factory = getEntityManagerFactory();
         EntityManager em = factory.createEntityManager();
-        if (entity.getId() == 0)
-            throw new IllegalArgumentException("Entity id must be defined: id=" + entity.getId());
         try {
+            if (entity.getId() == 0)
+                throw new IllegalArgumentException("Entity id must be defined: id=" + entity.getId());
             em.getTransaction().begin();
             EntityInt persistentEntity = em.find(entity.getClass(), entity.getId());
             if (persistentEntity != null && persistentEntity.getVersion() == entity.getVersion()) {
@@ -99,7 +100,7 @@ public abstract class BasicDao {
             return null;
         } catch (Exception e) {
             em.getTransaction().rollback();
-            throw new Exception(e);
+            throw new DatabaseException(e);
         } finally {
             em.close();
         }

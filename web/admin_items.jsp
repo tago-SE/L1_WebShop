@@ -46,7 +46,8 @@
             <input type="hidden" name=<%= COMMAND%> value=<%= ITEMS_GET_ALL_CMD%>>
             <input type="submit" value="Refresh">
         </form>
-    </td><td>
+    </td>
+    <td>
         <!-- New Item -->
         <form method="post" action=<%= ITEMS_SERVLET %>>
             <input type="hidden" name=<%= COMMAND%> value=<%= GOTO_UPSERT_ITEM_CMD%>>
@@ -67,7 +68,6 @@
 %>
         <h3>Items</h3>
         <div style="color: #FF0000;">${errorResponse}</div><br>
-
             <table style="table-layout:fixed">
                 <th>id</th>
                 <th>name</th>

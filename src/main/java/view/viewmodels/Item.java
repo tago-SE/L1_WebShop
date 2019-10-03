@@ -4,12 +4,12 @@ import java.util.Collection;
 
 public class Item {
 
-    private final int id;
-    private final int version;
-    private final String name;
-    private final int price;
-    private final int quantity;
-    private final Collection<Category> categories;
+    public final int id;
+    public final int version;
+    public final String name;
+    public final int price;
+    public final int quantity;
+    public final Collection<Category> categories;
 
     public Item(int id, int version, String name, int price, int quantity, Collection<Category> categories) {
         this.id = id;

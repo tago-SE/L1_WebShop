@@ -1,5 +1,6 @@
 package model.repository.dao;
 
+import model.handlers.exceptions.DatabaseException;
 import model.repository.entities.CategoryEntity;
 import model.repository.entities.UserEntity;
 
@@ -19,7 +20,7 @@ public class CategoriesDao extends BasicDao {
         return delete(new CategoryEntity(id));
     }
 
-    public static List<CategoryEntity> findAll() throws Exception {
+    public static List<CategoryEntity> findAll() throws DatabaseException {
         EntityManagerFactory factory = getEntityManagerFactory();
         EntityManager em = factory.createEntityManager();
         try {
@@ -29,26 +30,25 @@ public class CategoriesDao extends BasicDao {
             return found;
         } catch (Exception e) {
             em.getTransaction().rollback();
-            throw new Exception(e);
+            throw new DatabaseException(e);
         } finally {
             em.close();
         }
     }
 
-    public static CategoryEntity findByName(String name) throws Exception {
+    public static CategoryEntity findByName(String name) throws DatabaseException {
         EntityManagerFactory factory = getEntityManagerFactory();
         EntityManager em = factory.createEntityManager();
         try {
             em.getTransaction().begin();
             List<CategoryEntity> found = em.createNamedQuery("Category.findByName").setParameter("name", name).getResultList();
             em.getTransaction().commit();
-            System.out.println(found.size());
             if (found.size() == 1)
                 return found.get(0);
             return null;
         } catch (Exception e) {
             em.getTransaction().rollback();
-            throw new Exception(e);
+            throw new DatabaseException(e);
         } finally {
             em.close();
         }

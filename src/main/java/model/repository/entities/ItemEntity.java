@@ -6,11 +6,10 @@ import javax.persistence.*;
 import java.util.*;
 
 @Entity
-@Table(name = "Items")
+@Table(name = "T_Item")
 @NamedQueries({
         @NamedQuery(name = "Item.findAll", query = "SELECT i FROM  ItemEntity i"),
         @NamedQuery(name = "Item.findByName", query = "SELECT i FROM  ItemEntity i WHERE i.name = :name"),
-        @NamedQuery(name = "Item.deleteById", query = "DELETE FROM ItemEntity i WHERE i.id =:id"),
 })
 public class ItemEntity implements EntityInt {
 
@@ -34,11 +33,8 @@ public class ItemEntity implements EntityInt {
     @ManyToMany(mappedBy="items", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     public Set<CategoryEntity> categories = new HashSet<>();
 
-    /*
-    @OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.ALL,CascadeType.PERSIST,CascadeType.MERGE }, mappedBy = "item")
-    @Column(nullable = false)
-    public Set<CartItemEntity> orderItems = new HashSet<>();
-     */
+    @OneToMany(mappedBy="item")
+    public Set<OrderItemEntity> orderItems = new HashSet<>();
 
     public ItemEntity() { }
 
@@ -46,9 +42,7 @@ public class ItemEntity implements EntityInt {
         this.id = id;
     }
 
-    public ItemEntity(int id, int version, String name, int price, int quantity) {
-        this.id = id;
-        this.version = version;
+    public ItemEntity(String name, int price, int quantity) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
@@ -84,32 +78,27 @@ public class ItemEntity implements EntityInt {
 
         // Removes any relations that no longer exists between Categories and Items
         //
-        final List<CategoryEntity> newCategories = new ArrayList<>(source.categories);
-        categories.forEach(oldCategory -> {
-            Iterator<CategoryEntity> itr = newCategories.iterator();
-            boolean doRemove = true;
-            while (itr.hasNext()) {
-                CategoryEntity newCategory = itr.next();
-                if (newCategory.id == oldCategory.id) {
-                    // Remove from new category list those categories that have been retained
-                    newCategories.remove(newCategory);
-                    doRemove = false;
-                    break;
-                }
+        List<CategoryEntity> addedList = new ArrayList<>();
+        List<CategoryEntity> removedList = new ArrayList<>();
+        for (CategoryEntity newC : source.categories) {
+            if (!categories.contains(newC)) {
+                addedList.add(newC);
             }
-            if (doRemove) {
-                // Remove relation between item and category
-                this.categories.remove(oldCategory);
-                oldCategory.items.remove(this);
+        }
+        for (CategoryEntity oldC : categories) {
+            if (!source.categories.contains(oldC)) {
+                removedList.add(oldC);
             }
-        });
-        // We fetch the persistent category for those that were added to not get any unattached errors.
-        newCategories.forEach(category -> {
-            // Add relation between item and category
-            CategoryEntity persistentCategory = em.find(CategoryEntity.class, category.id);
+        }
+        for (CategoryEntity c : removedList) {
+            categories.remove(c);
+            c.items.remove(this);
+        }
+        for (CategoryEntity c : addedList) {
+            CategoryEntity persistentCategory = em.find(CategoryEntity.class, c.id);
             categories.add(persistentCategory);
             persistentCategory.items.add(this);
-        });
+        }
     }
 
     @Override
@@ -129,12 +118,18 @@ public class ItemEntity implements EntityInt {
 
     @Override
     public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (CategoryEntity c : categories) {
+            sb.append(c.name).append(",");
+        }
+        String categoriesStr = sb.toString();
         return "ItemEntity{" +
                 "id=" + id +
                 ", version=" + version +
                 ", name='" + name + '\'' +
                 ", price=" + price +
                 ", quantity=" + quantity +
+                ",{" + categoriesStr.substring(0, categoriesStr.length() - 1) + "}" +
                 '}';
     }
 }

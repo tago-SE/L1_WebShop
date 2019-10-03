@@ -21,9 +21,9 @@ public interface EntityInt extends Serializable {
     /**
      * Method used to perform an update on an entity
      * @param em
-     * @param toEntity
+     * @param fromEntity
      */
-    void update(EntityManager em, EntityInt toEntity);
+    void update(EntityManager em, EntityInt fromEntity);
 
     /**
      * Returns the entity identifier

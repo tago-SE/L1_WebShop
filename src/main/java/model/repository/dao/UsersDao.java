@@ -1,5 +1,6 @@
 package model.repository.dao;
 
+import model.handlers.exceptions.DatabaseException;
 import model.repository.entities.ItemEntity;
 import model.repository.entities.UserEntity;
 
@@ -10,7 +11,7 @@ import java.util.List;
 
 public class UsersDao extends BasicDao {
 
-    public static List<UserEntity> findAll() throws Exception {
+    public static List<UserEntity> findAll() throws DatabaseException {
         EntityManagerFactory factory = getEntityManagerFactory();
         EntityManager em = factory.createEntityManager();
         try {
@@ -20,13 +21,13 @@ public class UsersDao extends BasicDao {
             return found;
         } catch (Exception e) {
             em.getTransaction().rollback();
-            throw new Exception(e);
+            throw new DatabaseException(e);
         } finally {
             em.close();
         }
     }
 
-    public static UserEntity findUserByCredentials(String username, String password) throws Exception {
+    public static UserEntity findUserByCredentials(String username, String password) throws DatabaseException {
         EntityManagerFactory factory = getEntityManagerFactory();
         EntityManager em = factory.createEntityManager();
         try {
@@ -43,38 +44,10 @@ public class UsersDao extends BasicDao {
             throw new IllegalStateException("Found {" + resultList.size() + "} matching credentials.");
         } catch (Exception e) {
             em.getTransaction().rollback();
-            throw new Exception(e);
+            throw new DatabaseException(e);
         } finally {
             em.close();
         }
     }
 
-    /*
-    public static void addItemToCart(int userId, int itemId, int amount) {
-        EntityManagerFactory factory = getEntityManagerFactory();
-        EntityManager em = factory.createEntityManager();
-        em.getTransaction().begin();
-        UserEntity user = em.find(UserEntity.class, userId);
-        final ItemEntity item = em.find(ItemEntity.class, itemId);
-
-        System.out.println("DATA\n\n" + user.toString() + "\n" + item.toString());
-
-        boolean wasInCart = false;
-        for (CartItemEntity cartItem : user.cart.cartItems) {
-            if (cartItem.item.id == item.id) {
-                wasInCart = true;
-                cartItem.amount += amount;
-                if (cartItem.amount < 0)
-                    cartItem.amount = 0;
-            }
-        }
-        if (!wasInCart) {
-            CartItemEntity cartItem = new CartItemEntity(item, amount);
-            em.persist(cartItem);
-            user.cart.cartItems.add(cartItem);
-        }
-
-        em.getTransaction().commit();
-    }
-     */
 }

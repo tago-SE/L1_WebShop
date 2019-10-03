@@ -1,16 +1,18 @@
 package model.repository.entities;
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import java.util.*;
 
 @Entity
-@Table(name = "Users")
-@NamedQueries({
-        @NamedQuery(name = "User.findAll", query = "SELECT u FROM  UserEntity u"),
-        @NamedQuery(name = "User.findByName", query = "SELECT u FROM  UserEntity u WHERE u.name = :name"),
-        @NamedQuery(name = "User.findByNameContains", query = "SELECT u FROM UserEntity u WHERE u.name LIKE :search"),
-        @NamedQuery(name = "User.validateCredentials", query = "SELECT u FROM  UserEntity u WHERE u.name = :name and u.password = :password")
-})
+    @Table(name = "T_User")
+    @NamedQueries({
+            @NamedQuery(name = "User.findAll", query = "SELECT u FROM  UserEntity u"),
+            @NamedQuery(name = "User.findByName", query = "SELECT u FROM  UserEntity u WHERE u.name = :name"),
+            @NamedQuery(name = "User.findByNameContains", query = "SELECT u FROM UserEntity u WHERE u.name LIKE :search"),
+            @NamedQuery(name = "User.validateCredentials", query = "SELECT u FROM  UserEntity u WHERE u.name = :name and u.password = :password")
+    })
 public class UserEntity implements EntityInt {
 
     @Id
@@ -28,15 +30,12 @@ public class UserEntity implements EntityInt {
     public String password;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name="Access", joinColumns=@JoinColumn(name="user_id"))
+    @CollectionTable(name="T_UserAccess", joinColumns=@JoinColumn(name="user_id"))
     @Column(name="access")
     public Set<String> accessRoles = new HashSet<>();
 
-    /*
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER, optional = false)
-    public UserCartEntity cart = new UserCartEntity();
-    */
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+    public Set<OrderEntity> orders = new HashSet<>();
 
     public UserEntity() {}
 
@@ -63,9 +62,6 @@ public class UserEntity implements EntityInt {
 
     @Override
     public boolean beforeInsert(EntityManager em) {
-
-        // Setup cart reference
-        //cart.user = this;
         return true;
     }
 

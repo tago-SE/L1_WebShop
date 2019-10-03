@@ -1,6 +1,7 @@
 package model.repository.dao;
 
 
+import model.handlers.exceptions.DatabaseException;
 import model.repository.entities.ItemEntity;
 
 import javax.persistence.EntityManager;
@@ -10,7 +11,15 @@ import java.util.List;
 public class ItemsDao extends BasicDao {
 
     public static boolean delete(int id) throws Exception {
-        return delete(new ItemEntity(id));
+        return BasicDao.delete(new ItemEntity(id));
+    }
+
+    public static ItemEntity insert(ItemEntity item) throws Exception {
+        return (ItemEntity) BasicDao.insert(item);
+    }
+
+    public static ItemEntity update(ItemEntity item) throws Exception {
+        return (ItemEntity) BasicDao.update(item);
     }
 
     public static List<ItemEntity> findAll() throws Exception {
@@ -23,13 +32,13 @@ public class ItemsDao extends BasicDao {
             return found;
         } catch (Exception e) {
             em.getTransaction().rollback();
-            throw new Exception(e);
+            throw new DatabaseException(e);
         } finally {
             em.close();
         }
     }
 
     public static ItemEntity findById(int id) throws Exception {
-        return (ItemEntity) findById(new ItemEntity(id));
+        return (ItemEntity) BasicDao.findById(new ItemEntity(id));
     }
 }

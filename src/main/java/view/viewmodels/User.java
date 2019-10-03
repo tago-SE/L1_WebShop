@@ -5,23 +5,28 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import static model.UserRoles.*;
+
 public class User {
 
-    private int id;
-    private int version;
-    private String name;
-    private Collection<String> accessRoles;
+    public final int id;
+    public final int version;
+    public final String name;
+    public final Collection<String> accessRoles;
 
-
-    public User() {}
 
     public User(String name) {
         this.name = name;
+        this.id = 0;
+        this.version = 0;
+        this.accessRoles = new ArrayList<>();
     }
 
     public User(int id, String name) {
         this.id = id;
         this.name = name;
+        this.version = 0;
+        this.accessRoles = new ArrayList<>();
     }
 
     public User(int id, int version, String name, List<String> accessRoles) {
@@ -48,11 +53,26 @@ public class User {
     }
 
     public boolean isAdmin() {
-        if (accessRoles != null)
-            for (String role : accessRoles) {
-                if (role.equals("Admin"))
-                    return true;
-            }
+        for (String role : accessRoles) {
+            if (role.equals(ADMIN))
+                return true;
+        }
+        return false;
+    }
+
+    public boolean isCustomer() {
+        for (String role : accessRoles) {
+            if (role.equals(CUSTOMER))
+                return true;
+        }
+        return false;
+    }
+
+    public boolean isStorageWorker() {
+        for (String role : accessRoles) {
+            if (role.equals(STORAGE_WORKER))
+                return true;
+        }
         return false;
     }
 

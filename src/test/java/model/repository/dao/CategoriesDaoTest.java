@@ -107,8 +107,8 @@ public class CategoriesDaoTest {
 
 
         CategoryEntity category = new CategoryEntity("Pants" + Math.random());
-        ItemEntity i1 = new ItemEntity(0, 0, "Red", 0, 0);
-        ItemEntity i2 = new ItemEntity(0, 0, "Blue", 0, 0);
+        ItemEntity i1 = new ItemEntity("Red", 0, 0);
+        ItemEntity i2 = new ItemEntity("Blue", 0, 0);
         category.items.add(i1);
         category.items.add(i2);
         i1.categories.add(category);

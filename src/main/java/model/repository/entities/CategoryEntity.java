@@ -1,14 +1,15 @@
 package model.repository.entities;
 
+import view.viewmodels.Category;
+
 import javax.persistence.*;
 import java.util.*;
 
 @Entity
-@Table(name = "Categories")
+@Table(name = "T_Category")
 @NamedQueries({
         @NamedQuery(name = "Category.findAll", query = "SELECT c FROM  CategoryEntity c"),
         @NamedQuery(name = "Category.findByName", query = "SELECT c FROM  CategoryEntity c WHERE c.name = :name"),
-        @NamedQuery(name = "Category.deleteById", query = "DELETE FROM CategoryEntity c WHERE c.id =:id"),
 })
 public class CategoryEntity  implements EntityInt {
 
@@ -26,7 +27,7 @@ public class CategoryEntity  implements EntityInt {
     @ManyToMany( cascade = {
             CascadeType.PERSIST, CascadeType.MERGE
     }, fetch = FetchType.EAGER)
-    @JoinTable(name = "CategoryItems", joinColumns = { @JoinColumn(name = "category_id") }, inverseJoinColumns = { @JoinColumn(name = "item_id") })
+    @JoinTable(name = "T_CategoryItems", joinColumns = { @JoinColumn(name = "category_id") }, inverseJoinColumns = { @JoinColumn(name = "item_id") })
     public Set<ItemEntity> items = new HashSet<>();
 
     public CategoryEntity() { }
@@ -100,6 +101,14 @@ public class CategoryEntity  implements EntityInt {
 
     public void setItems(Set<ItemEntity> items) {
         this.items = items;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CategoryEntity entity = (CategoryEntity) o;
+        return id == entity.id;
     }
 
     @Override

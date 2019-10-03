@@ -7,9 +7,9 @@ public class UserRoles {
 
     public static final String ADMIN = "Admin";
     public static final String CUSTOMER = "Customer";
-    public static final String EMPLOYEE = "Employee";
+    public static final String STORAGE_WORKER = "Employee";
 
-    public static final String[] roles = {ADMIN, CUSTOMER, EMPLOYEE};
+    public static final String[] roles = {ADMIN, CUSTOMER, STORAGE_WORKER};
 
     public static List<String> asList() {
         return Arrays.asList(roles);

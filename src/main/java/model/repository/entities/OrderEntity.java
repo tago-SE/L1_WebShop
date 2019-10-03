@@ -5,10 +5,14 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-@Deprecated
+
+@Entity
+@Table(name = "T_Order")
 public class OrderEntity implements EntityInt {
 
     @Id
+    @GeneratedValue(generator = "incrementor")
+    @Column(name = "order_id", unique = true)
     public int id;
 
     @Version
@@ -18,15 +22,35 @@ public class OrderEntity implements EntityInt {
     public String status;
 
     @Column
-    public Date dateRequest;
+    public Date sent;
 
     @Column
-    public Date dateSent;
+    public Date delivered;
 
-    @Column
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="user_id", nullable = false)
     public UserEntity user;
 
-    //public Set<CartItemEntity> orderItems = new HashSet<>();
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "order")
+    public Set<OrderItemEntity> orderItems = new HashSet<>();
+
+    public OrderEntity() { }
+
+    public OrderEntity(UserEntity user) {
+        setUser(user);
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+
+    public void setUser(UserEntity user) {
+        if (this.user != null)
+            this.user.orders.remove(this);
+        this.user = user;
+        this.user.orders.add(this);
+    }
 
     @Override
     public boolean beforeInsert(EntityManager em) {
@@ -39,7 +63,7 @@ public class OrderEntity implements EntityInt {
     }
 
     @Override
-    public void update(EntityManager em, EntityInt toEntity) {
+    public void update(EntityManager em, EntityInt fromEntity) {
 
     }
 
@@ -56,5 +80,15 @@ public class OrderEntity implements EntityInt {
     @Override
     public Query createVerifyIsUniqueQuery(EntityManager em) {
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderEntity{" +
+                "id=" + id +
+                ", version=" + version +
+                ", user.name=" + user.name +
+                ", orderItems=" + orderItems +
+                '}';
     }
 }

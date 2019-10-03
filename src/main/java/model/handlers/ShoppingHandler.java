@@ -1,8 +1,13 @@
 package model.handlers;
 
+import model.handlers.exceptions.DatabaseException;
 import model.repository.dao.ItemsDao;
+import model.repository.dao.OrdersDao;
 import model.repository.entities.ItemEntity;
+import model.repository.entities.OrderEntity;
+import model.repository.entities.OrderItemEntity;
 
+import java.util.Date;
 import java.util.HashMap;
 
 // TODO: Should add a Cart class and a periodic refresh for removing user carts that have not been used for some time.
@@ -153,8 +158,23 @@ public class ShoppingHandler {
         Cart cart = getUserCart(userId);
         int response = 0;
         if (cart.getTotalAmount() > 0) {
-            response = ORDER_OK;
-            cart.items.clear();
+            // Convert to order
+            OrderEntity order = new OrderEntity();
+            order.sent = new Date();
+            for (Cart.Item cartItem : cart.items.values()) {
+                if (cartItem.amount > 0) {
+                    // associations created internally to order and item in the constructor
+                    new OrderItemEntity(cartItem.item, order, cartItem.amount, cartItem.item.price);
+                }
+            }
+            try {
+                OrdersDao.insert(userId, order);
+                cart.items.clear();
+                response = ORDER_OK;
+            } catch (DatabaseException e) {
+                e.printStackTrace();
+                response = EXCEPTION;
+            }
         } else {
             response = ORDER_FAIL;
         }
