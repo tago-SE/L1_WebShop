@@ -1,8 +1,10 @@
 package view.controllers;
 
 import model.handlers.ShoppingHandler;
+import model.handlers.exceptions.DatabaseException;
 import utils.Converter;
 import view.viewmodels.Cart;
+import view.viewmodels.Order;
 import view.viewmodels.User;
 
 import javax.servlet.ServletException;
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 
 import static view.Commands.*;
 import static view.Pages.*;
@@ -83,10 +86,26 @@ public class ShoppingServlet extends BasicServlet {
         }
     }
 
+    private void getAllOrders(HttpSession session, HttpServletRequest request, HttpServletResponse response, List<String> access) throws IOException, ServletException {
+        String redirect = request.getParameter(REDIRECT_ARG);
+        try {
+            shoppingHandler.getAllOrders(access);
+            List<Order> orders = shoppingHandler.getAllOrders(access);
+            session.setAttribute(ORDERS_ARG, orders);
+            response.sendRedirect(redirect);
+        } catch (IllegalAccessException e) {
+            errorResponse(request,response, ILLEGAL_ACCESS_MSG, redirect);
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+            errorResponse(request, response, DB_EXCEPTION_MSG, redirect);
+        }
+    }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String command = translateRequestToCommand(request);
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute(ARG_CURR_USER);
+        List<String> access = (List<String>) user.getAccessRoles();
         if (user == null) {
             return;
         }
@@ -98,6 +117,7 @@ public class ShoppingServlet extends BasicServlet {
                 case CUSTOMER_ORDER_CMD: makeOrder(session, request, response); break;
                 case REMOVE_FROM_CART_CMD: dropCartItem(session, request, response); break;
                 case EDIT_CART_ITEM_ARG: editCartItem(session, request, response); break;
+                case GET_ALL_ORDERS: getAllOrders(session, request, response, access); break;
             }
         }
     }

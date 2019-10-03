@@ -8,6 +8,9 @@ import java.util.Set;
 
 @Entity
 @Table(name = "T_Order")
+@NamedQueries({
+        @NamedQuery(name = "Order.findAll", query = "SELECT o FROM OrderEntity o")
+})
 public class OrderEntity implements EntityInt {
 
     @Id
@@ -19,7 +22,7 @@ public class OrderEntity implements EntityInt {
     public int version;
 
     @Column
-    public String status;
+    public State status;
 
     @Column
     public Date sent;
@@ -34,16 +37,33 @@ public class OrderEntity implements EntityInt {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "order")
     public Set<OrderItemEntity> orderItems = new HashSet<>();
 
+    public enum State {
+        SENT, DELIVERED, KILLED;
+    }
+
     public OrderEntity() { }
 
     public OrderEntity(UserEntity user) {
         setUser(user);
     }
 
+    public void send() {
+        sent = new Date();
+        status = State.SENT;
+    }
+
+    public void deliver() {
+        delivered = new Date();
+        status = State.DELIVERED;
+    }
+
+    public void kill() {
+        status = State.KILLED;
+    }
+
     public UserEntity getUser() {
         return user;
     }
-
 
     public void setUser(UserEntity user) {
         if (this.user != null)
@@ -87,6 +107,9 @@ public class OrderEntity implements EntityInt {
         return "OrderEntity{" +
                 "id=" + id +
                 ", version=" + version +
+                ", status=" + status +
+                ", sent=" + sent +
+                ", delivered=" + delivered +
                 ", user.name=" + user.name +
                 ", orderItems=" + orderItems +
                 '}';

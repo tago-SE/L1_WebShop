@@ -95,7 +95,9 @@ public class OrderItemEntity implements EntityInt {
                 "id=" + id +
                 ", version=" + version +
                 ", amount=" + amount +
+                ", price_per_item=" + price_per_item +
                 ", item=" + item +
+                ", order.id=" + order.id +
                 '}';
     }
 }

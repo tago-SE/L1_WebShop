@@ -1,5 +1,6 @@
 package model.repository.dao;
 
+import model.handlers.exceptions.DatabaseException;
 import model.repository.entities.ItemEntity;
 import model.repository.entities.OrderEntity;
 import model.repository.entities.OrderItemEntity;
@@ -13,7 +14,7 @@ import java.util.List;
 
 public class OrderItemEntityTest {
 
-    @Test
+    //@Test
     public void testItemOrderEntity() throws Exception {
         EntityManagerFactory factory = BasicDao.getEntityManagerFactory();
         EntityManager em = factory.createEntityManager();
@@ -39,7 +40,13 @@ public class OrderItemEntityTest {
         em.persist(oi2);
         em.getTransaction().commit();
 
-        //user = (UserEntity) UsersDao.insert(user);
         System.out.println(order.toString());
+    }
+
+    @Test
+    public void testFindAll() throws DatabaseException {
+        List<OrderEntity> orders = OrdersDao.findAll();
+        for (int i = 0 ; i < 3 && i < orders.size(); i++)
+            System.out.println(orders.get(i).toString());
     }
 }

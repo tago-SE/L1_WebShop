@@ -7,6 +7,7 @@
 <%@ page import="static view.Pages.HOME_JSP" %>
 <%@ page import="java.util.List" %>
 <%@ page import="static view.Pages.LOGIN_JSP" %>
+<%@ page import="static view.Pages.*" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
@@ -40,12 +41,15 @@
             {
                 %>
                 <h3>Admin Control</h3>
-                    <a href = "admin_categories.jsp">Categories</a><br>
-                    <a href = "admin_items.jsp">Items</a><br>
-                    <a href = "admin_users.jsp">Users</a><br>
+                <a href = <%=ADMIN_CATEGORIES_JSP%>>Categories</a><br>
+                <a href = <%=ADMIN_ITEMS_JSP%>>Items</a><br>
+                <a href = <%=ADMIN_USERS_JSP%>>Users</a><br>
                 <%
             }
         %>
+
+        <h3>Staff Control</h3>
+        <a href = <%=ORDERS_JSP%>>Orders</a><br>
 
 
         <!-- Refresh Categories -->

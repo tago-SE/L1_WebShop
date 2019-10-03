@@ -1,13 +1,8 @@
 package utils;
 
 import model.handlers.ShoppingHandler;
-import model.repository.entities.ItemEntity;
-import model.repository.entities.UserEntity;
-import view.viewmodels.Cart;
-import view.viewmodels.Category;
-import model.repository.entities.CategoryEntity;
-import view.viewmodels.Item;
-import view.viewmodels.User;
+import model.repository.entities.*;
+import view.viewmodels.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,7 +22,31 @@ public class Converter {
         for (ShoppingHandler.Cart.Item item : entity.items.values()) {
             cartItems.add(new Cart.CartItem(toItem(item.item), item.amount));
         }
-        return  new Cart(cartItems);
+        return new Cart(cartItems);
+    }
+
+    // ~~~~~~~~~~
+    //  Order
+    // ~~~~~~~~~~
+
+    public static OrderItem toOrderItem(OrderItemEntity entity) {
+        return new OrderItem(entity.id, entity.version, toItem(entity.getItem()), entity.amount, entity.price_per_item);
+    }
+
+    public static Order toOrder(OrderEntity entity) {
+        List<OrderItem> orderItems = new ArrayList<>();
+        for (OrderItemEntity oi : entity.orderItems) {
+            orderItems.add(toOrderItem(oi));
+        }
+        return new Order(entity.id, entity.version, toUser(entity.user), entity.status.toString(), entity.sent, entity.delivered, orderItems);
+    }
+
+    public static List<Order> toOrders(List<OrderEntity> entities) {
+        List<Order> orderList = new ArrayList<>();
+        for (OrderEntity oe : entities) {
+            orderList.add(toOrder(oe));
+        }
+        return orderList;
     }
 
     // ~~~~~~~~~~

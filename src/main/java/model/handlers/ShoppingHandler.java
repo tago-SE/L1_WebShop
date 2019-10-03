@@ -6,9 +6,13 @@ import model.repository.dao.OrdersDao;
 import model.repository.entities.ItemEntity;
 import model.repository.entities.OrderEntity;
 import model.repository.entities.OrderItemEntity;
+import utils.Converter;
+import view.viewmodels.Order;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 // TODO: Should add a Cart class and a periodic refresh for removing user carts that have not been used for some time.
 public class ShoppingHandler {
@@ -16,6 +20,9 @@ public class ShoppingHandler {
     public static final int ORDER_OK          = 1;
     public static final int ORDER_FAIL        = 2;
     public static final int EXCEPTION         = 3;
+
+    private static final String[] accessRoles = {"Admin", "Worker"};
+    private static final AccessControl accessControl = new AccessControl(accessRoles);
 
     private HashMap<Integer, Cart> carts = new HashMap<>();
 
@@ -160,10 +167,10 @@ public class ShoppingHandler {
         if (cart.getTotalAmount() > 0) {
             // Convert to order
             OrderEntity order = new OrderEntity();
-            order.sent = new Date();
+            order.send();
             for (Cart.Item cartItem : cart.items.values()) {
                 if (cartItem.amount > 0) {
-                    // associations created internally to order and item in the constructor
+                    // associations created internally to order and item inside the constructor
                     new OrderItemEntity(cartItem.item, order, cartItem.amount, cartItem.item.price);
                 }
             }
@@ -179,6 +186,12 @@ public class ShoppingHandler {
             response = ORDER_FAIL;
         }
         return response;
+    }
+
+    public List<Order> getAllOrders(List<String> access) throws IllegalAccessException, DatabaseException {
+        if (accessControl.validateAccess(null, access))
+            return Converter.toOrders(OrdersDao.findAll());
+        throw new IllegalAccessException();
     }
 
 }

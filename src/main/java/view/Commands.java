@@ -41,8 +41,11 @@ public class Commands {
     public static final String CUSTOMER_ORDER_CMD           = "make_order";
     public static final String REMOVE_FROM_CART_CMD         = "cart_i_rem";
     public static final String EDIT_CART_ITEM_ARG           = "edit_cart";
-
     public static final String CART_ARG                     = "cart";
+
+    // Orders
+    public static final String GET_ALL_ORDERS               = "ord_all";
+    public static final String ORDERS_ARG                   = "orders";
 
     // User
     public static final String LOGIN_COMMAND                = "login";

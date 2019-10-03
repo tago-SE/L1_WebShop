@@ -13,6 +13,8 @@ import static view.Commands.*;
 public abstract class BasicServlet extends HttpServlet {
 
     public static final String UNKNOWN_EXCEPTION_MSG = "Unknown exception raised.";
+    public static final String DB_EXCEPTION_MSG     = "Database exception raised.";
+    public static final String ILLEGAL_ACCESS_MSG   = "Illegal access.";
 
     protected void errorResponse(HttpServletRequest request,
                                       HttpServletResponse response,
