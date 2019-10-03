@@ -112,8 +112,19 @@ public class Converter {
     //  User
     // ~~~~~~~
 
+    public static UserEntity toUserEntity(User model) {
+        UserEntity entity = new UserEntity();
+        entity.id = model.id;
+        entity.version = model.version;
+        entity.name = model.name;
+        entity.firstName = model.firstName;
+        entity.lastName = model.lastName;
+        entity.accessRoles = new HashSet<>(model.accessRoles);
+        return entity;
+    }
+
     public static User toUser(UserEntity entity) {
-        return new User(entity.id, entity.version, entity.name, new ArrayList<>(entity.accessRoles));
+        return new User(entity.id, entity.version, entity.name, new ArrayList<>(entity.accessRoles), entity.firstName, entity.lastName);
     }
 
     public static List<User> toUsers(List<UserEntity> entities) {

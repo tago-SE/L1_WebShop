@@ -44,6 +44,7 @@
         <!-- Refresh Categories -->
         <form method="post" action=<%=ITEMS_SERVLET%>>
             <input type="hidden" name=<%= COMMAND%> value=<%= ITEMS_GET_ALL_CMD%>>
+            <input type="hidden" name=<%=REDIRECT_ARG%> value=<%=ADMIN_ITEMS_JSP%>>
             <input type="submit" value="Refresh">
         </form>
     </td>
@@ -51,6 +52,7 @@
         <!-- New Item -->
         <form method="post" action=<%= ITEMS_SERVLET %>>
             <input type="hidden" name=<%= COMMAND%> value=<%= GOTO_UPSERT_ITEM_CMD%>>
+            <input type="hidden" name=<%=REDIRECT_ARG%> value=<%=ADMIN_ITEMS_JSP%>>
             <input type="hidden" name=<%= ITEM_ID_ARG%> value=0>
             <input type="submit" value="New Item">
         </form>
@@ -98,16 +100,20 @@
                         <form method="post" action=<%= ITEMS_SERVLET %>>
                             <input type="hidden" name=<%= COMMAND%> value=<%= GOTO_UPSERT_ITEM_CMD%>>
                             <input type="hidden" name=<%= ITEM_ID_ARG%> value=<%= item.getId()%>>
+                            <input type="hidden" name=<%=REDIRECT_ARG%> value=<%=ADMIN_ITEMS_JSP%>>
                             <input type="submit" value="Edit">
                         </form>
                     </td><td>
                         <form method="post" action=<%= ITEMS_SERVLET %>>
                             <input type="hidden" name=<%= COMMAND%> value=<%= DELETE_ITEM_CMD%>>
                             <input type="hidden" name=<%= ITEM_ID_ARG%> value=<%= item.getId()%>>
+                            <input type="hidden" name=<%=REDIRECT_ARG%> value=<%=ADMIN_ITEMS_JSP%>>
                             <input type="submit" value="delete">
                         </form>
                     </td>
                     </tr>
+
+
 
 
 <%

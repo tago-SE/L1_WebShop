@@ -22,6 +22,23 @@ public class ItemsDao extends BasicDao {
         return (ItemEntity) BasicDao.update(item);
     }
 
+    public static ItemEntity setItemQuantity(int itemId, int newQuantity) throws DatabaseException {
+        EntityManagerFactory factory = getEntityManagerFactory();
+        EntityManager em = factory.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            ItemEntity entity = em.find(ItemEntity.class, itemId);
+            entity.quantity = newQuantity;
+            em.getTransaction().commit();
+            return entity;
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw new DatabaseException(e);
+        } finally {
+            em.close();
+        }
+    }
+
     public static List<ItemEntity> findAll() throws Exception {
         EntityManagerFactory factory = getEntityManagerFactory();
         EntityManager em = factory.createEntityManager();

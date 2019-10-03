@@ -1,11 +1,11 @@
 package model.handlers;
 
+import model.handlers.exceptions.DatabaseException;
 import model.repository.dao.CategoriesDao;
 import model.repository.dao.ItemsDao;
 import model.repository.entities.CategoryEntity;
 import model.repository.entities.ItemEntity;
 import utils.Converter;
-import view.viewmodels.Category;
 import view.viewmodels.Item;
 
 import java.util.ArrayList;
@@ -48,6 +48,12 @@ public class ItemsHandler {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static boolean updateItemStock(int itemId, int amount, List<String> access) throws IllegalAccessException, DatabaseException {
+        if (!accessControl.validateAccess(null, access))
+            throw new IllegalAccessException();
+        return ItemsDao.setItemQuantity(itemId, amount) != null;
     }
 
     public static List<Item> getItemsByCategories(String... categories) throws Exception {

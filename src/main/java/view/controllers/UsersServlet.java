@@ -2,20 +2,20 @@ package view.controllers;
 
 import model.UserRoles;
 import model.handlers.ShoppingHandler;
+import model.handlers.exceptions.DatabaseException;
 import model.handlers.exceptions.LoginException;
 import model.handlers.exceptions.RegisterException;
 import view.viewmodels.User;
 import model.handlers.UsersHandler;
-import view.Commands;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static view.Commands.*;
@@ -34,13 +34,14 @@ public class UsersServlet extends BasicServlet {
     private static final String ILLEGAL_ACCESS_MSG      = "Unauthorized Access.";
     private static final String UNKNOWN_EXCEPTION_MSG   = "Unknown exception raised";
     private static final String CANNOT_DELETE_SELF      = "Cannot delete yourself";
+    private static final String NO_USER_ROLE_ERR        = "A user must be assigned at least one role";
+    private static final String USER_CHANGES_OK         = "User changes were accepted.";
 
     private ShoppingHandler shoppingHandler = ShoppingHandler.getInstance();
 
     public void init(ServletConfig config) {
 
     }
-
 
     private void onLoginSuccess(HttpServletRequest request,
                                 HttpServletResponse response,
@@ -192,6 +193,38 @@ public class UsersServlet extends BasicServlet {
         }
     }
 
+    private void updateUser(HttpSession session,  HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        User user = (User) session.getAttribute(ARG_CURR_USER);
+        List<String> access = (List<String>) user.getAccessRoles();
+        User editUser = (User) session.getAttribute(USER_TO_EDIT_ARG);
+        String firstName = request.getParameter(FIRST_NAME_ARG);
+        String lastName = request.getParameter(LAST_NAME_ARG);
+        String adminRole = request.getParameter(UserRoles.ADMIN);
+        String WorkerRole = request.getParameter(UserRoles.STORAGE_WORKER);
+        String customerRole = request.getParameter(UserRoles.CUSTOMER);
+        String redirect = request.getParameter(REDIRECT_ARG);
+        List<String> newAccessList = new ArrayList<>();
+        if (adminRole != null)
+            newAccessList.add(adminRole);
+        if (WorkerRole != null)
+            newAccessList.add(WorkerRole);
+        if (customerRole != null)
+            newAccessList.add(customerRole);
+        if (newAccessList.size() == 0 && user.isAdmin()) {
+            errorResponse(request, response, NO_USER_ROLE_ERR, redirect);
+            return;
+        }
+        newAccessList = editUser.accessRoles;
+        User newUser = new User(editUser.id, editUser.version, editUser.name, newAccessList, firstName, lastName);
+        try {
+            newUser = UsersHandler.updateUser(newUser);
+            session.setAttribute(USER_TO_EDIT_ARG, newUser);
+            successResponse(request, response, USER_CHANGES_OK, redirect);
+        } catch (DatabaseException e) {
+            errorResponse(request, response, DB_EXCEPTION_MSG, redirect);
+        }
+    }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String command = translateRequestToCommand(request);
         HttpSession session = request.getSession();
@@ -204,6 +237,7 @@ public class UsersServlet extends BasicServlet {
                 case CMD_DELETE_USER: deleteUser(session, request, response); break;
                 case CMD_GOTO_EDIT_USER: gotoEditUser(session, request, response); break;
                 case GOTO_CMD: gotoPage(session, request, response); break;
+                case UPDATE_USER_CMD: updateUser(session, request, response);
                 default:
             }
         }

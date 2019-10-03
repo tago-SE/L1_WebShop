@@ -72,6 +72,10 @@ public class OrderEntity implements EntityInt {
         this.user.orders.add(this);
     }
 
+    public boolean isDelivered() {
+        return delivered != null;
+    }
+
     @Override
     public boolean beforeInsert(EntityManager em) {
         return false;

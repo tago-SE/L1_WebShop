@@ -29,6 +29,10 @@ public class Order {
         this.cost = total;
     }
 
+    public boolean isDelivered() {
+        return delivered != null;
+    }
+
     @Override
     public String toString() {
         return "Order{" +

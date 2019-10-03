@@ -29,6 +29,12 @@ public class UserEntity implements EntityInt {
     @Column(name = "pass", nullable = false)
     public String password;
 
+    @Column(name = "fname")
+    public String firstName;
+
+    @Column(name ="lname")
+    public String lastName;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name="T_UserAccess", joinColumns=@JoinColumn(name="user_id"))
     @Column(name="access")
@@ -75,6 +81,8 @@ public class UserEntity implements EntityInt {
         UserEntity source = (UserEntity) fromEntity;
         this.accessRoles = source.accessRoles;
         this.name = source.name;
+        this.firstName = source.firstName;
+        this.lastName = source.lastName;
     }
 
     @Override
@@ -108,9 +116,10 @@ public class UserEntity implements EntityInt {
                 "id=" + id +
                 ", version=" + version +
                 ", name='" + name + '\'' +
+                ", fname='" + firstName + '\'' +
+                ", lname='" + lastName + '\'' +
                 ", password='" + password + '\'' +
                 ", accessRoles=" + accessRoles +
-                //", cart=" + cart +
                 '}';
     }
 

@@ -36,21 +36,27 @@
 
         Welcome <%= user.getName() %>
 
-        <%
-            if (user.isAdmin())
-            {
-                %>
-                <h3>Admin Control</h3>
-                <a href = <%=ADMIN_CATEGORIES_JSP%>>Categories</a><br>
-                <a href = <%=ADMIN_ITEMS_JSP%>>Items</a><br>
-                <a href = <%=ADMIN_USERS_JSP%>>Users</a><br>
-                <%
-            }
+<%
+    if (user.isAdmin())
+    {
         %>
-
-        <h3>Staff Control</h3>
-        <a href = <%=ORDERS_JSP%>>Orders</a><br>
-
+        <h3>Admin Control</h3>
+        <a href = <%=ADMIN_CATEGORIES_JSP%>>Categories</a><br>
+        <a href = <%=ADMIN_ITEMS_JSP%>>Items</a><br>
+        <a href = <%=ADMIN_USERS_JSP%>>Users</a><br>
+        <%
+    }
+%>
+<%
+    if (user.isStorageWorker())
+    {
+%>
+    <h3>Staff Control</h3>
+    <a href = <%=ORDERS_JSP%>>Orders</a><br>
+    <a href = <%=STOCK_JSP%>>Stock</a><br>
+<%
+    }
+%>
 
         <!-- Refresh Categories -->
         </br>

@@ -2,6 +2,7 @@ package view.controllers;
 
 import model.handlers.CategoriesHandler;
 import model.handlers.ItemsHandler;
+import model.handlers.exceptions.DatabaseException;
 import view.viewmodels.Category;
 import view.viewmodels.Item;
 import view.viewmodels.User;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +36,7 @@ public class ItemsServlet extends BasicServlet {
     private static final String COULD_NOT_READ_VER_MSG = "Failed to read version from client.";
     private static final String UNKNOWN_EXCEPTION_MSG = "Unknown exception raised.";
     private static final String SELECT_MIN_CAT_MSG = "Select at least one category.";
+    private static final String STOCK_ITEM_CHANGE_MSG = "Stock item was changed.";
 
     private void insertOrUpdateItem(
             HttpSession session,
@@ -109,7 +112,7 @@ public class ItemsServlet extends BasicServlet {
             try {
                 ItemsHandler.updateItem(newItem, access);
                 // Return to admin items page regardless of success or failure
-                getAdminItems(session, response);
+                getItems(session, request, response);
             } catch (Exception e) {
                 if (e instanceof IllegalAccessException) {
                     errorResponse(request, response, ACCESS_DENIED_MSG, EDIT_ITEM_JSP);
@@ -138,9 +141,10 @@ public class ItemsServlet extends BasicServlet {
         response.sendRedirect(EDIT_ITEM_JSP);
     }
 
-    private void getAdminItems(HttpSession session, HttpServletResponse response) throws IOException {
+    private void getItems(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws IOException {
         session.setAttribute(ITEMS_ARG, ItemsHandler.getItems());
-        response.sendRedirect(ADMIN_ITEMS_JSP);
+        String page = request.getParameter(REDIRECT_ARG);
+        response.sendRedirect(page);
     }
 
     private void deleteItem(HttpSession session,  List<String> access, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -148,7 +152,7 @@ public class ItemsServlet extends BasicServlet {
         try {
             int id = Integer.parseInt(idParam);
             ItemsHandler.deleteItem(id, access);
-            getAdminItems(session, response);
+            getItems(session, request, response);
         } catch (Exception e) {
             if (e instanceof IllegalAccessException) {
                 errorResponse(request, response, ACCESS_DENIED_MSG, ADMIN_ITEMS_JSP);
@@ -183,6 +187,20 @@ public class ItemsServlet extends BasicServlet {
         }
     }
 
+    private void editStockAmount(HttpSession session, HttpServletRequest request, HttpServletResponse response, List<String> access) throws ServletException, IOException {
+        try {
+            ItemsHandler.updateItemStock(
+                    Integer.parseInt(request.getParameter(ITEM_ID_ARG)),
+                    Integer.parseInt(request.getParameter(ITEM_AMOUNT_ARG)), access);
+            request.setAttribute(SUCCESS_RESPONSE_ARG, STOCK_ITEM_CHANGE_MSG);
+            getItems(session, request, response);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        }
+    }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String command = translateRequestToCommand(request);
         HttpSession session = request.getSession();
@@ -192,10 +210,11 @@ public class ItemsServlet extends BasicServlet {
             switch (command) {
                 case GOTO_UPSERT_ITEM_CMD: gotoEditItem(session, request, response); break;
                 case UPSERT_ITEM_CMD: insertOrUpdateItem(session, request, response, access); break;
-                case ITEMS_GET_ALL_CMD: getAdminItems(session, response); break;
+                case ITEMS_GET_ALL_CMD: getItems(session, request, response); break;
                 case DELETE_ITEM_CMD: deleteItem(session, access, request, response); break;
                 case QUERY_BY_CATEGORY_CMD: queryItemsByCategory(session, request, response); break;
                 case GOTO_CMD: gotoPage(session, request, response); break;
+                case EDIT_ITEM_STOCK_CMD: editStockAmount(session, request, response, access);
             }
         }
     }

@@ -2,93 +2,11 @@
 <Diagram>
   <ID>JAVA</ID>
   <OriginalElement />
-  <nodes>
-    <node x="224.9817708333333" y="0.0">model.repository.entities.EntityInt</node>
-    <node x="33.64999999999998" y="96.0">model.repository.entities.ItemEntity</node>
-    <node x="185.0" y="306.0">model.repository.entities.OrderItemEntity</node>
-    <node x="305.6067708333333" y="96.0">model.repository.entities.UserEntity</node>
-    <node x="0.0" y="306.0">model.repository.entities.CategoryEntity</node>
-    <node x="280.990625" y="472.0">model.repository.entities.OrderEntity</node>
-  </nodes>
+  <nodes />
   <notes />
-  <edges>
-    <edge source="model.repository.entities.OrderItemEntity" target="model.repository.entities.ItemEntity">
-      <point x="-50.33333333333334" y="-58.0" />
-      <point x="210.16666666666663" y="281.0" />
-      <point x="226.25" y="281.0" />
-      <point x="85.60000000000002" y="80.0" />
-    </edge>
-    <edge source="model.repository.entities.ItemEntity" target="model.repository.entities.EntityInt">
-      <point x="-53.5" y="-80.0" />
-      <point x="87.14999999999998" y="66.0" />
-      <point x="252.2317708333333" y="66.0" />
-      <point x="-27.25" y="13.0" />
-    </edge>
-    <edge source="model.repository.entities.UserEntity" target="model.repository.entities.OrderEntity">
-      <point x="44.249999999999986" y="80.0" />
-      <point x="438.3567708333333" y="281.0" />
-      <point x="392.490625" y="281.0" />
-      <point x="0.0" y="-91.0" />
-    </edge>
-    <edge source="model.repository.entities.OrderEntity" target="model.repository.entities.UserEntity">
-      <point x="-44.599999999999966" y="-91.0" />
-      <point x="347.89062500000006" y="452.0" />
-      <point x="381.490625" y="452.0" />
-      <point x="381.490625" y="281.0" />
-      <point x="349.8567708333333" y="281.0" />
-      <point x="-44.25" y="80.0" />
-    </edge>
-    <edge source="model.repository.entities.CategoryEntity" target="model.repository.entities.EntityInt">
-      <point x="-41.25" y="-58.0" />
-      <point x="41.25" y="281.0" />
-      <point x="23.149999999999977" y="281.0" />
-      <point x="23.149999999999977" y="56.0" />
-      <point x="241.33177083333328" y="56.0" />
-      <point x="-38.150000000000006" y="13.0" />
-    </edge>
-    <edge source="model.repository.entities.OrderEntity" target="model.repository.entities.OrderItemEntity">
-      <point x="-89.19999999999996" y="-91.0" />
-      <point x="303.29062500000003" y="452.0" />
-      <point x="260.5" y="452.0" />
-      <point x="0.0" y="58.0" />
-    </edge>
-    <edge source="model.repository.entities.OrderItemEntity" target="model.repository.entities.EntityInt">
-      <point x="50.33333333333334" y="-58.0" />
-      <point x="310.8333333333333" y="281.0" />
-      <point x="284.9817708333333" y="281.0" />
-      <point x="5.4500000000000455" y="13.0" />
-    </edge>
-    <edge source="model.repository.entities.UserEntity" target="model.repository.entities.EntityInt">
-      <point x="-44.25" y="-80.0" />
-      <point x="349.8567708333333" y="76.0" />
-      <point x="295.8317708333333" y="76.0" />
-      <point x="16.350000000000023" y="13.0" />
-    </edge>
-    <edge source="model.repository.entities.OrderEntity" target="model.repository.entities.EntityInt">
-      <point x="44.60000000000004" y="-91.0" />
-      <point x="437.09062500000005" y="442.0" />
-      <point x="493.1067708333333" y="442.0" />
-      <point x="493.1067708333333" y="56.0" />
-      <point x="317.63177083333335" y="56.0" />
-      <point x="38.150000000000034" y="13.0" />
-    </edge>
-    <edge source="model.repository.entities.CategoryEntity" target="model.repository.entities.ItemEntity">
-      <point x="13.75" y="-58.0" />
-      <point x="96.25" y="281.0" />
-      <point x="97.84999999999997" y="281.0" />
-      <point x="-42.8" y="80.0" />
-    </edge>
-    <edge source="model.repository.entities.ItemEntity" target="model.repository.entities.CategoryEntity">
-      <point x="0.0" y="80.0" />
-      <point x="140.64999999999998" y="281.0" />
-      <point x="123.75" y="281.0" />
-      <point x="41.25" y="-58.0" />
-    </edge>
-  </edges>
-  <settings layout="Hierarchic Group" zoom="1.0" x="464.1805555555557" y="428.82738095238125" />
-  <SelectedNodes>
-    <node>model.repository.entities.UserEntity</node>
-  </SelectedNodes>
+  <edges />
+  <settings layout="Orthogonal" zoom="0.933406113537118" x="599.0891887813639" y="428.89356725146195" />
+  <SelectedNodes />
   <Categories>
     <Category>Fields</Category>
   </Categories>

@@ -12,7 +12,9 @@ public class User {
     public final int id;
     public final int version;
     public final String name;
-    public final Collection<String> accessRoles;
+    public final List<String> accessRoles;
+    public final String firstName;
+    public final String lastName;
 
 
     public User(String name) {
@@ -20,6 +22,7 @@ public class User {
         this.id = 0;
         this.version = 0;
         this.accessRoles = new ArrayList<>();
+        firstName = lastName = "";
     }
 
     public User(int id, String name) {
@@ -27,6 +30,7 @@ public class User {
         this.name = name;
         this.version = 0;
         this.accessRoles = new ArrayList<>();
+        firstName = lastName = "";
     }
 
     public User(int id, int version, String name, List<String> accessRoles) {
@@ -34,6 +38,16 @@ public class User {
         this.version = version;
         this.name = name;
         this.accessRoles = new ArrayList<>(accessRoles);
+        firstName = lastName = "";
+    }
+
+    public User(int id, int version, String name, List<String> accessRoles, String firstName, String lastName) {
+        this.id = id;
+        this.version = version;
+        this.name = name;
+        this.accessRoles = accessRoles;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public Integer getId() {
@@ -82,8 +96,9 @@ public class User {
                 "id=" + id +
                 ", version=" + version +
                 ", name='" + name + '\'' +
-                ", roles=" + accessRoles +
+                ", accessRoles=" + accessRoles +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
                 '}';
     }
-
 }

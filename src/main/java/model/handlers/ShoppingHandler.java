@@ -6,6 +6,7 @@ import model.repository.dao.OrdersDao;
 import model.repository.entities.ItemEntity;
 import model.repository.entities.OrderEntity;
 import model.repository.entities.OrderItemEntity;
+import org.hibernate.dialect.Database;
 import utils.Converter;
 import view.viewmodels.Order;
 
@@ -192,6 +193,10 @@ public class ShoppingHandler {
         if (accessControl.validateAccess(null, access))
             return Converter.toOrders(OrdersDao.findAll());
         throw new IllegalAccessException();
+    }
+
+    public void deliverOrder(int orderId) throws Exception {
+        OrdersDao.deliverOrder(orderId);
     }
 
 }

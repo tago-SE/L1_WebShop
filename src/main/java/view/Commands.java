@@ -26,6 +26,7 @@ public class Commands {
     public static final String DELETE_ITEM_CMD              = "i_delete";
     public static final String UPSERT_ITEM_CMD              = "i_upsert";
     public static final String QUERY_BY_CATEGORY_CMD        = "i_cat_query";
+    public static final String EDIT_ITEM_STOCK_CMD          = "i_stock";
 
     public static final String ITEM_NAME_ARG                = "i_name";
     public static final String ITEM_ID_ARG                  = "i_id";
@@ -44,8 +45,12 @@ public class Commands {
     public static final String CART_ARG                     = "cart";
 
     // Orders
-    public static final String GET_ALL_ORDERS               = "ord_all";
+    public static final String GET_ALL_ORDERS_CMD           = "ord_all";
+    public static final String DELIVER_ORDER_CMD            = "ord_deliver";
     public static final String ORDERS_ARG                   = "orders";
+    public static final String DELIVERED_SORT_ARG           = "orders_del_first";
+    public static final String UNDELIVERED_SORT_ARG         = "orders_del_first";
+    public static final String ORDER_ID_ARG                 = "order_id";
 
     // User
     public static final String LOGIN_COMMAND                = "login";
@@ -54,9 +59,10 @@ public class Commands {
     public static final String CMD_USERS_GET_ALL            = "cmd_u_all";
     public static final String CMD_GOTO_EDIT_USER           = "goto_edit_user";
     public static final String CMD_DELETE_USER              = "delete_user";
-    public static final String CMD_EDIT_USER                =   "delete_user";
+    public static final String UPDATE_USER_CMD              = "update_user";
+    public static final String FIRST_NAME_ARG               = "fname";
+    public static final String LAST_NAME_ARG                = "lname";
     public static final String ARG_USER_ID                  = "id_user";
-
     public static final String USER_TO_EDIT_ARG             = "watch_user";
 
     // Response
@@ -77,7 +83,6 @@ public class Commands {
     public static final String USER_LIST_ARG                = "all_users";
 
     public static final String ARG_CURR_PAGE                 = "curr_page";
-
 
 
     // Servlets as defined in web.xml

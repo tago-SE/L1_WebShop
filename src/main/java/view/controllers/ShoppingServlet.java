@@ -2,6 +2,8 @@ package view.controllers;
 
 import model.handlers.ShoppingHandler;
 import model.handlers.exceptions.DatabaseException;
+import model.handlers.exceptions.InvalidRequestException;
+import model.handlers.exceptions.OutOfStockException;
 import utils.Converter;
 import view.viewmodels.Cart;
 import view.viewmodels.Order;
@@ -23,6 +25,9 @@ public class ShoppingServlet extends BasicServlet {
 
     public static final String ORDER_MIN_ONE_ITEM_MSG = "Your cart is empty.";
     public static final String ORDER_SENT_MSG = "Order has been sent.";
+    public static final String OUT_OF_STOCK_MSG = "Delivery cannot be made due to one or more items being out of stock.";
+    public static final String DELIVERY_ALREADY_MADE_MSG = "Delivery has already been made before.";
+
     private static ShoppingHandler shoppingHandler = ShoppingHandler.getInstance();
 
     private void addToCart(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -88,9 +93,17 @@ public class ShoppingServlet extends BasicServlet {
 
     private void getAllOrders(HttpSession session, HttpServletRequest request, HttpServletResponse response, List<String> access) throws IOException, ServletException {
         String redirect = request.getParameter(REDIRECT_ARG);
+        String sortByDelivered = request.getParameter(DELIVERED_SORT_ARG);
+        String sortByUndelivered = request.getParameter(UNDELIVERED_SORT_ARG);
         try {
             shoppingHandler.getAllOrders(access);
             List<Order> orders = shoppingHandler.getAllOrders(access);
+            if (sortByDelivered != null && sortByDelivered.equals("1")) {
+                // Not yet implemented
+            }
+            else if (sortByUndelivered != null && sortByUndelivered.equals("1")) {
+                // Not yet implemented
+            }
             session.setAttribute(ORDERS_ARG, orders);
             response.sendRedirect(redirect);
         } catch (IllegalAccessException e) {
@@ -98,6 +111,30 @@ public class ShoppingServlet extends BasicServlet {
         } catch (DatabaseException e) {
             e.printStackTrace();
             errorResponse(request, response, DB_EXCEPTION_MSG, redirect);
+        }
+    }
+
+    private void deliverOrder(HttpSession session, HttpServletRequest request, HttpServletResponse response, List<String> access) throws IOException, ServletException {
+        int orderId = Integer.parseInt(request.getParameter(ORDER_ID_ARG));
+        String redirect = request.getParameter(REDIRECT_ARG);
+        try {
+            shoppingHandler.deliverOrder(orderId);
+            request.setAttribute(REDIRECT_ARG, redirect);
+            getAllOrders(session, request, response, access);
+        } catch (Exception e) {
+            if (e instanceof DatabaseException) {
+                e.printStackTrace();
+                errorResponse(request,response, DB_EXCEPTION_MSG, redirect);
+            }
+            else if (e instanceof OutOfStockException) {
+                errorResponse(request,response, OUT_OF_STOCK_MSG, redirect);
+            }
+            else if (e instanceof InvalidRequestException) {
+                errorResponse(request,response, DELIVERY_ALREADY_MADE_MSG, redirect);
+            } else {
+                e.printStackTrace();
+                errorResponse(request,response, UNKNOWN_EXCEPTION_MSG, redirect);
+            }
         }
     }
 
@@ -117,7 +154,8 @@ public class ShoppingServlet extends BasicServlet {
                 case CUSTOMER_ORDER_CMD: makeOrder(session, request, response); break;
                 case REMOVE_FROM_CART_CMD: dropCartItem(session, request, response); break;
                 case EDIT_CART_ITEM_ARG: editCartItem(session, request, response); break;
-                case GET_ALL_ORDERS: getAllOrders(session, request, response, access); break;
+                case GET_ALL_ORDERS_CMD: getAllOrders(session, request, response, access); break;
+                case DELIVER_ORDER_CMD: deliverOrder(session, request, response, access); break;
             }
         }
     }

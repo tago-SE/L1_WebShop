@@ -1,5 +1,6 @@
 package model.handlers;
 
+import model.handlers.exceptions.DatabaseException;
 import utils.Converter;
 import model.handlers.exceptions.LoginException;
 import model.handlers.exceptions.RegisterException;
@@ -89,6 +90,10 @@ public class UsersHandler {
             e.printStackTrace();
             return EXCEPTION;
         }
+    }
+
+    public static User updateUser(User u) throws DatabaseException {
+        return Converter.toUser((UserEntity) UsersDao.update(Converter.toUserEntity(u)));
     }
 
     public static List<User> getAllUsers(List<String> access) {
