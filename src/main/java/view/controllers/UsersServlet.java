@@ -200,21 +200,22 @@ public class UsersServlet extends BasicServlet {
         String firstName = request.getParameter(FIRST_NAME_ARG);
         String lastName = request.getParameter(LAST_NAME_ARG);
         String adminRole = request.getParameter(UserRoles.ADMIN);
-        String WorkerRole = request.getParameter(UserRoles.STORAGE_WORKER);
+        String workerRole = request.getParameter(UserRoles.STORAGE_WORKER);
         String customerRole = request.getParameter(UserRoles.CUSTOMER);
         String redirect = request.getParameter(REDIRECT_ARG);
         List<String> newAccessList = new ArrayList<>();
         if (adminRole != null)
             newAccessList.add(adminRole);
-        if (WorkerRole != null)
-            newAccessList.add(WorkerRole);
+        if (workerRole != null)
+            newAccessList.add(workerRole);
         if (customerRole != null)
             newAccessList.add(customerRole);
         if (newAccessList.size() == 0 && user.isAdmin()) {
             errorResponse(request, response, NO_USER_ROLE_ERR, redirect);
             return;
+        } else {
+            newAccessList = editUser.accessRoles;
         }
-        newAccessList = editUser.accessRoles;
         User newUser = new User(editUser.id, editUser.version, editUser.name, newAccessList, firstName, lastName);
         try {
             newUser = UsersHandler.updateUser(newUser);

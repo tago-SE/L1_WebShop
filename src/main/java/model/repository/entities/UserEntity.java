@@ -79,10 +79,14 @@ public class UserEntity implements EntityInt {
     @Override
     public void update(EntityManager em, EntityInt fromEntity) {
         UserEntity source = (UserEntity) fromEntity;
-        this.accessRoles = source.accessRoles;
         this.name = source.name;
         this.firstName = source.firstName;
         this.lastName = source.lastName;
+        this.accessRoles.clear();
+        for (String access : source.accessRoles) {
+            System.out.println("ADDED_ACCESS__: " + access);
+            this.accessRoles.add(access);
+        }
     }
 
     @Override

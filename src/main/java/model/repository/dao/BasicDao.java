@@ -81,12 +81,11 @@ public abstract class BasicDao {
             em.getTransaction().begin();
             EntityInt persistentEntity = em.find(entity.getClass(), entity.getId());
             if (persistentEntity != null && persistentEntity.getVersion() == entity.getVersion()) {
-
                 Query isUniqueQuery = entity.createVerifyIsUniqueQuery(em);
                 boolean performUpdate = true;
                 if (isUniqueQuery != null) {
                     List<EntityInt> resultList = isUniqueQuery.getResultList();
-                    if ((resultList.size() == 1 && resultList.get(0).getId()!= persistentEntity.getId()) || resultList.size() > 1) {
+                    if ((resultList.size() == 1 && resultList.get(0).getId() != persistentEntity.getId()) || resultList.size() > 1) {
                         performUpdate = false;
                     }
                 }
