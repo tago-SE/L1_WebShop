@@ -67,12 +67,9 @@ public class OrdersDao extends BasicDao {
         EntityManagerFactory factory = getEntityManagerFactory();
         EntityManager em = factory.createEntityManager();
         try {
-            em.getTransaction().begin();
             List<OrderEntity> found = em.createNamedQuery("Order.findAll").getResultList();
-            em.getTransaction().commit();
             return found;
         } catch (Exception e) {
-            em.getTransaction().rollback();
             throw new DatabaseException(e);
         } finally {
             em.close();
