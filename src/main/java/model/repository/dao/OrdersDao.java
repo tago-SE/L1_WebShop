@@ -11,6 +11,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.util.List;
 
+import static utils.LogManager.getLogger;
+
 public class OrdersDao extends BasicDao {
 
     public static OrderEntity insert(int userId, OrderEntity order) throws DatabaseException {
@@ -27,10 +29,12 @@ public class OrdersDao extends BasicDao {
             for (OrderItemEntity orderItem : order.orderItems) {
                 em.persist(orderItem);
             }
+            getLogger().info("order saved: " + order.id);
             em.getTransaction().commit();
             return order;
         } catch (Exception e) {
             em.getTransaction().rollback();
+            getLogger().severe(e.getCause() + " :" + e.getMessage());
             throw new DatabaseException(e);
         } finally {
             em.close();
@@ -54,9 +58,11 @@ public class OrdersDao extends BasicDao {
                 }
             }
             order.deliver();
+            getLogger().info("order delivered: " + orderId);
             em.getTransaction().commit();
         } catch (Exception e) {
             em.getTransaction().rollback();
+            getLogger().severe(e.getCause() + " :" + e.getMessage());
             throw e;
         } finally {
             em.close();
@@ -68,8 +74,10 @@ public class OrdersDao extends BasicDao {
         EntityManager em = factory.createEntityManager();
         try {
             List<OrderEntity> found = em.createNamedQuery("Order.findAll").getResultList();
+            getLogger().info("found: " + found.size());
             return found;
         } catch (Exception e) {
+            getLogger().severe(e.getCause() + " :" + e.getMessage());
             throw new DatabaseException(e);
         } finally {
             em.close();

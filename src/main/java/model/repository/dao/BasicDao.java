@@ -7,6 +7,8 @@ import model.repository.entities.EntityInt;
 import javax.persistence.*;
 import java.util.List;
 
+import static utils.LogManager.getLogger;
+
 /**
  * Abstract class containing basic CRUD operators and some queries
  */
@@ -38,10 +40,13 @@ public abstract class BasicDao {
                 em.persist(entity);
             }
             em.getTransaction().commit();
+            if (entity != null)
+                getLogger().severe("inserted: " + entity.getClass().getSimpleName() + " [" + entity.getId() + "]");
             // Returns the persistent entity along with any database modified attributes
             return entity;
         } catch (Exception e) {
             em.getTransaction().rollback();
+            getLogger().severe(e.getCause() + " :" + e.getMessage());
             throw new Exception(e);
         } finally {
             em.close();
@@ -60,12 +65,15 @@ public abstract class BasicDao {
                 foundEntity.beforeDelete(em);
                 em.remove(foundEntity);
                 em.getTransaction().commit();
+                getLogger().severe("deleted success: " + entity.getClass().getSimpleName() + " [" + entity.getId() + "]");
                 return true;
             }
             em.getTransaction().commit();
+            getLogger().severe("deleted failure: " + entity.getClass().getSimpleName() + " [" + entity.getId() + "]");
             return false;
         } catch (Exception e) {
             em.getTransaction().rollback();
+            getLogger().severe(e.getCause() + " :" + e.getMessage());
             throw new Exception(e);
         } finally {
             em.close();
@@ -92,13 +100,16 @@ public abstract class BasicDao {
                 if (performUpdate) {
                     persistentEntity.update(em, entity);
                     em.getTransaction().commit();
+                    getLogger().severe("update success: " + entity.getClass().getSimpleName() + " [" + entity.getId() + "]");
                     return persistentEntity;
                 }
             }
             em.getTransaction().commit();
+            getLogger().severe("update failure: " + entity.getClass().getSimpleName() + " [" + entity.getId() + "]");
             return null;
         } catch (Exception e) {
             em.getTransaction().rollback();
+            getLogger().severe(e.getCause() + " :" + e.getMessage());
             throw new DatabaseException(e);
         } finally {
             em.close();
@@ -115,6 +126,7 @@ public abstract class BasicDao {
             return foundEntity;
         } catch (Exception e) {
             em.getTransaction().rollback();
+            getLogger().severe(e.getCause() + " :" + e.getMessage());
             throw new Exception(e);
         } finally {
             em.close();

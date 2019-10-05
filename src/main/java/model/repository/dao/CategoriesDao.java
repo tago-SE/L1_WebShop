@@ -9,6 +9,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import java.util.List;
 
+import static utils.LogManager.getLogger;
+
 public class CategoriesDao extends BasicDao {
 
 
@@ -25,8 +27,10 @@ public class CategoriesDao extends BasicDao {
         EntityManager em = factory.createEntityManager();
         try {
             List<CategoryEntity> found = em.createNamedQuery("Category.findAll").getResultList();
+            getLogger().info("found: " + found.size());
             return found;
         } catch (Exception e) {
+            getLogger().severe(e.getCause() + " :" + e.getMessage());
             throw new DatabaseException(e);
         } finally {
             em.close();
@@ -40,11 +44,14 @@ public class CategoriesDao extends BasicDao {
             em.getTransaction().begin();
             List<CategoryEntity> found = em.createNamedQuery("Category.findByName").setParameter("name", name).getResultList();
             em.getTransaction().commit();
-            if (found.size() == 1)
+            if (found.size() == 1) {
+                getLogger().info("found: " + found.size());
                 return found.get(0);
+            }
             return null;
         } catch (Exception e) {
             em.getTransaction().rollback();
+            getLogger().severe(e.getCause() + " :" + e.getMessage());
             throw new DatabaseException(e);
         } finally {
             em.close();
