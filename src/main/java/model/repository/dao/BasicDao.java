@@ -16,8 +16,12 @@ public abstract class BasicDao {
 
     private static final String PERSISTENCE_UNIT_NAME = "org.hibernate.lab1_web_shop.jpa";
 
+    private static EntityManagerFactory factory = null;
+
     public static EntityManagerFactory getEntityManagerFactory() {
-        return  Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+        if (factory == null) // run-once
+            return factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+        return factory;
     }
 
     public static EntityInt insert(EntityInt entity) throws Exception {

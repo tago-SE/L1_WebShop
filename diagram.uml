@@ -3,62 +3,83 @@
   <ID>JAVA</ID>
   <OriginalElement />
   <nodes>
-    <node x="265.5" y="347.0">model.repository.entities.EntityInt</node>
-    <node x="488.5" y="109.0">model.repository.entities.ItemEntity</node>
-    <node x="-11.0" y="787.0">model.repository.dao.ItemsDao</node>
-    <node x="189.0" y="667.0">model.repository.dao.UsersDao</node>
-    <node x="371.5" y="787.0">model.repository.dao.CategoriesDao</node>
-    <node x="232.5" y="-22.0">model.repository.entities.UserEntity</node>
-    <node x="244.5" y="462.0">model.repository.entities.OrderItemEntity</node>
-    <node x="185.5" y="907.0">model.repository.dao.OrdersDao</node>
-    <node x="189.0" y="787.0">model.repository.dao.BasicDao</node>
-    <node x="-31.5" y="269.0">model.repository.entities.OrderEntity</node>
-    <node x="797.5" y="302.0">model.repository.entities.CategoryEntity</node>
+    <node x="413.0" y="1774.0">view.Pages</node>
+    <node x="677.5" y="1667.0">view.controllers.CategoriesServlet</node>
+    <node x="393.0" y="2142.0">view.controllers.ShoppingServlet</node>
+    <node x="161.0" y="224.0">view.Commands</node>
+    <node x="-25.0" y="907.0">view.controllers.ItemsServlet</node>
+    <node x="960.5" y="73.0">view.controllers.BasicServlet</node>
+    <node x="455.0" y="907.0">view.controllers.UsersServlet</node>
   </nodes>
   <notes />
   <edges>
-    <edge source="model.repository.entities.ItemEntity" target="model.repository.entities.EntityInt">
-      <point x="0.0" y="91.0" />
-      <point x="600.0" y="352.0" />
-      <point x="54.5" y="-8.0" />
+    <edge source="view.controllers.UsersServlet" target="view.Commands">
+      <point x="-65.0" y="0.0" />
+      <point x="119.0" y="0.0" />
     </edge>
-    <edge source="model.repository.entities.CategoryEntity" target="model.repository.entities.EntityInt">
-      <point x="-82.5" y="0.0" />
-      <point x="54.5" y="0.0" />
+    <edge source="view.controllers.UsersServlet" target="view.Pages">
+      <point x="0.0" y="13.0" />
+      <point x="0.0" y="-146.0" />
     </edge>
-    <edge source="model.repository.dao.CategoriesDao" target="model.repository.dao.BasicDao">
-      <point x="-68.5" y="0.0" />
-      <point x="51.0" y="0.0" />
+    <edge source="view.controllers.ItemsServlet" target="view.controllers.BasicServlet">
+      <point x="0.0" y="-13.0" />
+      <point x="40.0" y="0.0" />
+      <point x="1080.0" y="0.0" />
+      <point x="0.0" y="-47.0" />
     </edge>
-    <edge source="model.repository.entities.OrderItemEntity" target="model.repository.entities.EntityInt">
+    <edge source="view.controllers.ShoppingServlet" target="view.controllers.BasicServlet">
+      <point x="127.0" y="0.0" />
+      <point x="1240.0" y="2200.0" />
+      <point x="1240.0" y="120.0" />
+      <point x="119.5" y="0.0" />
+    </edge>
+    <edge source="view.controllers.CategoriesServlet" target="view.Pages">
+      <point x="0.0" y="13.0" />
+      <point x="760.0" y="1920.0" />
+      <point x="107.0" y="0.0" />
+    </edge>
+    <edge source="view.controllers.ItemsServlet" target="view.Pages">
+      <point x="0.0" y="13.0" />
+      <point x="40.0" y="1920.0" />
+      <point x="-107.0" y="0.0" />
+    </edge>
+    <edge source="view.controllers.ShoppingServlet" target="view.Commands">
+      <point x="-127.0" y="0.0" />
+      <point x="280.0" y="2200.0" />
+      <point x="0.0" y="696.0" />
+    </edge>
+    <edge source="view.controllers.ShoppingServlet" target="view.Pages">
       <point x="0.0" y="-58.0" />
-      <point x="0.0" y="13.0" />
+      <point x="0.0" y="146.0" />
     </edge>
-    <edge source="model.repository.entities.UserEntity" target="model.repository.entities.EntityInt">
-      <point x="0.0" y="102.0" />
+    <edge source="view.controllers.CategoriesServlet" target="view.controllers.BasicServlet">
       <point x="0.0" y="-13.0" />
+      <point x="760.0" y="160.0" />
+      <point x="-119.5" y="40.0" />
     </edge>
-    <edge source="model.repository.dao.UsersDao" target="model.repository.dao.BasicDao">
-      <point x="0.0" y="13.0" />
-      <point x="0.0" y="-13.0" />
+    <edge source="view.controllers.UsersServlet" target="view.controllers.BasicServlet">
+      <point x="65.0" y="0.0" />
+      <point x="720.0" y="920.0" />
+      <point x="720.0" y="150.0" />
+      <point x="-119.5" y="30.0" />
     </edge>
-    <edge source="model.repository.dao.OrdersDao" target="model.repository.dao.BasicDao">
-      <point x="0.0" y="-13.0" />
-      <point x="0.0" y="13.0" />
+    <edge source="view.controllers.BasicServlet" target="view.Commands">
+      <point x="-119.5" y="10.0" />
+      <point x="280.0" y="130.0" />
+      <point x="0.0" y="-696.0" />
     </edge>
-    <edge source="model.repository.entities.OrderEntity" target="model.repository.entities.EntityInt">
-      <point x="111.5" y="0.0" />
-      <point x="-54.5" y="0.0" />
+    <edge source="view.controllers.CategoriesServlet" target="view.Commands">
+      <point x="-82.5" y="0.0" />
+      <point x="320.0" y="1680.0" />
+      <point x="40.0" y="696.0" />
     </edge>
-    <edge source="model.repository.dao.ItemsDao" target="model.repository.dao.BasicDao">
-      <point x="51.0" y="0.0" />
-      <point x="-51.0" y="0.0" />
+    <edge source="view.controllers.ItemsServlet" target="view.Commands">
+      <point x="65.0" y="0.0" />
+      <point x="-119.0" y="0.0" />
     </edge>
   </edges>
-  <settings layout="Orthogonal" zoom="0.6334061135371181" x="988.0942135878134" y="654.9224405377454" />
-  <SelectedNodes>
-    <node>model.repository.dao.ItemsDao</node>
-  </SelectedNodes>
+  <settings layout="Orthogonal" zoom="0.5334061135371181" x="1060.377622067179" y="1544.012814359422" />
+  <SelectedNodes />
   <Categories>
     <Category>Fields</Category>
   </Categories>

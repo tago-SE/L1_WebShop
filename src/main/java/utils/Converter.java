@@ -119,7 +119,6 @@ public class Converter {
         entity.name = model.name;
         entity.firstName = model.firstName;
         entity.lastName = model.lastName;
-        System.out.println("MODEL__" + model.accessRoles);
         entity.accessRoles = new HashSet<>(model.accessRoles);
         return entity;
     }

@@ -58,12 +58,14 @@ public class UsersHandler {
             throw new RegisterException(NO_PASSWORD);
         if (!password.equals(password1))
             throw new RegisterException(NO_PASSWORD_MATCH);
-        // New User
+
+        // New User - Debug
         UserEntity newUser = new UserEntity(username, password);
         newUser.addAccess("Admin");
         newUser.addAccess("Customer");
         newUser.addAccess("Worker");
         UserEntity user = (UserEntity) UsersDao.insert(newUser);
+
         if (user == null)
             throw new RegisterException(REGISTRATION_FAILURE);
         return Converter.toUser(user);

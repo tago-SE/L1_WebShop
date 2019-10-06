@@ -210,11 +210,10 @@ public class UsersServlet extends BasicServlet {
             newAccessList.add(workerRole);
         if (customerRole != null)
             newAccessList.add(customerRole);
+
         if (newAccessList.size() == 0 && user.isAdmin()) {
             errorResponse(request, response, NO_USER_ROLE_ERR, redirect);
             return;
-        } else {
-            newAccessList = editUser.accessRoles;
         }
         User newUser = new User(editUser.id, editUser.version, editUser.name, newAccessList, firstName, lastName);
         try {

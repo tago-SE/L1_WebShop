@@ -9,6 +9,7 @@ public class LogManager {
 
 
     // NOTICE: The file FILE_PATH must exists and be accessible by the program.
+    // Should not be a dynamic link...
     private static final String FILE_PATH = "C:\\Users\\tiago\\Desktop\\Repositories\\L1_WebShop\\dblogs.log";
     //
     private static Logger logger = null;
