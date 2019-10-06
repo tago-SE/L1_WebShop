@@ -9,9 +9,8 @@ public class LogManager {
 
 
     // We are running Tomcat, so we need to write to the tomcat writeable directory "webapps"
-    // Make sure that the file "dblogs.log" exists inside the directory and that
-    // you have access rights to this folder.
-    // Apache Software Foundation/TomcatX/webapps/ ...
+    // Make sure that access is allowed to the tomcat folder (Folder properties)
+    // Target Directory: Apache Software Foundation/TomcatX/webapps/ ...
     private static final String FILE_PATH = "..//webapps//Projects//L1_WebShop//dblogs.log";
 
     private static Logger logger = null;
