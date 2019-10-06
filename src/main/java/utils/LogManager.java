@@ -8,10 +8,12 @@ import java.util.logging.SimpleFormatter;
 public class LogManager {
 
 
-    // NOTICE: The file FILE_PATH must exists and be accessible by the program.
-    // Should not be a dynamic link...
-    private static final String FILE_PATH = "C:\\Users\\tiago\\Desktop\\Repositories\\L1_WebShop\\dblogs.log";
-    //
+    // We are running Tomcat, so we need to write to the tomcat writeable directory "webapps"
+    // Make sure that the file "dblogs.log" exists inside the directory and that
+    // you have access rights to this folder.
+    // Apache Software Foundation/TomcatX/webapps/ ...
+    private static final String FILE_PATH = "..//webapps//Projects//L1_WebShop//dblogs.log";
+
     private static Logger logger = null;
 
     public static Logger getLogger() {
