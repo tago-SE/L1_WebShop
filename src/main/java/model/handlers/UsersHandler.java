@@ -102,7 +102,6 @@ public class UsersHandler {
         if (!accessControl.validateAccess(null, access))
             return null;
         try {
-            List<User> users = Converter.toUsers(UsersDao.findAll());
             return Converter.toUsers(UsersDao.findAll());
         } catch (Exception e) {
             return new ArrayList<>();
