@@ -6,5 +6,5 @@ Back-end lab focusing on implementation of
 
 Hibernate ORM, JDBC
 
-JSF/Servlet
+JSP/Servlet
 
